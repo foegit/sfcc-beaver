@@ -3,6 +3,7 @@
 	"displayName": "sfcc-x",
 	"description": "Boost working with SFCC code",
 	"version": "0.0.1",
+	"icon": "static/salesforce.png",
 	"engines": {
 		"vscode": "^1.66.0"
 	},
