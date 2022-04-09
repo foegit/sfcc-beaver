@@ -1,7 +1,7 @@
 {
-	"name": "sfcc-x",
-	"displayName": "sfcc-x",
-	"description": "Boost working with SFCC code",
+	"name": "sfccBeaver",
+	"displayName": "SFCC Beaver",
+	"description": "A beaver who is an experienced developer (of its dam) will help you with your work routine",
 	"version": "0.0.1",
 	"icon": "static/salesforce.png",
 	"engines": {
@@ -11,14 +11,14 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:sfcc-x.copyRequire"
+		"onCommand:sfccBeaver.extract"
 	],
 	"main": "./dist/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "sfcc-x.copyRequire",
-				"title": "sfx: 🔖 Copy Require"
+				"command": "sfccBeaver.extract",
+				"title": "🦫 sf extract"
 			}
 		]
 	},
