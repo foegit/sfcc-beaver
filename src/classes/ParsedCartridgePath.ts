@@ -21,6 +21,14 @@ export default class ParsedCartridgePath {
     static templatePathRegExp = /^.*\/templates\/.*\/(.*)\.isml$/;
     static templatePathPosition = 1;
 
+    /**
+     * d:/work/app_custom/cartridge/templates/resources/address_en_GB.properties
+     * 0 - whole match `d:/work/app_custom/cartridge/templates/resources/address_en_GB.properties`
+     * 1 - properties group path `address`
+     */
+    static propertiesPathRegExp = /^.*\/templates\/resources\/([^\_]*).*\.properties$/;
+    static propertiesPath = 1;
+
     private parsedPath : RegExpExecArray;
 
     constructor(path: string) {
@@ -50,5 +58,12 @@ export default class ParsedCartridgePath {
         const templateParsedPath = ParsedCartridgePath.templatePathRegExp.exec(relatedPath);
 
         return templateParsedPath ? templateParsedPath[ParsedCartridgePath.templatePathPosition] : '';
+    }
+
+    getPropertiesGroup() : string {
+        const relatedPath = this.getRelatedPath();
+        const propertiesParsedPath = ParsedCartridgePath.propertiesPathRegExp.exec(relatedPath);
+
+        return propertiesParsedPath ? propertiesParsedPath[ParsedCartridgePath.templatePathPosition] : '';
     }
 }

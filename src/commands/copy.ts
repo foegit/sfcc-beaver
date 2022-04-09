@@ -4,11 +4,11 @@ import ParsedCartridgePath from '../classes/ParsedCartridgePath';
 const fileHandlers = new Map();
 
 fileHandlers.set('js', function (cartridgePath: ParsedCartridgePath) {
-        const requireScript = `var ${cartridgePath.getFileName()} = require('*/${cartridgePath.getRelatedPath()}');`;
+        const scriptRequire = `var ${cartridgePath.getFileName()} = require('*/${cartridgePath.getRelatedPath()}');`;
 
-        vscode.env.clipboard.writeText(requireScript);
+        vscode.env.clipboard.writeText(scriptRequire);
 
-        const message = `Copied to clipboard: ${requireScript}`;
+        const message = `Copied to clipboard: ${scriptRequire}`;
         vscode.window.showInformationMessage(message);
     }
 );
@@ -20,11 +20,23 @@ fileHandlers.set('isml', function (cartridgePath: ParsedCartridgePath) {
             throw new Error('Template is not recognized');
         }
 
-        const isinclude = `<isinclude template="${templatePath}" />`;
+        const templateIsinclude = `<isinclude template="${templatePath}" />`;
 
-        vscode.env.clipboard.writeText(isinclude);
+        vscode.env.clipboard.writeText(templateIsinclude);
 
-        const message = `Copied to clipboard: ${isinclude}`;
+        const message = `Copied to clipboard: ${templateIsinclude}`;
+        vscode.window.showInformationMessage(message);
+    }
+);
+
+fileHandlers.set('properties', function (cartridgePath: ParsedCartridgePath) {
+        const propertiesGroup = cartridgePath.getPropertiesGroup();
+
+        const resourceMsg = `Resource.msg('field.shipping.address.first.name', '${propertiesGroup}', null)`;
+
+        vscode.env.clipboard.writeText(resourceMsg);
+
+        const message = `Copied to clipboard: ${resourceMsg}`;
         vscode.window.showInformationMessage(message);
     }
 );
