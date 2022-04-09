@@ -10,14 +10,14 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:sfcc-x.helloWorld"
+		"onCommand:sfcc-x.copyRequire"
 	],
 	"main": "./dist/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "sfcc-x.helloWorld",
-				"title": "Hello World"
+				"command": "sfcc-x.copyRequire",
+				"title": "sfx: 🔖 Copy Require"
 			}
 		]
 	},
