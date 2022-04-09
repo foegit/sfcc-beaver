@@ -1,15 +1,18 @@
 import * as vscode from 'vscode';
+import BeaverError, { ErrCodes } from '../classes/errors/BeaverError';
 import ParsedCartridgePath from '../classes/ParsedCartridgePath';
 
 const fileHandlers = new Map();
 
+function toClipBoard(snippet: string) {
+    vscode.env.clipboard.writeText(snippet);
+    vscode.window.showInformationMessage(`🦫 Copied!\n${snippet}`);
+}
+
 fileHandlers.set('js', function (cartridgePath: ParsedCartridgePath) {
         const scriptRequire = `var ${cartridgePath.getFileName()} = require('*/${cartridgePath.getRelatedPath()}');`;
 
-        vscode.env.clipboard.writeText(scriptRequire);
-
-        const message = `Copied to clipboard: ${scriptRequire}`;
-        vscode.window.showInformationMessage(message);
+        toClipBoard(scriptRequire);
     }
 );
 
@@ -22,46 +25,60 @@ fileHandlers.set('isml', function (cartridgePath: ParsedCartridgePath) {
 
         const templateIsinclude = `<isinclude template="${templatePath}" />`;
 
-        vscode.env.clipboard.writeText(templateIsinclude);
-
-        const message = `Copied to clipboard: ${templateIsinclude}`;
-        vscode.window.showInformationMessage(message);
+        toClipBoard(templateIsinclude);
     }
 );
 
-fileHandlers.set('properties', function (cartridgePath: ParsedCartridgePath) {
-        const propertiesGroup = cartridgePath.getPropertiesGroup();
+fileHandlers.set('properties', function (cartridgePath: ParsedCartridgePath, activeEditor : vscode.TextEditor ) {
+        const propertyGroup = cartridgePath.getPropertiesGroup();
 
-        const resourceMsg = `Resource.msg('field.shipping.address.first.name', '${propertiesGroup}', null)`;
+        const { text } = activeEditor.document.lineAt(activeEditor.selection.active.line);
+        const selectedLineContent = text.trim();
 
-        vscode.env.clipboard.writeText(resourceMsg);
+        if (!selectedLineContent) {
+            throw new BeaverError(ErrCodes.propertiesEmptyLine);
+        }
 
-        const message = `Copied to clipboard: ${resourceMsg}`;
-        vscode.window.showInformationMessage(message);
+        const propertyRegExp = /^([^#]+)=.*$/;
+        const parsedProperty = propertyRegExp.exec(selectedLineContent);
+
+        if (!parsedProperty) {
+            throw new BeaverError(ErrCodes.propertiesInvalid);
+        }
+
+        const propertyKey = parsedProperty[1];
+        const resourceMsg = `Resource.msg('${propertyKey}'), '${propertyGroup}', null)`;
+
+        toClipBoard(resourceMsg);
     }
 );
 
 export function copyInclude() {
-    const activeTextEditor = vscode.window.activeTextEditor;
-
-    if (!activeTextEditor) {
-        vscode.window.showErrorMessage('No open file in the moment');
-        return;
-    }
-
-    const filePath = activeTextEditor.document.uri.path;
-
     try {
-        const cartridgePath = new ParsedCartridgePath(filePath);
-        const extension = cartridgePath.getFiletype();
+        const activeTextEditor = vscode.window.activeTextEditor;
 
-        if (fileHandlers.has(extension)) {
-            fileHandlers.get(extension)(cartridgePath);
+        if (!activeTextEditor) {
+            throw new BeaverError(ErrCodes.noActiveEditor);
+        }
+
+        const filePath = activeTextEditor.document.uri.path;
+        const cartridgePath = new ParsedCartridgePath(filePath);
+        const fileType = cartridgePath.getFiletype();
+
+        if (fileHandlers.has(fileType)) {
+            fileHandlers.get(fileType)(cartridgePath, activeTextEditor);
         } else {
             throw new Error('Unsupported file type');
         }
-
     } catch (error) {
-        vscode.window.showErrorMessage('Current file is not recognized as SFCC supported file. Extension expects /cartridge/ in path. Only .js files can be handled');
+        let errorMessage;
+
+        if (error instanceof BeaverError) {
+            errorMessage = error.printError();
+        } else {
+            errorMessage = BeaverError.getMessageFor(ErrCodes.unknownError);
+        }
+
+        vscode.window.showErrorMessage(errorMessage);
     }
 }
