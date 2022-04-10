@@ -30,3 +30,4 @@ A beaver will help you to work with an SFCC projects
     // or
 
     Resource.msgf('label.orderhistory.vieworderdetails', 'address', null, '{0}');
+    ```
