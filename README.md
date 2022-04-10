@@ -1,6 +1,6 @@
 # sfcc-x README
 
-Boost you productivity working with SFCC projects
+A beaver will help you to work with an SFCC projects
 
 ## Features
 
@@ -20,8 +20,6 @@ Boost you productivity working with SFCC projects
     <isinclude template="account/components/loginForm">
     ```
 
-## Road map
-
 - **sf 🦊 extract** in `.properties` copies resource message of the active line
 
     ```js
@@ -32,4 +30,3 @@ Boost you productivity working with SFCC projects
     // or
 
     Resource.msgf('label.orderhistory.vieworderdetails', 'address', null, '{0}');
-    ```

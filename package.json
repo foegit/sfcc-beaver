@@ -1,9 +1,9 @@
 {
-	"name": "sfccBeaver",
+	"name": "sfcc-beaver",
 	"displayName": "SFCC Beaver",
 	"description": "A beaver who is an experienced developer (of its dam) will help you with your work routine",
 	"version": "0.0.1",
-	"icon": "static/salesforce.png",
+	"icon": "static/sfccBeaverLogo.png",
 	"engines": {
 		"vscode": "^1.66.0"
 	},

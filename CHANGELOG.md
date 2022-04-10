@@ -1,11 +1,9 @@
 # Change Log
 
-All notable changes to the "sfcc-x" extension will be documented in this file.
-
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
-
-## [0.0.1] - 2022-04-06
+## [1.0.0] - 2022-04-10
 
 ### Added
 
-- Copy require of active script file to the clipboard
+- Extract require of active script file to the clipboard
+- Extract isinclude of active template to clipboard
+- Extract Resource.msg of active line of active properties file to clipboard
