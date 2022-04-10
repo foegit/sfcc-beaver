@@ -13,7 +13,8 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:sfccBeaver.extract"
+		"onCommand:sfccBeaver.extract",
+		"onView:beaverDam"
 	],
 	"main": "./dist/extension.js",
 	"contributes": {
@@ -22,7 +23,26 @@
 				"command": "sfccBeaver.extract",
 				"title": "🦫 sf extract"
 			}
-		]
+		],
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "beaver-dam",
+					"title": "Beaver Dam",
+					"icon": "static/sfccBeaverIcon.svg"
+				}
+			]
+		},
+		"views": {
+			"beaver-dam": [
+				{
+					"id": "beaverDam",
+					"name": "Beaver Dam",
+					"icon": "static/sfccBeaverIcon.svg",
+					"contextualTitle": "Beaver Dam"
+				}
+			]
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run package",
