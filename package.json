@@ -3,7 +3,7 @@
 	"displayName": "SFCC Beaver",
 	"description": "A beaver who is an experienced developer (of its dam) will help you with your work routine",
 	"version": "1.0.2",
-	"icon": "static/sfccBeaverLogo.png",
+	"icon": "static/simpleLogo.png",
 	"repository": "https://github.com/foegit/sfcc-beaver",
 	"publisher": "SerhiiHlavatskyi",
 	"engines": {
