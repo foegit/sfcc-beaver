@@ -5,6 +5,7 @@
 	"version": "0.0.1",
 	"icon": "static/sfccBeaverLogo.png",
 	"repository": "https://github.com/foegit/sfcc-beaver",
+	"publisher": "SerhiiHlavatskyi",
 	"engines": {
 		"vscode": "^1.66.0"
 	},

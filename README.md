@@ -4,7 +4,7 @@ A beaver will help you to work with an SFCC projects
 
 ## Features
 
-- **sf 🦊 extract** in `.js` file copies require of the script
+- **🦫 sf extract** in `.js` file copies require of the script
 
     ```js
     // .../cartridge/scripts/cart/cartHelpers.js
@@ -12,7 +12,7 @@ A beaver will help you to work with an SFCC projects
     var cartHelpers = require('*/cartridge/scripts/cart/cartHelpers');
     ```
 
-- **sf 🦊 extract** in `.isml` copies isinclude of the template
+- **🦫 sf extract** in `.isml` copies isinclude of the template
 
     ```html
     <!-- from: .../cartridge/templates/default/account/components/loginForm.isml -->
@@ -20,7 +20,7 @@ A beaver will help you to work with an SFCC projects
     <isinclude template="account/components/loginForm">
     ```
 
-- **sf 🦊 extract** in `.properties` copies resource message of the active line
+- **🦫 sf extract** in `.properties` copies resource message of the active line
 
     ```js
     //.../cartridge/templates/resources/address_en_GB.properties on 1st line
