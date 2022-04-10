@@ -31,3 +31,10 @@ A beaver will help you to work with an SFCC projects
 
     Resource.msgf('label.orderhistory.vieworderdetails', 'address', null, '{0}');
     ```
+
+## Road Map
+
+### Extend
+
+- **🦫 sf override** in `.js` file will ask about a cartridge in which override the file
+
