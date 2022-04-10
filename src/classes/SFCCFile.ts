@@ -1,4 +1,4 @@
-export default class ParsedCartridgePath {
+export default class SFCCFile {
     /**
      * d:/work/app_custom/cartridge/scripts/helpers.js
      * 0 - whole match `d:/work/app_custom/cartridge/scripts/helpers.js`
@@ -18,7 +18,7 @@ export default class ParsedCartridgePath {
      * 0 - whole match `d:/work/app_custom/cartridge/templates/default/components/home.isml`
      * 1 - template path `components/home`
      */
-    static templatePathRegExp = /^.*\/templates\/.*\/(.*)\.isml$/;
+    static templatePathRegExp = /^.*\/templates\/[^\/]*\/(.*)\.isml$/;
     static templatePathPosition = 1;
 
     /**
@@ -32,7 +32,7 @@ export default class ParsedCartridgePath {
     private parsedPath : RegExpExecArray;
 
     constructor(path: string) {
-        const parsed = ParsedCartridgePath.cartridgePathRegExp.exec(path);
+        const parsed = SFCCFile.cartridgePathRegExp.exec(path);
 
         if (parsed === null || parsed.length < 6) {
             throw new Error('Can not parse path');
@@ -42,28 +42,28 @@ export default class ParsedCartridgePath {
     }
 
     getRelatedPath() : string {
-        return this.parsedPath[ParsedCartridgePath.relatedPathPosition];
+        return this.parsedPath[SFCCFile.relatedPathPosition];
     }
 
     getFileName() : string {
-        return this.parsedPath[ParsedCartridgePath.fileNamePosition];
+        return this.parsedPath[SFCCFile.fileNamePosition];
     }
 
     getFiletype() : string {
-        return this.parsedPath[ParsedCartridgePath.extensionPosition];
+        return this.parsedPath[SFCCFile.extensionPosition];
     }
 
     getTemplatePath() : string {
         const relatedPath = this.getRelatedPath();
-        const templateParsedPath = ParsedCartridgePath.templatePathRegExp.exec(relatedPath);
+        const templateParsedPath = SFCCFile.templatePathRegExp.exec(relatedPath);
 
-        return templateParsedPath ? templateParsedPath[ParsedCartridgePath.templatePathPosition] : '';
+        return templateParsedPath ? templateParsedPath[SFCCFile.templatePathPosition] : '';
     }
 
     getPropertiesGroup() : string {
         const relatedPath = this.getRelatedPath();
-        const propertiesParsedPath = ParsedCartridgePath.propertiesPathRegExp.exec(relatedPath);
+        const propertiesParsedPath = SFCCFile.propertiesPathRegExp.exec(relatedPath);
 
-        return propertiesParsedPath ? propertiesParsedPath[ParsedCartridgePath.templatePathPosition] : '';
+        return propertiesParsedPath ? propertiesParsedPath[SFCCFile.templatePathPosition] : '';
     }
 }

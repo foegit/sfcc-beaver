@@ -5,13 +5,15 @@ export enum ErrCodes {
     noActiveEditor = 1,
     propertiesEmptyLine = 3,
     propertiesInvalid = 4,
+    unknownFileType = 5,
 };
 
 const errorsMeta : Record<ErrCodes, ErrorMeta> = {
-    [ErrCodes.unknownError]: new ErrorMeta('I don\'t what happened. Did you restart your computer?'),
+    [ErrCodes.unknownError]: new ErrorMeta('I don\'t know what happened. Did you restart your computer?'),
     [ErrCodes.noActiveEditor]: new ErrorMeta('Dude, open something! I won\'t do anything before it.'),
     [ErrCodes.propertiesEmptyLine]: new ErrorMeta('Hey, you\'re on an empty line. Move on'),
-    [ErrCodes.propertiesInvalid]: new ErrorMeta('Is it just me or this property look sick?')
+    [ErrCodes.propertiesInvalid]: new ErrorMeta('Is it just me or this property looks shady?'),
+    [ErrCodes.unknownFileType]: new ErrorMeta('It doesn\'t look like a job for me')
 };
 
 export default class BeaverError extends Error {
