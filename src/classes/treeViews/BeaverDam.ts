@@ -1,6 +1,8 @@
 import * as vscode from 'vscode';
+import SFCCProject from '../SFCCProject';
 
 export class DepNodeProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
+	private sfccProject = new SFCCProject();
 
 	private _onDidChangeTreeData: vscode.EventEmitter<vscode.TreeItem | undefined | void> = new vscode.EventEmitter<vscode.TreeItem | undefined | void>();
 	readonly onDidChangeTreeData: vscode.Event<vscode.TreeItem | undefined | void> = this._onDidChangeTreeData.event;
@@ -14,7 +16,13 @@ export class DepNodeProvider implements vscode.TreeDataProvider<vscode.TreeItem>
 	}
 
 	getChildren(): vscode.TreeItem[] {
-		return [new vscode.TreeItem('test1'), new vscode.TreeItem('test2')];
+		const cartridges = this.sfccProject.getCartridges();
+
+		const treeItems : vscode.TreeItem[] = cartridges.map(c => {
+			return new vscode.TreeItem(c.getName());
+		});
+
+		return treeItems;
 	}
 }
 
