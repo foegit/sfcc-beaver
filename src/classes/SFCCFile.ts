@@ -41,7 +41,16 @@ export default class SFCCFile {
         this.parsedPath = parsed;
     }
 
-    getRelatedPath() : string {
+    getRelatedPath(cutExtension? : boolean) : string {
+        const relatedPath = this.parsedPath[SFCCFile.relatedPathPosition];
+
+        if (cutExtension) {
+            const extension = this.getExtension();
+            const regExp = new RegExp(`\.${extension}$`);
+
+            return relatedPath.replace(regExp, '');
+        }
+
         return this.parsedPath[SFCCFile.relatedPathPosition];
     }
 
@@ -50,6 +59,10 @@ export default class SFCCFile {
     }
 
     getFiletype() : string {
+        return this.parsedPath[SFCCFile.extensionPosition];
+    }
+
+    getExtension() : string {
         return this.parsedPath[SFCCFile.extensionPosition];
     }
 
