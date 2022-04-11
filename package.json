@@ -2,7 +2,7 @@
 	"name": "sfcc-beaver",
 	"displayName": "SFCC Beaver",
 	"description": "A beaver who is an experienced developer (of its dam) will help you with your work routine",
-	"version": "1.0.4",
+	"version": "1.1.0",
 	"icon": "static/simpleLogo.png",
 	"repository": "https://github.com/foegit/sfcc-beaver",
 	"publisher": "SerhiiHlavatskyi",
@@ -14,7 +14,8 @@
 	],
 	"activationEvents": [
 		"onCommand:sfccBeaver.extract",
-		"onView:beaverDam"
+		"onView:beaverDam",
+		"onCommand:sfccBeaver.unixpath"
 	],
 	"main": "./dist/extension.js",
 	"contributes": {
@@ -22,6 +23,10 @@
 			{
 				"command": "sfccBeaver.extract",
 				"title": "🦫 sf extract"
+			},
+			{
+				"command": "sfccBeaver.unixpath",
+				"title": "🦫 unix path"
 			}
 		],
 		"viewsContainers": {

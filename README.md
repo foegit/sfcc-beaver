@@ -4,7 +4,7 @@ A beaver will help you to work with an SFCC projects
 
 ## Features
 
-- **🦫 sf extract** in `.js` file copies require of the script
+- **🦫 sf extract** in `.js/.ds/.json` file copies require of the script
 
     ```js
     // .../cartridge/scripts/cart/cartHelpers.js
@@ -31,6 +31,8 @@ A beaver will help you to work with an SFCC projects
 
     Resource.msgf('label.orderhistory.vieworderdetails', 'address', null, '{0}');
     ```
+
+- **🦫 unix path** in any active file copies Unix-like path related to root of the project
 
 ## Road Map
 
