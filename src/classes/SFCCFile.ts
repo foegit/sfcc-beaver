@@ -28,6 +28,9 @@ export default class SFCCFile {
      */
     static propertiesPathRegExp = /^.*\/templates\/resources\/([^\_]*).*\.properties$/;
     static propertiesPath = 1;
+    static scriptExtensions = ['js', 'ds'];
+    static scripFileType = 'SCRIPT';
+    static jsonFileType = 'JSON';
 
     private parsedPath : RegExpExecArray;
 
@@ -59,7 +62,17 @@ export default class SFCCFile {
     }
 
     getFiletype() : string {
-        return this.parsedPath[SFCCFile.extensionPosition];
+        const extension = this.getExtension();
+
+        if (SFCCFile.scriptExtensions.includes(extension)) {
+            return SFCCFile.scripFileType;
+        }
+
+        if (extension === 'json') {
+            return SFCCFile.jsonFileType;
+        }
+
+        return extension;
     }
 
     getExtension() : string {
