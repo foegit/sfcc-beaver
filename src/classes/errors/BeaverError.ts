@@ -1,4 +1,4 @@
-import ErrorMeta from "./ErrorMeta";
+import ErrorMeta from './ErrorMeta';
 
 export enum ErrCodes {
     unknownError = 0,

@@ -1,8 +1,9 @@
 import * as vscode from 'vscode';
 import BeaverError, { ErrCodes } from '../classes/errors/BeaverError';
-import SFCCFile from '../classes/../classes/SFCCFile';
+import SFCCFile from '../classes/SFCCFile';
 import FileExtractorFactory from '../classes/extract/FileExtractorFactory';
 import Clipboard from '../classes/Clipboard';
+import { handleError } from './error';
 
 export function copyInclude() {
     try {
@@ -20,15 +21,7 @@ export function copyInclude() {
 
         Clipboard.toClipboard(snippet);
     } catch (error) {
-        let errorMessage;
-
-        if (error instanceof BeaverError) {
-            errorMessage = error.printError();
-        } else {
-            errorMessage = BeaverError.getMessageFor(ErrCodes.unknownError);
-        }
-
-        vscode.window.showErrorMessage(errorMessage);
+        handleError(error);
     }
 }
 
@@ -47,15 +40,7 @@ export function copyUnixPath() {
 
         Clipboard.toClipboard(snippet);
     } catch (error) {
-        let errorMessage;
-
-        if (error instanceof BeaverError) {
-            errorMessage = error.printError();
-        } else {
-            errorMessage = BeaverError.getMessageFor(ErrCodes.unknownError);
-        }
-
-        vscode.window.showErrorMessage(errorMessage);
+        handleError(error);
     }
 }
 

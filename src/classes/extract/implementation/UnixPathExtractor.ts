@@ -1,6 +1,6 @@
-import * as vscode from "vscode";
-import SFCCFile from "../../SFCCFile";
-import IFileExtractor from "../IFileExtractor";
+import * as vscode from 'vscode';
+import SFCCFile from '../../SFCCFile';
+import IFileExtractor from '../IFileExtractor';
 
 export default class UnixPathExtractor implements IFileExtractor {
     getSnippet(sfccFile: SFCCFile, activeEditor: vscode.TextEditor) : string{

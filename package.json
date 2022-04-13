@@ -15,7 +15,9 @@
 	"activationEvents": [
 		"onCommand:sfccBeaver.extract",
 		"onView:beaverDam",
-		"onCommand:sfccBeaver.unixpath"
+		"onCommand:sfccBeaver.unixpath",
+		"onCommand:sfccBeaver.override"
+
 	],
 	"main": "./dist/extension.js",
 	"contributes": {
@@ -23,6 +25,10 @@
 			{
 				"command": "sfccBeaver.extract",
 				"title": "🦫 sf extract"
+			},
+			{
+				"command": "sfccBeaver.override",
+				"title": "🦫 sf override"
 			},
 			{
 				"command": "sfccBeaver.unixpath",

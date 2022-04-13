@@ -1,6 +1,8 @@
 import * as vscode from 'vscode';
-import SFCCFile from "../SFCCFile";
+import SFCCFile from '../SFCCFile';
 
-export default interface IFileExtractor {
+interface IFileExtractor {
     getSnippet(sfccFile: SFCCFile, activeEditor : vscode.TextEditor): string;
-}
+};
+
+export default IFileExtractor;

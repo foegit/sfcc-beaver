@@ -18,8 +18,8 @@ export class DepNodeProvider implements vscode.TreeDataProvider<vscode.TreeItem>
 	getChildren(): vscode.TreeItem[] {
 		const cartridges = this.sfccProject.getCartridges();
 
-		const treeItems : vscode.TreeItem[] = cartridges.map(c => {
-			return new vscode.TreeItem(c.getName());
+		const treeItems : vscode.TreeItem[] = cartridges.map(cartridge => {
+			return new vscode.TreeItem(`🌳 ${cartridge.getName()}`);
 		});
 
 		return treeItems;

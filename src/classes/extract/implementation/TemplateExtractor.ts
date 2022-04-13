@@ -1,5 +1,5 @@
-import SFCCFile from "../../SFCCFile";
-import IFileExtractor from "../IFileExtractor";
+import SFCCFile from '../../SFCCFile';
+import IFileExtractor from '../IFileExtractor';
 
 export default class TemplateExtractor implements IFileExtractor {
     getSnippet(sfccFile: SFCCFile) : string{

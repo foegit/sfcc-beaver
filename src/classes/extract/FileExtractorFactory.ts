@@ -1,10 +1,10 @@
-import SFCCFile from "../SFCCFile";
-import IFileExtractor from "./IFileExtractor";
-import ResourceExtractor from "./implementation/ResourceExtractor";
-import ScriptExtractor from "./implementation/ScriptExtractor";
-import TemplateExtractor from "./implementation/TemplateExtractor";
-import UnixPathExtractor from "./implementation/UnixPathExtractor";
-import UnknownFileExtractor from "./implementation/UnknownTypeExtractor";
+import SFCCFile from '../SFCCFile';
+import IFileExtractor from './IFileExtractor';
+import ResourceExtractor from './implementation/ResourceExtractor';
+import ScriptExtractor from './implementation/ScriptExtractor';
+import TemplateExtractor from './implementation/TemplateExtractor';
+import UnixPathExtractor from './implementation/UnixPathExtractor';
+import UnknownFileExtractor from './implementation/UnknownTypeExtractor';
 
 export default class FileExtractorFactory {
     static getHandler(handlerType : string) : IFileExtractor {
