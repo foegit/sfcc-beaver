@@ -1,42 +1,21 @@
-# sfcc-x README
+# Welcome to SFFC Beaver extension
 
-A beaver will help you to work with an SFCC projects
+Beaver who is an experience developer (of his dam) will help you with routine in your SFCC projects.
 
 ## Features
 
-- **🦫 sf extract** in `.js/.ds/.json` file copies require of the script
+* Beaver can copy requires, includes, and resource properties to the clipboard using **🦫 sf extract** command.
 
-    ```js
-    // .../cartridge/scripts/cart/cartHelpers.js
+* You can also call command **🦫 unix path** to copy full path of the active file to clipboard. This can be useful not only for SFCC projects.
 
-    var cartHelpers = require('*/cartridge/scripts/cart/cartHelpers');
-    ```
-
-- **🦫 sf extract** in `.isml` copies isinclude of the template
-
-    ```html
-    <!-- from: .../cartridge/templates/default/account/components/loginForm.isml -->
-
-    <isinclude template="account/components/loginForm">
-    ```
-
-- **🦫 sf extract** in `.properties` copies resource message of the active line
-
-    ```js
-    //.../cartridge/templates/resources/address_en_GB.properties on 1st line
-
-    Resource.msg('field.shipping.address.first.name', 'address', null)
-
-    // or
-
-    Resource.msgf('label.orderhistory.vieworderdetails', 'address', null, '{0}');
-    ```
-
-- **🦫 unix path** in any active file copies Unix-like path related to root of the project
+To activate command press `F1` or `Ctrl+Shift+P` and start typing name of the command.
 
 ## Road Map
 
-### Extend
+There are plenty of things that Beaver would like to learn:
 
-- **🦫 sf override** in `.js` file will ask about a cartridge in which override the file
+* How to override files from one cartridge to another. So you can simply override scripts, templates, forms, and properties files. (And it is his current task)
 
+* How to create cartridge from scratch
+
+* Help with managing meta
