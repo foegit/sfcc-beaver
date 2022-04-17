@@ -1,9 +1,9 @@
-import SFCCFile from '../../SFCCFile';
+import SFCCProjectFile from '../../SFCCProjectFile';
 import IFileExtractor from '../IFileExtractor';
 
 export default class TemplateExtractor implements IFileExtractor {
-    getSnippet(sfccFile: SFCCFile) : string{
-        const templatePath = sfccFile.getTemplatePath();
+    getSnippet(sfccFile: SFCCProjectFile) : string{
+        const templatePath = sfccFile.getSFCCPath();
 
         if (templatePath === '') {
             // TODO add beaver error

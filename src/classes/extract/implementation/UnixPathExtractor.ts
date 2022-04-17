@@ -1,9 +1,9 @@
 import * as vscode from 'vscode';
-import SFCCFile from '../../SFCCFile';
+import SFCCProjectFile from '../../SFCCProjectFile';
 import IFileExtractor from '../IFileExtractor';
 
 export default class UnixPathExtractor implements IFileExtractor {
-    getSnippet(sfccFile: SFCCFile, activeEditor: vscode.TextEditor) : string{
+    getSnippet(_sfccFile: SFCCProjectFile, activeEditor: vscode.TextEditor) : string{
         const fileFullPath = activeEditor.document.uri.path;
 
         const openWorkspaces = vscode.workspace.workspaceFolders;
