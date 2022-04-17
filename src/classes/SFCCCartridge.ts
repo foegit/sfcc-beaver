@@ -6,8 +6,8 @@ export default class SFCCCartridge {
         this.path = path;
     }
 
-    getProjectFile() {
-        
+    getCartridgePath() : string {
+        return this.path;
     }
 
     getName() : string {

@@ -6,6 +6,9 @@ import path = require('path');
 import SFCCCartridge from './SFCCCartridge';
 
 export default class SFCCProject {
+
+    cartridges : SFCCCartridge[] = [];
+
     constructor() {
         console.log('SFCC Project Initialized');
     }
@@ -15,21 +18,25 @@ export default class SFCCProject {
             return [];
         }
 
-        const [ workspaceFolder ] = vscode.workspace.workspaceFolders;
+        if (this.cartridges.length === 0) {
+            const [ workspaceFolder ] = vscode.workspace.workspaceFolders;
 
-        // .project files indicate cartridges root
-        const foundProjectFiles = fg.sync('**/.project', {
-            cwd: workspaceFolder.uri.fsPath,
-            ignore: ['**/node_modules/**']
-        });
+            // .project files indicate cartridges root
+            const foundProjectFiles = fg.sync('**/.project', {
+                cwd: workspaceFolder.uri.fsPath,
+                ignore: ['**/node_modules/**']
+            });
 
-        return foundProjectFiles.map(filepath => {
-            const projectFileFullPath = path.resolve(workspaceFolder.uri.fsPath, filepath);
-            const cartridgePath = projectFileFullPath.replace(`${path.sep}.project`, '');
+            this.cartridges = foundProjectFiles.map(filepath => {
+                const projectFileFullPath = path.resolve(workspaceFolder.uri.fsPath, filepath);
+                const cartridgePath = projectFileFullPath.replace(`${path.sep}.project`, '');
 
-            const cartridge = new SFCCCartridge(cartridgePath);
+                const cartridge = new SFCCCartridge(cartridgePath);
 
-            return cartridge;
-        });
+                return cartridge;
+            });
+        }
+
+        return this.cartridges;
     }
 }
