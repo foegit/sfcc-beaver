@@ -11,7 +11,7 @@ export async function overrideFile() {
         const activeTextEditor = window.activeTextEditor;
 
         if (activeTextEditor) {
-            const overrider = FileExtractorFactory.get('script', activeTextEditor, sfccProject);
+            const overrider = FileExtractorFactory.get(activeTextEditor, sfccProject);
 
             await overrider.override();
         } else {

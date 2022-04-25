@@ -1,17 +1,17 @@
 import * as path from 'path';
 import * as fs from 'fs';
-import { TextEditor, window, workspace, Uri } from 'vscode';
-import BeaverError, { ErrCodes } from '../errors/BeaverError';
-import SFCCCartridge from '../SFCCCartridge';
-import SFCCProject from '../SFCCProject';
+import * as vscode from 'vscode';
+import BeaverError, { ErrCodes } from '../../errors/BeaverError';
+import SFCCCartridge from '../../SFCCCartridge';
+import SFCCProject from '../../SFCCProject';
 
 const defaultFileTemplate = '// overridden';
 
 class FileOverrider {
     protected sfccProject : SFCCProject;
-    protected activeEditor : TextEditor;
+    protected activeEditor : vscode.TextEditor;
 
-    constructor(activeEditor : TextEditor, sfccProject : SFCCProject) {
+    constructor(activeEditor : vscode.TextEditor, sfccProject : SFCCProject) {
         this.sfccProject = sfccProject;
         this.activeEditor = activeEditor;
     }
@@ -37,7 +37,7 @@ class FileOverrider {
 
     private async selectTargetCartridge() {
         const cartridgesList = this.sfccProject.getCartridges().map(cartridge => cartridge.getName());
-        const selectedCartridgeName = await window.showQuickPick(cartridgesList) || '';
+        const selectedCartridgeName = await vscode.window.showQuickPick(cartridgesList) || '';
         const selectedCartridge = this.sfccProject.getCartridgeByName(selectedCartridgeName);
 
         if (!selectedCartridge) {
@@ -74,15 +74,39 @@ class FileOverrider {
     }
 
     protected appendTargetFile(targetPath: string) {
-        fs.appendFileSync(targetPath, this.getAppendSnippet());
+        const appendText = this.getAppendSnippet();
+
+        if (appendText) {
+            fs.appendFileSync(targetPath, appendText);
+        }
     }
 
     private focusOnFile(filePath: string) {
-        var openPath = Uri.parse('file:///' + filePath);
+        var openPath = vscode.Uri.parse('file:///' + filePath);
 
-        workspace.openTextDocument(openPath).then(doc => {
-            window.showTextDocument(doc);
+        vscode.workspace.openTextDocument(openPath).then(textDocument => {
+            vscode.window.showTextDocument(textDocument);
+
+            const targetPosition = this.getFocusPosition(textDocument);
+
+            vscode.commands
+                .executeCommand('cursorMove', {
+                    to: 'down',
+                    by: 'line',
+                    value: targetPosition.line,
+                })
+                .then(() =>vscode.commands.executeCommand('cursorMove', {
+                    to: 'right',
+                    by: 'character',
+                    value: targetPosition.character,
+                })
+            );
+
         });
+    }
+
+    protected getFocusPosition(createdTextDocument: vscode.TextDocument): vscode.Position {
+        return new vscode.Position(createdTextDocument.lineCount, 2);
     }
 };
 

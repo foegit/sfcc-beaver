@@ -2,14 +2,13 @@ export const snippet : string = `'use strict';
 
 var base = module.superModule;
 
-// expose same methods as base
-Object.keys(base).forEach(function (key) {
+Object.keys(base).forEach(function (key) { // expose base methods
     module.exports[key] = base[key];
 });
 
-function foo() {
-    // code
+function {fName} () {
+    {comment}
 }
 
-module.exports.foo = foo;
+module.exports.{fName} = {fName};
 `;
