@@ -1,10 +1,13 @@
-import IFileOverrider from './IFileOverrider';
-import EmptyOverrider from './implementation/DefaultOverrider';
+import { TextEditor } from 'vscode';
+import SFCCProject from '../SFCCProject';
+import FileOverrider from './FileOverrider';
+import ScriptFileOverrider from './ScriptFileOverrider';
 
 export default class FileOverriderFactory {
-    static get(type : string) : IFileOverrider {
+    static get(type : string, activeEditor : TextEditor, sfccProject : SFCCProject) : FileOverrider {
         switch (type) {
-            default: return new EmptyOverrider();
+            case 'script': return new ScriptFileOverrider(activeEditor, sfccProject);
+            default: return new FileOverrider(activeEditor, sfccProject);
         }
     }
 }

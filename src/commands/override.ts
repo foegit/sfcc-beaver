@@ -6,14 +6,14 @@ import SFCCProject from '../classes/SFCCProject';
 
 const sfccProject = new SFCCProject();
 
-export function overrideFile() {
+export async function overrideFile() {
     try {
         const activeTextEditor = window.activeTextEditor;
 
         if (activeTextEditor) {
-            const overrider = FileExtractorFactory.get('any');
+            const overrider = FileExtractorFactory.get('script', activeTextEditor, sfccProject);
 
-            overrider.override(activeTextEditor, sfccProject);
+            await overrider.override();
         } else {
             if (!activeTextEditor) {
                 throw new BeaverError(ErrCodes.noActiveEditor);
