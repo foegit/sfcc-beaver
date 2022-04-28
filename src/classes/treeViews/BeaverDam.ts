@@ -16,7 +16,12 @@ export class DepNodeProvider implements vscode.TreeDataProvider<vscode.TreeItem>
     }
 
     async getChildren(): Promise<vscode.TreeItem[]> {
+        const startTime = new Date();
+
         const cartridges = await this.sfccProject.getCartridgesAsync();
+
+        const endTime = new Date();
+        console.debug(`It took ${(endTime.valueOf() - startTime.valueOf()) / 1000} sec to find cartridges`);
 
         const treeItems : vscode.TreeItem[] = cartridges.map(cartridge => {
             return new vscode.TreeItem(`🌳 ${cartridge.getName()}`);

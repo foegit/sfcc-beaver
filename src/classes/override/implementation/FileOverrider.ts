@@ -4,9 +4,6 @@ import * as vscode from 'vscode';
 import BeaverError, { ErrCodes } from '../../errors/BeaverError';
 import SFCCCartridge from '../../SFCCCartridge';
 import SFCCProject from '../../SFCCProject';
-
-const defaultFileTemplate = '// overridden';
-
 class FileOverrider {
     protected sfccProject : SFCCProject;
     protected activeEditor : vscode.TextEditor;

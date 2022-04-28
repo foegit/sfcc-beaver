@@ -56,10 +56,12 @@ export default class SFCCProject {
 
         const [ workspaceFolder ] = vscode.workspace.workspaceFolders;
 
+
         const foundFiles = fg.sync('**/.project', {
             cwd: workspaceFolder.uri.fsPath,
             ignore: ['**/node_modules/**']
         });
+
 
         this.cartridges = foundFiles.map(filepath => {
             const projectFileFullPath = path.resolve(workspaceFolder.uri.fsPath, filepath);
