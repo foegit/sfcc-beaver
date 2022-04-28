@@ -4,14 +4,15 @@ import * as vscode from 'vscode';
 import BeaverError, { ErrCodes } from '../../errors/BeaverError';
 import SFCCCartridge from '../../SFCCCartridge';
 import SFCCProject from '../../SFCCProject';
+import IFileCreator from '../IFileCreator';
+import IFileAppender from '../IFileAppender';
 class FileOverrider {
-    protected sfccProject : SFCCProject;
-    protected activeEditor : vscode.TextEditor;
-
-    constructor(activeEditor : vscode.TextEditor, sfccProject : SFCCProject) {
-        this.sfccProject = sfccProject;
-        this.activeEditor = activeEditor;
-    }
+    constructor(
+        private activeEditor : vscode.TextEditor,
+        private sfccProject : SFCCProject,
+        private fileCreator: IFileCreator,
+        private fileAppender: IFileAppender
+    ) {}
 
     async override() {
         const targetCartridge = await this.selectTargetCartridge();
@@ -56,7 +57,7 @@ class FileOverrider {
     }
 
     protected getNewFileSnippet(): string {
-        return '// overridden';
+        return this.fileCreator.create(this.activeEditor);
     }
 
     protected createNewTargetFile(targetPath: string) {
@@ -67,7 +68,7 @@ class FileOverrider {
     }
 
     protected getAppendSnippet(): string {
-        return '\n// overridden';
+        return this.fileAppender.append(this.activeEditor);
     }
 
     protected appendTargetFile(targetPath: string) {

@@ -1,4 +1,5 @@
-export const snippet : string = `'use strict';
+export const snippet : string =
+`'use strict';
 
 var base = module.superModule;
 
@@ -7,7 +8,7 @@ Object.keys(base).forEach(function (key) { // expose base methods
 });
 
 function {fName} () {
-    {comment}
+    // code
 }
 
 module.exports.{fName} = {fName};

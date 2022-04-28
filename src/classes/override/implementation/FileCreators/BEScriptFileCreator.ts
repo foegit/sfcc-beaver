@@ -1,19 +1,23 @@
-import { snippet } from '../snippets/script';
-import FileOverrider from './FileOverrider';
+import { TextEditor, window } from 'vscode';
+import IFileCreator from '../../IFileCreator';
+import { snippet } from '../../snippets/script';
 
-// TODO: define desired logic for script files
-
-class ScriptFileOverrider extends FileOverrider {
-    protected getNewFileSnippet(): string {
+export default class BEScriptFileCreator implements IFileCreator {
+    create(activeEditor: TextEditor): string {
         let snippetCopy = snippet;
 
-        const focusedFunction = this.getFocusedFunction();
+        const focusedFunction = this.getFocusedFunction(activeEditor);
 
         if (!focusedFunction) {
             return this.replaceFunctionName(snippetCopy, 'foo');
         }
 
         return this.replaceFunctionName(snippetCopy, focusedFunction);;
+    }
+
+    protected getAppendSnippet(): string {
+        window.showInformationMessage('🦫 Someone has overriden it. Is it suspicious?...');
+        return '';
     }
 
     private replaceFunctionName(snippet: string, fName: string): string {
@@ -24,8 +28,8 @@ class ScriptFileOverrider extends FileOverrider {
         return snippet.replace('{comment}', comment);
     }
 
-    private getFocusedFunction(): string {
-        const ae = this.activeEditor;
+    private getFocusedFunction(activeEditor : TextEditor): string {
+        const ae = activeEditor;
         const doc = ae.document;
         const selectedLine = doc.lineAt(ae.selection.active.line);
 
@@ -38,5 +42,3 @@ class ScriptFileOverrider extends FileOverrider {
         return parsedLine ? parsedLine[1] : '';
     }
 }
-
-export default ScriptFileOverrider;
