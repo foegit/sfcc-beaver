@@ -15,7 +15,10 @@ export default class FileOverriderFactory {
         const extension = path.parse(activeFilePath).ext;
 
         switch (extension) {
-            case '.isml': return new FileOverrider(activeEditor, sfccProject, new CopyFileCreator(), new StaticFileAppender());
+            case '.isml':
+            case '.xml':
+            case '.json':
+                return new FileOverrider(activeEditor, sfccProject, new CopyFileCreator(), new StaticFileAppender());
             case '.properties': return new FileOverrider(activeEditor, sfccProject, new CopyLineFileCreator(), new CopyLineFileAppender());
             case '.js': return new FileOverrider(activeEditor, sfccProject, new BEScriptFileCreator(), new StaticFileAppender());
             default: return new FileOverrider(activeEditor, sfccProject, new StaticFileCreator('// overridden'), new StaticFileAppender('\n// overridden'));
