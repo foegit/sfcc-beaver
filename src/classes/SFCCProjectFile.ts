@@ -53,9 +53,13 @@ export default class SFCCProjectFile {
 
         if (this.fileType === '.properties') {
             // return a name of the group
-            const propertiesPathParseResult = /^.*\/templates\/resources\/([^\_]*).*\.properties$/.exec(this.path);
+            const propertiesPathParseResult = /^.*[\/\\](.*)\.properties$/.exec(this.path);
 
-            return propertiesPathParseResult ? propertiesPathParseResult[1] : '';
+            if (!propertiesPathParseResult) {
+                return 'unknown';
+            }
+
+            return propertiesPathParseResult[1].replace(/_.*$/, ''); // replaces locale if needed
         }
 
         return '';
