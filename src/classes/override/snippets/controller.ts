@@ -6,6 +6,7 @@ var server = require('server');
 server.extend(module.superModule);
 
 server.append('{endpoint}', function(res, req, next) {
+    
     next();
 });
 

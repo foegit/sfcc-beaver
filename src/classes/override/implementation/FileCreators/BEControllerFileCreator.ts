@@ -6,13 +6,13 @@ export default class BEControllerFileCreator implements IFileCreator {
     create(activeEditor: TextEditor): string {
         let snippetCopy = controller;
 
-        const focusedFunction = this.getFocusedController(activeEditor);
+        const focusedController = this.getFocusedController(activeEditor);
 
-        if (!focusedFunction) {
+        if (!focusedController) {
             return this.replaceEndpointName(snippetCopy, 'foo');
         }
 
-        return this.replaceEndpointName(snippetCopy, focusedFunction);;
+        return this.replaceEndpointName(snippetCopy, focusedController);;
     }
 
     protected getAppendSnippet(): string {
@@ -27,13 +27,25 @@ export default class BEControllerFileCreator implements IFileCreator {
     private getFocusedController(activeEditor : TextEditor): string {
         const ae = activeEditor;
         const doc = ae.document;
-        const selectedLine = doc.lineAt(ae.selection.active.line);
+        const selectedLine = ae.selection.active.line;
 
         if (!selectedLine) {
             return '';
         }
 
-        const parsedLine = /^function\s*(\w*).*$/.exec(selectedLine.text);
+        const searchRange = [
+            selectedLine !== 0 ? doc.lineAt(selectedLine - 1).text : '', // prev line
+            doc.lineAt(selectedLine).text,
+            selectedLine + 1 > doc.lineCount ? doc.lineAt(selectedLine + 1).text : '' // next line
+        ].join('\n');
+
+        const endpointRegExp = /server[\s\S]*\.(?:get|post|append|prepend|replace)[\s\S]*\([\s\S]*['"]([\w\d]*)['"].*$/gm;
+
+        if (!selectedLine) {
+            return '';
+        }
+
+        const parsedLine = endpointRegExp.exec(searchRange);
 
         return parsedLine ? parsedLine[1] : '';
     }
