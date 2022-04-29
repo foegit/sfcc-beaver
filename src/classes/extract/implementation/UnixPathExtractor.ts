@@ -12,8 +12,15 @@ export default class UnixPathExtractor implements IFileExtractor {
             return fileFullPath;
         }
 
+        const settings = vscode.workspace.getConfiguration('sfccBeaver');
+
         const projectDirectoryPath = openWorkspaces[0].uri.path;
         const filePathRelatedToRoot = fileFullPath.replace(`${projectDirectoryPath}\/`, '');
+
+        if (settings.addLineNumberForUnix) {
+            const selectedLine = activeEditor.selection.active.line;
+            return filePathRelatedToRoot + '#' + selectedLine;
+        }
 
         return filePathRelatedToRoot;
     }

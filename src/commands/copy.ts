@@ -16,7 +16,7 @@ export function copyInclude() {
         const filePath = activeTextEditor.document.uri.path;
         const sfccFile = new SFCCProjectFile(filePath);
 
-        const snippet = FileExtractorFactory.getHandler(sfccFile).getSnippet(sfccFile, activeTextEditor);
+        const snippet = FileExtractorFactory.getHandler(sfccFile.extension).getSnippet(sfccFile, activeTextEditor);
 
         Clipboard.toClipboard(snippet);
     } catch (error) {
@@ -35,7 +35,7 @@ export function copyUnixPath() {
         const filePath = activeTextEditor.document.uri.path;
         const sfccFile = new SFCCProjectFile(filePath);
 
-        const snippet = FileExtractorFactory.getHandler(sfccFile).getSnippet(sfccFile, activeTextEditor);
+        const snippet = FileExtractorFactory.getHandler('unix').getSnippet(sfccFile, activeTextEditor);
 
         Clipboard.toClipboard(snippet);
     } catch (error) {

@@ -20,6 +20,16 @@
 	],
 	"main": "./dist/extension.js",
 	"contributes": {
+		"configuration": {
+			"title": "SFCC Beaver",
+			"properties": {
+				"sfccBeaver.addLineNumberForUnix": {
+					"type": "boolean",
+					"default": true,
+					"description": "Adds line number (#11) for extracted unix path"
+				}
+			}
+		},
 		"commands": [
 			{
 				"command": "sfccBeaver.extract",
