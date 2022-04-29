@@ -6,6 +6,7 @@ import SFCCCartridge from '../../SFCCCartridge';
 import SFCCProject from '../../SFCCProject';
 import IFileCreator from '../IFileCreator';
 import IFileAppender from '../IFileAppender';
+import CartridgeListItemDecorator from './CartridgeListItemDecorator';
 class FileOverrider {
     constructor(
         private activeEditor : vscode.TextEditor,
@@ -34,15 +35,22 @@ class FileOverrider {
     }
 
     private async selectTargetCartridge() {
-        const cartridgesList1 = this.sfccProject.getCartridges().map(cartridge => cartridge.getName());
-        const cartridgesList2 = this.sortCartridges(cartridgesList1);
-        const cl3 : string[] = cartridgesList2.map(c => {
-            // @ts-ignore
-            return c.name + '(' + c.weight + ')';
+        const currentCartridgePath = this.activeEditor.document.uri.fsPath;
+
+        const sfccCartridges = this.sfccProject.getCartridges().filter(sfccCartridge => {
+            const selectedCartridgeRegExp = new RegExp(`^.*[\\\\/]${sfccCartridge.getName()}[\\\\/].*$`);
+
+            return !selectedCartridgeRegExp.test(currentCartridgePath);
         });
 
-        const selectedCartridgeName = await vscode.window.showQuickPick(cl3) || '';
-        const selectedCartridge = this.sfccProject.getCartridgeByName(selectedCartridgeName);
+        const decoratedCartridges = sfccCartridges.map(sfccCartridge => new CartridgeListItemDecorator(sfccCartridge));
+        const sortedDecorateCartridges = this.sortByPriority(decoratedCartridges);
+        const selectionList : string[] = sortedDecorateCartridges.map(cartridge => cartridge.getPrintableName());
+
+        const selectedCartridgeName = await vscode.window.showQuickPick(selectionList) || '';
+        const originalCartridgeName = CartridgeListItemDecorator.parseOriginalName(selectedCartridgeName);
+        const selectedCartridge = this.sfccProject.getCartridgeByName(originalCartridgeName);
+
 
         if (!selectedCartridge) {
             throw new BeaverError(ErrCodes.cartridgeIsUnknown, selectedCartridgeName);
@@ -51,43 +59,12 @@ class FileOverrider {
         return selectedCartridge;
     }
 
-    private sortCartridges(cartridges: string[]): Object[] {
-        const weightedCartridges = cartridges.map(cartridge => {
-            return {
-                name: cartridge,
-                weight: this.getWeightOfCartridge(cartridge)
-            };
+    private sortByPriority(decoratedCartridges: CartridgeListItemDecorator[]): CartridgeListItemDecorator[] {
+        decoratedCartridges.sort((c1, c2) => {
+            return c2.getPriority() - c1.getPriority();
         });
 
-        weightedCartridges.sort((c1, c2) => {
-            return c2.weight - c1.weight;
-        });
-
-        return weightedCartridges;
-    }
-
-    private prefixWeight: Map<string, number> = new Map([
-        ['app', 10000],
-        ['int', 1000],
-        ['link', 1000],
-        ['plugin', 1000],
-        ['bc', 100]
-    ]);
-
-    private endOfList = ['modules', 'app_storefront_base'];
-
-    private getWeightOfCartridge(cartridgeName: string): number {
-        if (this.endOfList.includes(cartridgeName)) {
-            return -1000;
-        }
-
-        const prefix = /^([^_]*)_.*$/.exec(cartridgeName);
-
-        if (prefix) {
-            return this.prefixWeight.get(prefix[1]) || 0;
-        }
-
-        return 0;
+        return decoratedCartridges;
     }
 
     protected getTargetPath(currentCartridge: SFCCCartridge) {
