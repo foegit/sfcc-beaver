@@ -16,7 +16,7 @@ export default class BEScriptFileCreator implements IFileCreator {
     }
 
     protected getAppendSnippet(): string {
-        window.showInformationMessage('🦫 Someone has overriden it. Is it suspicious?...');
+        window.showInformationMessage('🦫 Someone has overwritten it. Strange...');
         return '';
     }
 
