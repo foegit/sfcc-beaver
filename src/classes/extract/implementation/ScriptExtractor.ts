@@ -3,7 +3,7 @@ import IFileExtractor from '../IFileExtractor';
 
 export default class ScriptExtractor implements IFileExtractor {
     getSnippet(sfccFile: SFCCProjectFile) : string{
-        const scriptRequire = `var ${sfccFile.fileName} = require('*/${sfccFile.getSFCCPath()}');`;
+        const scriptRequire = `var ${sfccFile.fileName} = require('*${sfccFile.getSFCCPath()}');`;
 
         return scriptRequire;
     }

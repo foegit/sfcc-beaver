@@ -9,6 +9,7 @@ import BEScriptFileCreator from './implementation/FileCreators/BEScriptFileCreat
 import StaticFileAppender from './implementation/FileAppenders/StaticFileAppender';
 import CopyLineFileAppender from './implementation/FileAppenders/CopyLineFileAppender';
 import BEControllerFileCreator from './implementation/FileCreators/BEControllerFileCreator';
+import PathTool from '../tools/PathTool';
 
 export default class FileOverriderFactory {
     static get(activeEditor : TextEditor, sfccProject : SFCCProject) : FileOverrider {
@@ -27,39 +28,21 @@ export default class FileOverriderFactory {
     }
 
     private static getScriptFileOverrider(activeEditor: TextEditor, sfccProject: SFCCProject) {
-        const {
-            hasFolderInPath
-        } = FileOverriderFactory;
+        const { hasFolder } = PathTool;
 
         const activeFile = activeEditor.document.uri.fsPath;
 
-        if (hasFolderInPath(activeFile, 'controllers')) {
+        if (hasFolder(activeFile, 'controllers')) {
             return new FileOverrider(activeEditor, sfccProject, new BEControllerFileCreator(), new StaticFileAppender());
-        } else if (hasFolderInPath(activeFile, 'client')
-            || hasFolderInPath(activeFile, 'config')
-            || hasFolderInPath(activeFile, 'experience')
+        } else if (hasFolder(activeFile, 'client')
+            || hasFolder(activeFile, 'config')
+            || hasFolder(activeFile, 'experience')
         ) {
             return new FileOverrider(activeEditor, sfccProject, new CopyFileCreator(), new StaticFileAppender());
-        } else if (hasFolderInPath(activeFile, 'experience')) {
+        } else if (hasFolder(activeFile, 'experience')) {
             return new FileOverrider(activeEditor, sfccProject, new CopyFileCreator(), new StaticFileAppender());
         } else {
             return new FileOverrider(activeEditor, sfccProject, new BEScriptFileCreator(), new StaticFileAppender());
         }
-    }
-
-    private static isControllerPath(filePath: string) {
-        return FileOverriderFactory.hasFolderInPath(filePath, 'controllers');
-    }
-
-    private static isClientPath(filePath: string) {
-        return FileOverriderFactory.hasFolderInPath(filePath, 'client');
-    }
-
-    private static isConfigPath(filePath: string) {
-        return FileOverriderFactory.hasFolderInPath(filePath, 'config');
-    }
-
-    private static hasFolderInPath(filePath: string, folder: string) {
-        return filePath.includes(`${path.sep}${folder}${path.sep}`);
     }
 }

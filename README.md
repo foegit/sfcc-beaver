@@ -1,21 +1,47 @@
-# Welcome to SFFC Beaver extension
+# 🦫 SFCC Beaver
 
-Beaver who is an experience developer (of his dam) will help you with routine in your SFCC projects.
+Beaver who is an experience developer (including his dam) will take care about routine tasks on SFCC projects.
+
+💡 Please keep in mind, Beaver supports only SFRA projects. However, some of the feature are compatible with SiteGen.
 
 ## Features
 
-* Beaver can copy requires, includes, and resource properties to the clipboard using **🦫 sf extract** command.
+### ⭐ Overview
 
-* You can also call command **🦫 unix path** to copy full path of the active file to clipboard. This can be useful not only for SFCC projects.
+This extension provides a set of command to automate routine tasks. To activate command press `⌨ F1` or `⌨ Ctrl+Shift+P` and start typing name of the command:
 
-To activate command press `F1` or `Ctrl+Shift+P` and start typing name of the command.
+- **🦫 sf extract** command
+  - get a require of active script file
+  - get an isinclude of active template file
+  - get a call of Resource.msg for open .properties file
+- **🦫 unix path** command
+  - get a path of your file related to the project root
+- **🦫 sf override** command
+  - override active file to another cartridge
+
+### 🪚 Extract
+
+Depends on the file type, you can automatically extract an import statement for this file.
+
+1. Open a file you need to import
+    - For resources, focus cursor on property you want to use
+2. Call _sf extract_ and appropriate import will be copied to the clipboard:
+    - `var fileName = require({filePath});` for JavaScript, JSON files
+    - `<isinclude template='{templatePath}' />` for ISML file
+    - `Resource.msg('{activeLinePropName}', '{fileName}', null)` for .properties files
+
+### 🪵 Override
+
+Depends on the file type, you can automatically override a file to another cartridge
+
+1. Open file you need to override
+    - For resources, focus cursor on property you want to use
+2. Call _sf extract_ and Beaver will override it for you
 
 ## Road Map
 
-There are plenty of things that Beaver would like to learn:
+Beaver works hard helping you, but it also learns a lot of new stuff to help you even more:
 
-* How to override files from one cartridge to another. So you can simply override scripts, templates, forms, and properties files. (And it is his current task)
-
-* How to create cartridge from scratch
-
-* Help with managing meta
+- Creating commonly used templates like steptypes, bm_extension, controller, the entire cartridge, and PD component
+- Managing meta through OCAPI
+- Help managing PageDesigner pages

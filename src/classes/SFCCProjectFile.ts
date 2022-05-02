@@ -1,4 +1,5 @@
 import path = require('path');
+import PathTool from './tools/PathTool';
 
 export default class SFCCProjectFile {
     path : string;
@@ -15,9 +16,8 @@ export default class SFCCProjectFile {
     }
 
     private parse() {
-        const cartridgeIndex = this.path.indexOf('cartridge');
-
-        var parsedPath = path.parse(this.path);
+        const cartridgeIndex = PathTool.indexOfFolder(this.path, 'cartridge');
+        const parsedPath = path.parse(this.path);
 
         this.extension = parsedPath.ext;
         this.fileName = parsedPath.name;
