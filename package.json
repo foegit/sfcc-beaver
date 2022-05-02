@@ -2,7 +2,7 @@
 	"name": "sfcc-beaver",
 	"displayName": "SFCC Beaver",
 	"description": "A beaver who is an experienced developer (of its dam) will help you with your work routine",
-	"version": "1.1.1",
+	"version": "1.1.2",
 	"icon": "static/simpleLogo.png",
 	"repository": "https://github.com/foegit/sfcc-beaver",
 	"publisher": "SerhiiHlavatskyi",
