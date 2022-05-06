@@ -5,6 +5,7 @@ export default class SFCCProjectFile {
     path : string;
     cartridgeRelativePath : string = '';
     inCartridge : boolean = false;
+    inModules : boolean = false;
     extension : string = '';
     fileName : string = '';
     fileType : string = '';
@@ -16,17 +17,22 @@ export default class SFCCProjectFile {
     }
 
     private parse() {
-        const cartridgeIndex = PathTool.indexOfFolder(this.path, 'cartridge');
         const parsedPath = path.parse(this.path);
 
         this.extension = parsedPath.ext;
         this.fileName = parsedPath.name;
         this.fileType = this.extension;
 
+        const cartridgeIndex = PathTool.indexOfFolder(this.path, 'cartridge');
+        const modulesIndex = PathTool.indexOfFolder(this.path, 'modules');
+
         this.inCartridge = cartridgeIndex !== -1;
+        this.inModules = modulesIndex !== -1;
 
         if (this.inCartridge) {
             this.cartridgeRelativePath = this.path.slice(cartridgeIndex).replace(this.extension, '');
+        } else if (this.inModules) {
+            this.cartridgeRelativePath = this.path.slice(modulesIndex + 9).replace(this.extension, '');
         }
     }
 

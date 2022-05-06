@@ -24,10 +24,6 @@ export default class BEScriptFileCreator implements IFileCreator {
         return snippet.replace(/\{fName\}/g, fName);
     }
 
-    private replaceComment(snippet: string, comment: string): string {
-        return snippet.replace('{comment}', comment);
-    }
-
     private getFocusedFunction(activeEditor : TextEditor): string {
         const ae = activeEditor;
         const doc = ae.document;

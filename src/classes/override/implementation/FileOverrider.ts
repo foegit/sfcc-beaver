@@ -7,6 +7,7 @@ import SFCCProject from '../../SFCCProject';
 import IFileCreator from '../IFileCreator';
 import IFileAppender from '../IFileAppender';
 import CartridgeListItemDecorator from './CartridgeListItemDecorator';
+import PathTool from '../../tools/PathTool';
 class FileOverrider {
     constructor(
         private activeEditor : vscode.TextEditor,
@@ -69,8 +70,16 @@ class FileOverrider {
 
     protected getTargetPath(currentCartridge: SFCCCartridge) {
         const currentPath = this.activeEditor.document.uri.fsPath;
-        const relativeCurrentCartridge = /^.*(cartridge.*)$/.exec(currentPath);
 
+        if (PathTool.hasFolder(currentPath, 'modules')) {
+            throw new BeaverError(ErrCodes.modulesOverride);
+        }
+
+        if (!PathTool.hasFolder(currentPath, 'cartridge')) {
+            throw new BeaverError(ErrCodes.notInCartridgeOverride);
+        }
+
+        const relativeCurrentCartridge = /^.*(cartridge[\/\\].*)$/.exec(currentPath);
         const targetCartridgePath = currentCartridge.getCartridgePath();
         const pathToCreate = relativeCurrentCartridge ? relativeCurrentCartridge[1] : '';
         const fullTargetPath = path.join(targetCartridgePath, pathToCreate);
