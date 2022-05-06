@@ -25,12 +25,17 @@ export default class CartridgeListItemDecorator {
         ['plugin', new PrefixConfig(1000, '🟢')],
         ['bc', new PrefixConfig(100, '🔵')],
         ['bm', new PrefixConfig(100, '🔵')],
-        ['core', new PrefixConfig(-1000, '🟣')]
-
+        ['core', new PrefixConfig(-1000, '🟣')],
+        ['sfraBase', new PrefixConfig(-2000, '🌩️')]
     ]);
 
     private parsePrefix(sfccCartridge: SFCCCartridge): string {
         const cartridgeName = sfccCartridge.getName();
+
+        if (cartridgeName === 'app_storefront_base') {
+            return 'sfraBase';
+        }
+
         const prefix = /^([^_]*)_.*$/.exec(cartridgeName);
 
         return prefix ? prefix[1] : 'unknown';
