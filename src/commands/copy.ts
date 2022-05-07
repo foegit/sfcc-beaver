@@ -1,8 +1,9 @@
 import * as vscode from 'vscode';
 import BeaverError, { ErrCodes } from '../classes/errors/BeaverError';
-import SFCCFile from '../classes/../classes/SFCCFile';
 import FileExtractorFactory from '../classes/extract/FileExtractorFactory';
 import Clipboard from '../classes/Clipboard';
+import { handleError } from './error';
+import SFCCProjectFile from '../classes/SFCCProjectFile';
 
 export function copyInclude() {
     try {
@@ -13,22 +14,13 @@ export function copyInclude() {
         }
 
         const filePath = activeTextEditor.document.uri.path;
-        const sfccFile = new SFCCFile(filePath);
-        const fileType = sfccFile.getFiletype();
+        const sfccFile = new SFCCProjectFile(filePath);
 
-        const snippet = FileExtractorFactory.getHandler(fileType).getSnippet(sfccFile, activeTextEditor);
+        const snippet = FileExtractorFactory.getHandler(sfccFile.extension).getSnippet(sfccFile, activeTextEditor);
 
         Clipboard.toClipboard(snippet);
     } catch (error) {
-        let errorMessage;
-
-        if (error instanceof BeaverError) {
-            errorMessage = error.printError();
-        } else {
-            errorMessage = BeaverError.getMessageFor(ErrCodes.unknownError);
-        }
-
-        vscode.window.showErrorMessage(errorMessage);
+        handleError(error);
     }
 }
 
@@ -41,21 +33,13 @@ export function copyUnixPath() {
         }
 
         const filePath = activeTextEditor.document.uri.path;
-        const sfccFile = new SFCCFile(filePath);
+        const sfccFile = new SFCCProjectFile(filePath);
 
-        const snippet = FileExtractorFactory.getHandler('any').getSnippet(sfccFile, activeTextEditor);
+        const snippet = FileExtractorFactory.getHandler('unix').getSnippet(sfccFile, activeTextEditor);
 
         Clipboard.toClipboard(snippet);
     } catch (error) {
-        let errorMessage;
-
-        if (error instanceof BeaverError) {
-            errorMessage = error.printError();
-        } else {
-            errorMessage = BeaverError.getMessageFor(ErrCodes.unknownError);
-        }
-
-        vscode.window.showErrorMessage(errorMessage);
+        handleError(error);
     }
 }
 
