@@ -44,7 +44,8 @@ class FileOverrider {
         const currentCartridgePath = this.activeEditor.document.uri.fsPath;
 
         const sfccCartridges = this.sfccProject.getCartridges().filter(sfccCartridge => {
-            if (PathTool.hasFolder(currentCartridgePath, 'modules')) {
+            if (sfccCartridge.getName() === 'modules') {
+                // Skip modules cartridge
                 return false;
             }
 

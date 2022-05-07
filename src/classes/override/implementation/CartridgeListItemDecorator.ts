@@ -1,6 +1,8 @@
+import { workspace } from 'vscode';
 import SFCCCartridge from '../../SFCCCartridge';
+import SettingTool from '../../tools/SettingTool';
 
-class PrefixConfig {
+class TypeConfig {
     constructor(
         public weight : number,
         public emoji: string
@@ -9,28 +11,33 @@ class PrefixConfig {
 
 export default class CartridgeListItemDecorator {
     private prefix: string;
-    private prefixConfig: PrefixConfig;
+    private prefixConfig: TypeConfig;
 
     constructor(private sfccCartridge: SFCCCartridge) {
-        this.prefix = this.parsePrefix(sfccCartridge);
-        this.prefixConfig = CartridgeListItemDecorator.prefixPriorityWeight.get(this.prefix) || new PrefixConfig(0, '⚪️');
+        this.prefix = this.getType(sfccCartridge);
+        this.prefixConfig = CartridgeListItemDecorator.typePriorityWeight.get(this.prefix) || new TypeConfig(0, '⚪️');
     }
 
-    static standardCoreCartridges = ['modules', 'app_storefront_base'];
 
-    static prefixPriorityWeight: Map<string, PrefixConfig> = new Map([
-        ['app', new PrefixConfig(10000, '⭐️')],
-        ['int', new PrefixConfig(1000, '🟢')],
-        ['link', new PrefixConfig(1000, '🟢')],
-        ['plugin', new PrefixConfig(1000, '🟢')],
-        ['bc', new PrefixConfig(100, '🔵')],
-        ['bm', new PrefixConfig(100, '🔵')],
-        ['core', new PrefixConfig(-1000, '🟣')],
-        ['sfraBase', new PrefixConfig(-2000, '🌩️')]
+    static typePriorityWeight: Map<string, TypeConfig> = new Map([
+        ['favorite', new TypeConfig(100000, '⭐')],
+        ['app', new TypeConfig(10000, '🚀')],
+        ['int', new TypeConfig(1000, '🟢')],
+        ['link', new TypeConfig(1000, '🟢')],
+        ['plugin', new TypeConfig(1000, '🟢')],
+        ['bc', new TypeConfig(100, '🔵')],
+        ['bm', new TypeConfig(100, '🔵')],
+        ['core', new TypeConfig(-1000, '🟣')],
+        ['sfraBase', new TypeConfig(-2000, '🌩️')]
     ]);
 
-    private parsePrefix(sfccCartridge: SFCCCartridge): string {
+    private getType(sfccCartridge: SFCCCartridge): string {
         const cartridgeName = sfccCartridge.getName();
+        const favoriteCartridges = SettingTool.getFavoriteCartridges();
+
+        if (favoriteCartridges.includes(cartridgeName)) {
+            return 'favorite';
+        }
 
         if (cartridgeName === 'app_storefront_base') {
             return 'sfraBase';
