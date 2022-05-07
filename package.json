@@ -3,7 +3,7 @@
 	"displayName": "SFCC Beaver",
 	"description": "A beaver who is an experienced developer (of its dam) will help you with your work routine",
 	"version": "1.2.0",
-	"icon": "static/simpleLogo.png",
+	"icon": "https://raw.githubusercontent.com/foegit/sfcc-beaver/main/static/simpleLogo.png",
 	"repository": "https://github.com/foegit/sfcc-beaver",
 	"publisher": "SerhiiHlavatskyi",
 	"engines": {
@@ -25,7 +25,7 @@
 			"properties": {
 				"sfccBeaver.addLineNumberForUnix": {
 					"type": "boolean",
-					"default": true,
+					"default": false,
 					"description": "Adds line number (#11) for extracted unix path"
 				}
 			}
@@ -43,26 +43,7 @@
 				"command": "sfccBeaver.unixpath",
 				"title": "🦫 unix path"
 			}
-		],
-		"viewsContainers": {
-			"activitybar": [
-				{
-					"id": "beaver-dam",
-					"title": "Beaver Dam",
-					"icon": "static/sfccBeaverIcon.svg"
-				}
-			]
-		},
-		"views": {
-			"beaver-dam": [
-				{
-					"id": "beaverDam",
-					"name": "Beaver Dam",
-					"icon": "static/sfccBeaverIcon.svg",
-					"contextualTitle": "Beaver Dam"
-				}
-			]
-		}
+		]
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run package",

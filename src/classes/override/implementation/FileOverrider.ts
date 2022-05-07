@@ -19,6 +19,11 @@ class FileOverrider {
     async override() {
         const targetCartridge = await this.selectTargetCartridge();
 
+        if (!targetCartridge) {
+            console.log('Cartridge is not selected');
+            return;
+        }
+
         this.overrideForCartridge(targetCartridge);
     }
 
@@ -35,7 +40,7 @@ class FileOverrider {
         this.focusOnFile(targetPath);
     }
 
-    private async selectTargetCartridge() {
+    private async selectTargetCartridge(): Promise<SFCCCartridge|null> {
         const currentCartridgePath = this.activeEditor.document.uri.fsPath;
 
         const sfccCartridges = this.sfccProject.getCartridges().filter(sfccCartridge => {
@@ -54,8 +59,13 @@ class FileOverrider {
 
         const selectedCartridgeName = await vscode.window.showQuickPick(selectionList) || '';
         const originalCartridgeName = CartridgeListItemDecorator.parseOriginalName(selectedCartridgeName);
-        const selectedCartridge = this.sfccProject.getCartridgeByName(originalCartridgeName);
 
+        if (!selectedCartridgeName) {
+            // nothing is selected
+            return null;
+        }
+
+        const selectedCartridge = this.sfccProject.getCartridgeByName(originalCartridgeName);
 
         if (!selectedCartridge) {
             throw new BeaverError(ErrCodes.cartridgeIsUnknown, selectedCartridgeName);
