@@ -6,8 +6,8 @@ import SFCCCartridge from '../../SFCCCartridge';
 import SFCCProject from '../../SFCCProject';
 import IFileCreator from '../IFileCreator';
 import IFileAppender from '../IFileAppender';
-import CartridgeListItemDecorator from './CartridgeListItemDecorator';
 import PathTool from '../../tools/PathTool';
+import SFCCProjectFile from '../../SFCCProjectFile';
 class FileOverrider {
     constructor(
         private activeEditor : vscode.TextEditor,
@@ -54,12 +54,11 @@ class FileOverrider {
             return !selectedCartridgeRegExp.test(currentCartridgePath);
         });
 
-        const decoratedCartridges = sfccCartridges.map(sfccCartridge => new CartridgeListItemDecorator(sfccCartridge));
-        const sortedDecorateCartridges = this.sortByPriority(decoratedCartridges);
-        const selectionList : string[] = sortedDecorateCartridges.map(cartridge => cartridge.getPrintableName());
+        const sortedCartridges = SFCCCartridge.sortByPriority(sfccCartridges);
+        const selectionList : string[] = sortedCartridges.map(cartridge => cartridge.getPrintableName());
 
         const selectedCartridgeName = await vscode.window.showQuickPick(selectionList) || '';
-        const originalCartridgeName = CartridgeListItemDecorator.parseOriginalName(selectedCartridgeName);
+        const originalCartridgeName = SFCCCartridge.parseOriginalName(selectedCartridgeName);
 
         if (!selectedCartridgeName) {
             // nothing is selected
@@ -73,14 +72,6 @@ class FileOverrider {
         }
 
         return selectedCartridge;
-    }
-
-    private sortByPriority(decoratedCartridges: CartridgeListItemDecorator[]): CartridgeListItemDecorator[] {
-        decoratedCartridges.sort((c1, c2) => {
-            return c2.getPriority() - c1.getPriority();
-        });
-
-        return decoratedCartridges;
     }
 
     protected getTargetPath(currentCartridge: SFCCCartridge) {

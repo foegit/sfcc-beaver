@@ -11,10 +11,13 @@ export function activate(context: vscode.ExtensionContext) {
 	const copyPathCommand = vscode.commands.registerCommand('sfccBeaver.extract', copyInclude);
 	const overrideFileCommand = vscode.commands.registerCommand('sfccBeaver.override', overrideFile);
 	const copyUnixPathCommand = vscode.commands.registerCommand('sfccBeaver.unixpath', copyUnixPath);
-
-	// Samples of `window.registerTreeDataProvider`
 	const testTreeProvider = new TestTreeProvider();
 	vscode.window.registerTreeDataProvider('beaverDam', testTreeProvider);
+	const refreshCartridgeList = vscode.commands.registerCommand('sfccBeaver.refreshCartridgeList', () => {
+		testTreeProvider.refresh();
+	});
+
+	// Samples of `window.registerTreeDataProvider`
 
 	// TODO: one day give it an explanation
 	context.subscriptions.push(copyPathCommand);

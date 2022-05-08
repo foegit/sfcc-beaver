@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import SFCCProject from '../SFCCProject';
+import DamTree from './DamTree';
 
 export class DepNodeProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
     private sfccProject = new SFCCProject();
@@ -15,16 +16,21 @@ export class DepNodeProvider implements vscode.TreeDataProvider<vscode.TreeItem>
         return element;
     }
 
-    async getChildren(): Promise<vscode.TreeItem[]> {
+    async getChildren(element?: vscode.TreeItem): Promise<vscode.TreeItem[]> {
+        if (!element) {
+            return Promise.resolve([new vscode.TreeItem('Cartridges', vscode.TreeItemCollapsibleState.Expanded)]);
+        }
+
         const startTime = new Date();
 
-        const cartridges = await this.sfccProject.getCartridgesAsync();
+        const sfccCartridges = await this.sfccProject.getSortedCartridgesAsync(false);
+
 
         const endTime = new Date();
         console.debug(`It took ${(endTime.valueOf() - startTime.valueOf()) / 1000} sec to find cartridges`);
 
-        const treeItems : vscode.TreeItem[] = cartridges.map(cartridge => {
-            return new vscode.TreeItem(`🌳 ${cartridge.getName()}`);
+        const treeItems : vscode.TreeItem[] = sfccCartridges.map(cartridge => {
+            return new DamTree(cartridge);
         });
 
         return treeItems;

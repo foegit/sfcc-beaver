@@ -20,12 +20,12 @@ export default class SFCCProject {
         return this.cartridges;
     }
 
-    async getCartridgesAsync() : Promise<SFCCCartridge[]> {
+    async getCartridgesAsync(useCache: boolean = true) : Promise<SFCCCartridge[]> {
         if(!vscode.workspace.workspaceFolders) {
             return Promise.resolve([]);
         }
 
-        if (this.cartridgesCached) {
+        if (this.cartridgesCached && useCache) {
             return Promise.resolve(this.cartridges);
         }
 
@@ -33,7 +33,7 @@ export default class SFCCProject {
 
         const foundFiles = await fg('**/.project', {
             cwd: workspaceFolder.uri.fsPath,
-            ignore: ['**/node_modules/**']
+            ignore: ['**/node_modules/**', '**/cartridge/**', '**/test/mocks/**']
         });
 
         this.cartridges = foundFiles.map(filepath => {
@@ -47,6 +47,10 @@ export default class SFCCProject {
         this.cartridgesCached = true;
 
         return this.cartridges;
+    }
+
+    async getSortedCartridgesAsync(useCache: boolean = false) {
+        return SFCCCartridge.sortByPriority(await this.getCartridgesAsync(useCache));
     }
 
     fetchCartridgesSync() {

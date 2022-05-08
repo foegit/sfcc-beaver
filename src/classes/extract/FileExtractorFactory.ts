@@ -1,4 +1,3 @@
-import SFCCProjectFile from '../SFCCProjectFile';
 import IFileExtractor from './IFileExtractor';
 import ResourceExtractor from './implementation/ResourceExtractor';
 import ScriptExtractor from './implementation/ScriptExtractor';
