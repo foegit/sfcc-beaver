@@ -14,7 +14,8 @@
     ],
     "activationEvents": [
         "onCommand:sfccBeaver.extract",
-        "onView:beaverDam",
+        "onView:cartridgesObserver",
+        "onView:jobObserver",
         "onCommand:sfccBeaver.unixpath",
         "onCommand:sfccBeaver.override"
     ],
@@ -49,10 +50,18 @@
             },
             {
                 "command": "sfccBeaver.refreshCartridgeList",
-                "title": "🦫 sf refresh cartridge list",
+                "title": "Refresh cartridge list",
                 "icon": {
-                    "light": "static/bookmark.svg",
-                    "dark": "static/bookmark.svg"
+                    "light": "static/icons/light/refresh.svg",
+                    "dark": "static/icons/dark/refresh.svg"
+                }
+            },
+            {
+                "command": "sfccBeaver.addCartridgeToFavorite",
+                "title": "Add cartridge to favorite",
+                "icon": {
+                    "light": "static/icons/light/star-full.svg",
+                    "dark": "static/icons/dark/star-full.svg"
                 }
             }
         ],
@@ -60,14 +69,14 @@
             "view/title": [
                 {
                     "command": "sfccBeaver.refreshCartridgeList",
-                    "when": "view == beaverDam",
+                    "when": "view == cartridgesObserver",
                     "group": "navigation"
                 }
             ],
             "view/item/context": [
                 {
-                    "command": "sfccBeaver.refreshCartridgeList",
-                    "when": "view == beaverDam",
+                    "command": "sfccBeaver.addCartridgeToFavorite",
+                    "when": "view == cartridgesObserver && viewItem == sfccCartridgeTreeItem",
                     "group": "inline"
                 }
             ]
@@ -84,9 +93,13 @@
         "views": {
             "beaver-dam": [
                 {
-                    "id": "beaverDam",
-                    "name": "Beaver Dam",
-                    "icon": "static/sfccBeaverIcon.svg",
+                    "id": "cartridgesObserver",
+                    "name": "Cartridges",
+                    "contextualTitle": "Beaver Dam"
+                },
+                {
+                    "id": "jobsObserver",
+                    "name": "Jobs",
                     "contextualTitle": "Beaver Dam"
                 }
             ]

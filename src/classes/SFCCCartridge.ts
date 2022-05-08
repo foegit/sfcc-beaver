@@ -93,4 +93,8 @@ export default class SFCCCartridge {
 
         return sfccCartridges;
     }
+
+    public isFavorite(): boolean {
+        return this.type === 'favorite';
+    }
 }
