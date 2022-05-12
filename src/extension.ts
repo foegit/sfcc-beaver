@@ -21,8 +21,13 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand('sfccBeaver.refreshCartridgeList', () => {
         cartridgesObserver.refresh();
     });
-    vscode.commands.registerCommand('sfccBeaver.addCartridgeToFavorite', (cartridgeItem: CartridgeTreeItem) => {
-        SettingTool.addCartridgeToFavorite(cartridgeItem.getName());
+    vscode.commands.registerCommand('sfccBeaver.pinCartridge', async (cartridgeItem: CartridgeTreeItem) => {
+        await SettingTool.addPinnedCartridge(cartridgeItem.getName());
+        cartridgesObserver.refresh();
+    });
+
+    vscode.commands.registerCommand('sfccBeaver.unpinCartridge', async (cartridgeItem: CartridgeTreeItem) => {
+        await SettingTool.removePinnedCartridge(cartridgeItem.getName());
         cartridgesObserver.refresh();
     });
 

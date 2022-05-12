@@ -27,11 +27,16 @@
                 "sfccBeaver.addLineNumberForUnix": {
                     "type": "boolean",
                     "default": false,
-                    "description": "Adds line number (#11) for extracted unix path"
+                    "description": "Adds line number (#11) for extracted unix path."
                 },
-                "sfccBeaver.favoriteCartridges": {
-                    "type": "string",
-                    "description": "Comma separated list of favorite cartridge. It's used by override feature to suggest these cartridges first"
+                "sfccBeaver.pinnedCartridges": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "description": "Name of the cartridge"
+                    },
+                    "default": [],
+                    "description": "Comma separated list of pinned cartridges."
                 }
             }
         },
@@ -57,11 +62,19 @@
                 }
             },
             {
-                "command": "sfccBeaver.addCartridgeToFavorite",
-                "title": "Add cartridge to favorite",
+                "command": "sfccBeaver.pinCartridge",
+                "title": "Pin cartridge",
                 "icon": {
-                    "light": "static/icons/light/star-full.svg",
-                    "dark": "static/icons/dark/star-full.svg"
+                    "light": "static/icons/light/pin.svg",
+                    "dark": "static/icons/dark/pin.svg"
+                }
+            },
+            {
+                "command": "sfccBeaver.unpinCartridge",
+                "title": "Unpin cartridge",
+                "icon": {
+                    "light": "static/icons/light/circle-slash.svg",
+                    "dark": "static/icons/dark/circle-slash.svg"
                 }
             }
         ],
@@ -75,8 +88,13 @@
             ],
             "view/item/context": [
                 {
-                    "command": "sfccBeaver.addCartridgeToFavorite",
+                    "command": "sfccBeaver.pinCartridge",
                     "when": "view == cartridgesObserver && viewItem == sfccCartridgeTreeItem",
+                    "group": "inline"
+                },
+                {
+                    "command": "sfccBeaver.unpinCartridge",
+                    "when": "view == cartridgesObserver && viewItem == sfccPinnedCartridgeTreeItem",
                     "group": "inline"
                 }
             ]

@@ -8,26 +8,26 @@ export default class SettingTool {
         return vscode.workspace.getConfiguration('sfccBeaver');
     }
 
-    static getFavoriteCartridges():string[] {
-        const rawValue = SettingTool.getBeaverConfig().favoriteCartridges;
-        if (!rawValue) {
-            return [];
-        }
-
-        const cartridgeList = rawValue.replace(/\s/g, '').split(',');
-
-        return cartridgeList;
+    static getPinnedCartridges():string[] {
+        return SettingTool.getBeaverConfig().pinnedCartridges;
     }
 
-    static addCartridgeToFavorite(cartridgeName: string): void {
-        const currentConfig = SettingTool.getFavoriteCartridges();
+    static async addPinnedCartridge(cartridgeName: string): Promise<void> {
+        const currentConfig = SettingTool.getPinnedCartridges();
 
         if (currentConfig.includes(cartridgeName)) {
             return;
         }
 
-        const newConfig = [...currentConfig, cartridgeName].join(', ');
+        const newConfig = [...currentConfig, cartridgeName];
 
-        vscode.workspace.getConfiguration('sfccBeaver').update('favoriteCartridges', newConfig, false);
+        await SettingTool.getBeaverConfig().update('pinnedCartridges', newConfig, false);
+    }
+
+    static async removePinnedCartridge(cartridgeName: string): Promise<void> {
+        const currentConfig = SettingTool.getPinnedCartridges();
+        const newConfig = currentConfig.filter(pinnedCartridge => pinnedCartridge !== cartridgeName);
+
+        await SettingTool.getBeaverConfig().update('pinnedCartridges', newConfig, false);
     }
 }

@@ -4,7 +4,8 @@ import SettingTool from './tools/SettingTool';
 class TypeConfig {
     constructor(
         public priority : number,
-        public emoji: string
+        public emoji: string,
+        public icon: string = 'circuit-board.svg'
     ) {}
 }
 export default class SFCCCartridge {
@@ -34,7 +35,7 @@ export default class SFCCCartridge {
     }
 
     static typePriority: Map<string, TypeConfig> = new Map([
-        ['favorite', new TypeConfig(100000, '⭐')],
+        ['pinned', new TypeConfig(100000, '⭐', 'pinned-blue.svg')],
         ['app', new TypeConfig(10000, '🚀')],
         ['int', new TypeConfig(1000, '🟢')],
         ['link', new TypeConfig(1000, '🟢')],
@@ -49,10 +50,10 @@ export default class SFCCCartridge {
 
     private getType(): string {
         const cartridgeName = this.getName();
-        const favoriteCartridges = SettingTool.getFavoriteCartridges();
+        const pinnedCartridges = SettingTool.getPinnedCartridges();
 
-        if (favoriteCartridges.includes(cartridgeName)) {
-            return 'favorite';
+        if (pinnedCartridges.includes(cartridgeName)) {
+            return 'pinned';
         }
 
         if (SFCCCartridge.sfraBaseCartridges.includes(cartridgeName)) {
@@ -94,7 +95,11 @@ export default class SFCCCartridge {
         return sfccCartridges;
     }
 
-    public isFavorite(): boolean {
-        return this.type === 'favorite';
+    public isPinned(): boolean {
+        return this.type === 'pinned';
+    }
+
+    public getIcon(): string {
+        return this.typeConfig.icon;
     }
 }

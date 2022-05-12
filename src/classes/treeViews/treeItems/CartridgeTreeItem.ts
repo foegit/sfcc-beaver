@@ -7,15 +7,12 @@ export default class CartridgeTreeItem extends TreeItem {
 
     constructor(sfccCartridge: SFCCCartridge) {
         super(sfccCartridge.getPrintableName());
-        this.contextValue = sfccCartridge.isFavorite() ? 'sfccFavCartridgeTreeItem' : 'sfccCartridgeTreeItem';
+
         this.sfccCartridge = sfccCartridge;
+
+        this.contextValue = sfccCartridge.isPinned() ? 'sfccPinnedCartridgeTreeItem' : 'sfccCartridgeTreeItem';
+        this.iconPath = path.join(__filename, '..', '..', 'static', 'icons', 'dark', this.sfccCartridge.getIcon());
     }
-
-    iconPath = {
-        light: path.join(__filename, '../../../../static/icons/light/star-full.svg'),
-        dark: path.join(__filename, '../../../../static/icons/dark/star-full.svg')
-    };
-
 
     public getName() {
         return this.sfccCartridge.getName();
