@@ -1,7 +1,5 @@
-import { TreeItem } from 'vscode';
+import { ThemeIcon, TreeItem } from 'vscode';
 import SFCCCartridge from '../../SFCCCartridge';
-import * as path from 'path';
-
 export default class CartridgeTreeItem extends TreeItem {
     private sfccCartridge: SFCCCartridge;
 
@@ -9,9 +7,8 @@ export default class CartridgeTreeItem extends TreeItem {
         super(sfccCartridge.getPrintableName());
 
         this.sfccCartridge = sfccCartridge;
-
         this.contextValue = sfccCartridge.isPinned() ? 'sfccPinnedCartridgeTreeItem' : 'sfccCartridgeTreeItem';
-        this.iconPath = path.join(__filename, '..', '..', 'static', 'icons', 'dark', this.sfccCartridge.getIcon());
+        this.iconPath = new ThemeIcon(this.sfccCartridge.getIcon());
     }
 
     public getName() {

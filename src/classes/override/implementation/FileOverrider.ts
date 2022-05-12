@@ -7,7 +7,16 @@ import SFCCProject from '../../SFCCProject';
 import IFileCreator from '../IFileCreator';
 import IFileAppender from '../IFileAppender';
 import PathTool from '../../tools/PathTool';
-import SFCCProjectFile from '../../SFCCProjectFile';
+
+class CartridgePickItem implements vscode.QuickPickItem {
+    label: string;
+    sfccCartridge: SFCCCartridge;
+
+    constructor(sfccCartridge: SFCCCartridge) {
+        this.sfccCartridge = sfccCartridge;
+        this.label = `$(${sfccCartridge.getIcon()}) ${sfccCartridge.getName()}`;
+    }
+}
 class FileOverrider {
     constructor(
         private activeEditor : vscode.TextEditor,
@@ -20,7 +29,7 @@ class FileOverrider {
         const targetCartridge = await this.selectTargetCartridge();
 
         if (!targetCartridge) {
-            console.log('Cartridge is not selected');
+            console.debug('Cartridge is not selected');
             return;
         }
 
@@ -55,23 +64,15 @@ class FileOverrider {
         });
 
         const sortedCartridges = SFCCCartridge.sortByPriority(sfccCartridges);
-        const selectionList : string[] = sortedCartridges.map(cartridge => cartridge.getPrintableName());
+        const selectionList : CartridgePickItem[] = sortedCartridges.map(cartridge => {
+            return new CartridgePickItem(cartridge);
+        });
 
-        const selectedCartridgeName = await vscode.window.showQuickPick(selectionList) || '';
-        const originalCartridgeName = SFCCCartridge.parseOriginalName(selectedCartridgeName);
+        const selectedCartridgeItem = await vscode.window.showQuickPick(selectionList) || '';
 
-        if (!selectedCartridgeName) {
-            // nothing is selected
-            return null;
-        }
 
-        const selectedCartridge = this.sfccProject.getCartridgeByName(originalCartridgeName);
 
-        if (!selectedCartridge) {
-            throw new BeaverError(ErrCodes.cartridgeIsUnknown, selectedCartridgeName);
-        }
-
-        return selectedCartridge;
+        return selectedCartridgeItem ? selectedCartridgeItem.sfccCartridge : null;
     }
 
     protected getTargetPath(currentCartridge: SFCCCartridge) {

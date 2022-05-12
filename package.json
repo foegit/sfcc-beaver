@@ -64,18 +64,12 @@
             {
                 "command": "sfccBeaver.pinCartridge",
                 "title": "Pin cartridge",
-                "icon": {
-                    "light": "static/icons/light/pin.svg",
-                    "dark": "static/icons/dark/pin.svg"
-                }
+                "icon": "$(pin)"
             },
             {
                 "command": "sfccBeaver.unpinCartridge",
                 "title": "Unpin cartridge",
-                "icon": {
-                    "light": "static/icons/light/circle-slash.svg",
-                    "dark": "static/icons/dark/circle-slash.svg"
-                }
+                "icon": "$(close)"
             }
         ],
         "menus": {

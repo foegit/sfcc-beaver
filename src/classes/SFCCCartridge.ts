@@ -5,7 +5,7 @@ class TypeConfig {
     constructor(
         public priority : number,
         public emoji: string,
-        public icon: string = 'circuit-board.svg'
+        public icon: string = 'cloud'
     ) {}
 }
 export default class SFCCCartridge {
@@ -35,7 +35,7 @@ export default class SFCCCartridge {
     }
 
     static typePriority: Map<string, TypeConfig> = new Map([
-        ['pinned', new TypeConfig(100000, '⭐', 'pinned-blue.svg')],
+        ['pinned', new TypeConfig(100000, '⭐', 'pinned')],
         ['app', new TypeConfig(10000, '🚀')],
         ['int', new TypeConfig(1000, '🟢')],
         ['link', new TypeConfig(1000, '🟢')],
@@ -70,11 +70,11 @@ export default class SFCCCartridge {
     }
 
     public getPrintableName() {
-        return `${this.typeConfig.emoji} ${this.getName()}`;
+        return this.getName();
     }
 
     static parseOriginalName(printableCartridgeName: string): string {
-        return printableCartridgeName.replace(/^.*\s/, '');
+        return printableCartridgeName;
     }
 
     static sortByPriority(sfccCartridges: SFCCCartridge[]): SFCCCartridge[] {
@@ -101,5 +101,13 @@ export default class SFCCCartridge {
 
     public getIcon(): string {
         return this.typeConfig.icon;
+    }
+
+    public getXIcon(): string {
+        if (this.type === 'pinned') {
+            return '$(pinned)';
+        }
+
+        return '$(cloud)';
     }
 }
