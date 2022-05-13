@@ -114,12 +114,7 @@
                 {
                     "id": "cartridgesObserver",
                     "name": "Cartridges",
-                    "contextualTitle": "Beaver Dam"
-                },
-                {
-                    "id": "jobsObserver",
-                    "name": "Jobs",
-                    "contextualTitle": "Beaver Dam"
+                    "contextualTitle": "Cartridge Overview"
                 }
             ]
         }

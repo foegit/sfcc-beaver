@@ -23,3 +23,7 @@
 ## [1.3.0] - 2022-05-07
 - Added override feature
 - Fixed a bug with modules folder
+
+## [1.4.0] - 2022-05-13
+- Added cartridges overview
+- Added cartridge pining

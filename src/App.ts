@@ -18,7 +18,7 @@ class App {
 
     constructor() {
         this.uniqueTime = String(Date.now()) + Math.random();
-        console.log('The app is inited', this.uniqueTime);
+        console.debug('App created', this.uniqueTime);
     }
 
     public activate(context: vscode.ExtensionContext) {
@@ -28,7 +28,11 @@ class App {
         const cartridgesObserver = new CartridgesObserver();
         const jobsObserver = new JobsObserver();
         vscode.window.registerTreeDataProvider('cartridgesObserver', cartridgesObserver);
-        vscode.window.registerTreeDataProvider('jobsObserver', jobsObserver);
+
+        if (false) {
+            vscode.window.registerTreeDataProvider('jobsObserver', jobsObserver);
+        }
+
         vscode.commands.registerCommand('sfccBeaver.refreshCartridgeList', async () => {
             await this.indexCartridges();
             cartridgesObserver.refresh();
