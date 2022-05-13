@@ -56,10 +56,7 @@
             {
                 "command": "sfccBeaver.refreshCartridgeList",
                 "title": "Refresh cartridge list",
-                "icon": {
-                    "light": "static/icons/light/refresh.svg",
-                    "dark": "static/icons/dark/refresh.svg"
-                }
+                "icon": "$(refresh)"
             },
             {
                 "command": "sfccBeaver.pinCartridge",

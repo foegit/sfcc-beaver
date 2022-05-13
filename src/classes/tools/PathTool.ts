@@ -1,3 +1,5 @@
+import { workspace } from 'vscode';
+
 /**
  * @class tool to work with path
  */
@@ -24,5 +26,22 @@ export default class PathTool {
         const indexResult = fsPath.search(searchRegExp);
 
         return indexResult;
+    }
+
+    /**
+     * Gets a project root related path for an absolute path
+     * @param fullPath
+     * @returns
+     */
+    static getProjectRelatedPath(fullPath: string): string {
+        const openWorkspaces = workspace.workspaceFolders;
+
+        if (!openWorkspaces || openWorkspaces.length === 0) {
+            return fullPath;
+        }
+
+        const projectDirectoryPath = openWorkspaces[0].uri.fsPath;
+        const filePathRelatedToRoot = fullPath.replace(`${projectDirectoryPath}`, '').replace(/^[\/\\]/, '');
+        return filePathRelatedToRoot;
     }
 }
