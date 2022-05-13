@@ -13,6 +13,7 @@ class CartridgePickItem implements vscode.QuickPickItem {
     label: string;
     sfccCartridge: SFCCCartridge;
     description?: string | undefined;
+    detail?: string | undefined;
 
     constructor(sfccCartridge: SFCCCartridge, isTargetFileExists: boolean, isCurrentCartridge: boolean) {
         this.sfccCartridge = sfccCartridge;
@@ -22,6 +23,10 @@ class CartridgePickItem implements vscode.QuickPickItem {
             this.description = 'currently opened';
         } else if (isTargetFileExists) {
             this.description = 'file exists $(arrow-right)';
+        }
+
+        if (sfccCartridge.getName() === 'modules') {
+            this.detail = '$(info) Modules is a not overridable cartridge';
         }
     }
 }
@@ -42,12 +47,12 @@ class FileOverrider {
         }
 
         if (targetCartridge.getName() === 'modules') {
-            vscode.window.showErrorMessage('Cannot override files in "modules" cartridge because it is unique cartridge and works differently than other cartridges');
+            vscode.window.showErrorMessage('Modules cartridge is not overridable because it is a unique cartridge and works differently');
             return;
         }
 
         if (targetCartridge.getName() === 'app_storefront_base') {
-            vscode.window.showWarningMessage('You override SFRA base cartridge. ');
+            vscode.window.showWarningMessage('You overrode SFRA base cartridge');
         }
 
         this.overrideForCartridge(targetCartridge);
@@ -69,11 +74,9 @@ class FileOverrider {
     private async selectTargetCartridge(): Promise<SFCCCartridge|null> {
         const currentCartridgePath = this.activeEditor.document.uri.fsPath;
 
-        const sfccCartridges = this.sfccProject.getCartridges();
+        const sfccCartridges = await this.sfccProject.getSortedCartridges();
 
-        const sortedCartridges = SFCCCartridge.sortByPriority(sfccCartridges);
-        const selectionList : CartridgePickItem[] = sortedCartridges.map(sfccCartridge => {
-
+        const selectionList : CartridgePickItem[] = sfccCartridges.map(sfccCartridge => {
             const targetPath = this.getTargetPath(sfccCartridge);
             const isTargetFileExists = fs.existsSync(targetPath);
 

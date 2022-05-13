@@ -19,7 +19,7 @@ export class CartridgesObserver implements vscode.TreeDataProvider<vscode.TreeIt
     async getChildren(): Promise<vscode.TreeItem[]> {
         const startTime = new Date();
 
-        const sfccCartridges = await this.sfccProject.getSortedCartridgesAsync();
+        const sfccCartridges = await this.sfccProject.getSortedCartridges();
 
         const endTime = new Date();
         console.debug(`It took ${(endTime.valueOf() - startTime.valueOf()) / 1000} sec to find cartridges`);

@@ -15,7 +15,7 @@ export enum ErrCodes {
 
 const errorsMeta : Record<ErrCodes, ErrorMeta> = {
     [ErrCodes.unknownError]: new ErrorMeta('I did not expect this to happened. Can you try again?'),
-    [ErrCodes.noActiveEditor]: new ErrorMeta('Dude, open something! I won\'t do anything before it.'),
+    [ErrCodes.noActiveEditor]: new ErrorMeta('I need an open file to do this'),
     [ErrCodes.propertiesEmptyLine]: new ErrorMeta('Hey, you\'re on an empty line. Move on'),
     [ErrCodes.propertiesInvalid]: new ErrorMeta('Is it just me or this property looks shady?'),
     [ErrCodes.unknownFileType]: new ErrorMeta('It doesn\'t look like a job for me'),
