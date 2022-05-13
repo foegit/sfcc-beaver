@@ -70,6 +70,16 @@
             }
         ],
         "menus": {
+            "commandPalette": [
+                {
+                    "command": "sfccBeaver.pinCartridge",
+                    "when": "false"
+                },
+                {
+                    "command": "sfccBeaver.unpinCartridge",
+                    "when": "false"
+                }
+            ],
             "view/title": [
                 {
                     "command": "sfccBeaver.refreshCartridgeList",
