@@ -12,6 +12,14 @@
     "categories": [
         "Other"
     ],
+    "keywords": [
+        "sfcc",
+        "salesforce",
+        "demandware",
+        "dw",
+        "cartridge",
+        "commerce cloud"
+    ],
     "activationEvents": [
         "onCommand:sfccBeaver.extract",
         "onView:cartridgesObserver",
