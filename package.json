@@ -21,11 +21,7 @@
         "commerce cloud"
     ],
     "activationEvents": [
-        "onCommand:sfccBeaver.extract",
-        "onView:cartridgesObserver",
-        "onView:jobObserver",
-        "onCommand:sfccBeaver.unixpath",
-        "onCommand:sfccBeaver.override"
+        "*"
     ],
     "main": "./dist/extension.js",
     "contributes": {
@@ -113,7 +109,7 @@
                 {
                     "id": "beaver-dam",
                     "title": "Beaver Dam",
-                    "icon": "static/sfccBeaverIcon.svg"
+                    "icon": "static/simpleLogo.svg"
                 }
             ]
         },
