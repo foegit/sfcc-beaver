@@ -11,6 +11,7 @@ import { JobsObserver } from './classes/treeViews/JobsObserver';
 import CartridgeTreeItem from './classes/treeViews/treeItems/CartridgeTreeItem';
 import { copyInclude, copyUnixPath } from './commands/copy';
 import { overrideFile } from './commands/override';
+import HoverManager from './classes/hover/HoverManager';
 
 class App {
     public uniqueTime: string;
@@ -55,6 +56,8 @@ class App {
         context.subscriptions.push(copyPathCommand);
         context.subscriptions.push(overrideFileCommand);
         context.subscriptions.push(copyUnixPathCommand);
+
+        HoverManager.init(context);
 
         this.workspaceState = context.workspaceState;
         this.indexCartridges();
