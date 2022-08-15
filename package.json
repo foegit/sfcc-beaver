@@ -71,6 +71,10 @@
                 "command": "sfccBeaver.unpinCartridge",
                 "title": "Unpin cartridge",
                 "icon": "$(close)"
+            },
+            {
+                "command": "sfccBeaver.openDocs",
+                "title": "Open documentation"
             }
         ],
         "menus": {
@@ -155,6 +159,7 @@
         "webpack-cli": "^4.9.2"
     },
     "dependencies": {
+        "axios": "^0.27.2",
         "fast-glob": "^3.2.11"
     }
 }

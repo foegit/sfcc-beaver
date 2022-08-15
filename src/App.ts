@@ -12,6 +12,7 @@ import CartridgeTreeItem from './classes/treeViews/treeItems/CartridgeTreeItem';
 import { copyInclude, copyUnixPath } from './commands/copy';
 import { overrideFile } from './commands/override';
 import HoverManager from './classes/hover/HoverManager';
+import DocumentationViewer from './classes/docs/DocumentationViewer';
 
 class App {
     public uniqueTime: string;
@@ -50,6 +51,7 @@ class App {
             cartridgesObserver.refresh();
         });
 
+
         // Samples of `window.registerTreeDataProvider`
 
         // TODO: one day give it an explanation
@@ -58,6 +60,7 @@ class App {
         context.subscriptions.push(copyUnixPathCommand);
 
         HoverManager.init(context);
+        DocumentationViewer.init(context);
 
         this.workspaceState = context.workspaceState;
         this.indexCartridges();
