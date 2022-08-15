@@ -23,12 +23,6 @@ export default class DocumentationViewer {
 import * as vscode from 'vscode';
 import axios from 'axios';
 
-const cats = {
-	'Coding Cat': 'https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif',
-	'Compiling Cat': 'https://media.giphy.com/media/mlvseq9yvZhba/giphy.gif',
-	'Testing Cat': 'https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif'
-};
-
 /**
  * Manages cat coding webview panels
  */
@@ -74,8 +68,11 @@ class CatCodingPanel {
         this._panel = panel;
         this._extensionUri = extensionUri;
 
+
+        this._panel.title = '🦫 SFCC Docs';
+        this._panel.webview.html = this._getHtmlForWebview(this._panel.webview);
+
         // Set the webview's initial html content
-        this._update();
 
         // Listen for when the panel is disposed
         // This happens when the user closes the panel or when the panel is closed programmatically
@@ -85,7 +82,7 @@ class CatCodingPanel {
         this._panel.onDidChangeViewState(
             e => {
                 if (this._panel.visible) {
-                    this._update();
+                    console.log('CHANGED');
                 }
             },
             null,
@@ -134,32 +131,7 @@ class CatCodingPanel {
         }
     }
 
-    private _update() {
-        const webview = this._panel.webview;
-
-        // Vary the webview's content based on where it is located in the editor.
-        switch (this._panel.viewColumn) {
-            case vscode.ViewColumn.Two:
-                this._updateForCat(webview, 'Compiling Cat');
-                return;
-
-            case vscode.ViewColumn.Three:
-                this._updateForCat(webview, 'Testing Cat');
-                return;
-
-            case vscode.ViewColumn.One:
-            default:
-                this._updateForCat(webview, 'Coding Cat');
-                return;
-        }
-    }
-
-    private _updateForCat(webview: vscode.Webview, catName: keyof typeof cats) {
-        this._panel.title = catName;
-        this._panel.webview.html = this._getHtmlForWebview(webview, cats[catName]);
-    }
-
-    private _getHtmlForWebview(webview: vscode.Webview, catGifPath: string) {
+    private _getHtmlForWebview(webview: vscode.Webview) {
         // Local path to main script run in the webview
         const scriptPathOnDisk = vscode.Uri.joinPath(this._extensionUri, 'static', 'docs', 'main.js');
 
@@ -167,14 +139,15 @@ class CatCodingPanel {
         const scriptUri = webview.asWebviewUri(scriptPathOnDisk);
 
         // Local path to css styles
-        const styleResetPath = vscode.Uri.joinPath(this._extensionUri, 'static', 'docs', 'reset.css');
-        const stylesPathMainPath = vscode.Uri.joinPath(this._extensionUri, 'static', 'docs', 'vscode.css');
+            const styleResetPath = vscode.Uri.joinPath(this._extensionUri, 'static', 'docs', 'reset.css');
+            const stylesPathMainPath = vscode.Uri.joinPath(this._extensionUri, 'static', 'docs', 'vscode.css');
 
         // Uri to load styles into webview
         const stylesResetUri = webview.asWebviewUri(styleResetPath);
         const stylesMainUri = webview.asWebviewUri(stylesPathMainPath);
 
         // Use a nonce to only allow specific scripts to be run
+        const nonce = getNonce();
 
         return `<!DOCTYPE html>
             <html lang="en">
@@ -185,6 +158,8 @@ class CatCodingPanel {
                     Use a content security policy to only allow loading images from https or from our extension directory,
                     and only allow scripts that have a specific nonce.
                 -->
+
+                <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource}; img-src ${webview.cspSource} https:; script-src 'nonce-${nonce}';">
 
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -206,7 +181,7 @@ class CatCodingPanel {
                 </main>
 
 
-                <script  src="${scriptUri}"></script>
+                <script nonce="${nonce}" src="${scriptUri}"></script>
 
 
             </body>
@@ -215,11 +190,20 @@ class CatCodingPanel {
 }
 
 function getWebviewOptions(extensionUri: vscode.Uri): vscode.WebviewOptions {
-	return {
-		// Enable javascript in the webview
-		enableScripts: true,
+    return {
+        // Enable javascript in the webview
+        enableScripts: true,
 
-		// And restrict the webview to only loading content from our extension's `media` directory.
-		localResourceRoots: [vscode.Uri.joinPath(extensionUri, 'static', 'docs')]
-	};
+        // And restrict the webview to only loading content from our extension's `media` directory.
+        localResourceRoots: [vscode.Uri.joinPath(extensionUri, 'static', 'docs')]
+    };
+}
+
+function getNonce() {
+    let text = '';
+    const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    for (let i = 0; i < 32; i++) {
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    return text;
 }
