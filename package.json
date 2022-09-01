@@ -73,8 +73,12 @@
                 "icon": "$(close)"
             },
             {
-                "command": "sfccBeaver.openDocs",
+                "command": "sfccBeaver.openDocsDetails",
                 "title": "Open documentation"
+            },
+            {
+                "command": "sfccBeaver.openClassDetails",
+                "title": "Open class"
             }
         ],
         "menus": {
@@ -120,9 +124,15 @@
         "views": {
             "beaver-dam": [
                 {
-                    "id": "cartridgesObserver",
                     "name": "Cartridges",
+                    "id": "cartridgesObserver",
                     "contextualTitle": "Cartridge Overview"
+                },
+                {
+                    "name": "Documentation",
+                    "id": "docsNavigator",
+                    "type": "webview",
+                    "contextualTitle": "Documentation Search"
                 }
             ]
         }
@@ -160,6 +170,8 @@
     },
     "dependencies": {
         "axios": "^0.27.2",
-        "fast-glob": "^3.2.11"
+        "cheerio": "^1.0.0-rc.12",
+        "fast-glob": "^3.2.11",
+        "normalize-url": "^7.0.3"
     }
 }

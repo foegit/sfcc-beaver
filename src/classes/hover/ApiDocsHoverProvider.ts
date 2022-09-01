@@ -1,31 +1,7 @@
 import * as vscode from 'vscode';
+import DocsViewerProvider from '../../webviewProviders/DocsViewerProvider';
 import DeclarationStyles from './DeclarationStyles';
 
-// vscode.languages.registerHoverProvider('*', {
-//     provideHover(document, position, token) {
-
-//         const range = document.getWordRangeAtPosition(position);
-//         const word = document.getText(range);
-
-//         if (word === 'HELLO') {
-
-//             return new vscode.Hover(new vscode.MarkdownString('URL utility class. Methods in this class generate URLs used in Commerce Cloud Digital.\n\n[🦫 Open Documentation](https://documentation.b2c.commercecloud.salesforce.com/DOC2/topic/com.demandware.dochelp/DWAPI/scriptapi/html/api/class_dw_web_URLUtils.html)'));
-//         }
-//     }
-// });
-
-// vscode.languages.registerHoverProvider('*', {
-//     provideHover(document, position, token) {
-
-//         const range = document.getWordRangeAtPosition(position);
-//         const word = document.getText(range);
-
-//         if (word === 'HELLO') {
-
-//             return new vscode.Hover(new vscode.MarkdownString('URL utility class. Methods in this class generate URLs used in Commerce Cloud Digital.\n\n[🦫 Open Documentation](https://documentation.b2c.commercecloud.salesforce.com/DOC2/topic/com.demandware.dochelp/DWAPI/scriptapi/html/api/class_dw_web_URLUtils.html)'));
-//         }
-//     }
-// });
 
 export default class ApiDocsHoverProvider {
     private timeout : NodeJS.Timer | undefined;
@@ -45,6 +21,14 @@ export default class ApiDocsHoverProvider {
                 this.triggerUpdateDecorations(true);
             }
         }, null, context.subscriptions);
+
+        context.subscriptions.push(
+            vscode.commands.registerCommand('sfccBeaver.openClassDetails', (data) => {
+                const classPath = /require\(['"](.*)['"]\)/.exec(data);
+
+                DocsViewerProvider.openClassDoc(context.extensionUri, classPath ? classPath[1] : 'dw');
+            })
+        );
     }
 
     updateDecorations() {
@@ -60,18 +44,16 @@ export default class ApiDocsHoverProvider {
             const classRequire = match[0];
 
             const startPos = this.activeEditor.document.positionAt(match.index + 9);
-
             const endPos = this.activeEditor.document.positionAt(match.index + match[0].length - 2);
+            const range = new vscode.Range(startPos, endPos);
 
-            const commentCommandUri = vscode.Uri.parse('command:sfccBeaver.extract');
-            const message = new vscode.MarkdownString(`[boom](${commentCommandUri}) URL utility class. Methods in this class generate URLs used in Commerce Cloud Digital.\n\n[🦫 Open Documentation](https://documentation.b2c.commercecloud.salesforce.com/DOC2/topic/com.demandware.dochelp/DWAPI/scriptapi/html/api/class_dw_web_URLUtils.html)`);
-            message.isTrusted = true;
+            const encodedArgs = encodeURIComponent(JSON.stringify([ classRequire]));
+            const commentCommandUri = vscode.Uri.parse('command:sfccBeaver.openClassDetails?' + encodedArgs);
+            const hoverMessage = new vscode.MarkdownString(`[🦫 Open Docs](${commentCommandUri})`);
 
-            const decoration = {
-                    range: new vscode.Range(startPos, endPos),
-                    hoverMessage: message
-                };
-            hovers.push(decoration);
+            hoverMessage.isTrusted = true;
+
+            hovers.push({ range, hoverMessage });
         }
         this.activeEditor.setDecorations(DeclarationStyles.apiClassDecoration, hovers);
     }
