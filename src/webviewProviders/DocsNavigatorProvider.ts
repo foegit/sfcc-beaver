@@ -52,9 +52,21 @@ export default class DocsNavigatorProvider implements vscode.WebviewViewProvider
     }
 
     private retrieveSearchResultHTML(result: string) {
-        const $htmlDoc = cheerio.load(result);
+        const $ = cheerio.load(result);
+        const $resultsTable = $('table.results');
 
-        return $htmlDoc;
+        const $allLinks = $resultsTable.find('a');
+
+        $allLinks.removeAttr('onmouseover');
+        $allLinks.removeAttr('onmouseout');
+
+        $resultsTable.find('td.icon img').each((i, el) => {
+            const $img = $(el);
+
+            $img.attr('src', this.getResourceUri('img/docIcon.svg')?.toString());
+        });
+
+        return $resultsTable.html();
     }
 
     /**
@@ -88,6 +100,7 @@ export default class DocsNavigatorProvider implements vscode.WebviewViewProvider
                     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                     <link href="${this.getResourceUri('css/reset.css')}" rel="stylesheet" />
                     <link href="${this.getResourceUri('css/vscode.css')}" rel="stylesheet" />
+                    <link href="${this.getResourceUri('css/docsProvider.css')}" rel="stylesheet" />
 
                     <title>SFCC Docs</title>
                 </head>
