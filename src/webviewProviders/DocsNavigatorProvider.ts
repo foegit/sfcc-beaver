@@ -30,11 +30,11 @@ export default class DocsNavigatorProvider implements vscode.WebviewViewProvider
                 case 'beaver:webview:docs:search': {
                     const result = await this.searchInDocs(data.query);
 
-                    const $result = this.retrieveSearchResultHTML(result);
+                    const res = this.prepareResponse(result);
 
                     this.webview?.webview.postMessage({
                         type: 'beaver:host:docs:updateResults',
-                        data: $result,
+                        data: res
                     });
 
                     break;
@@ -51,22 +51,19 @@ export default class DocsNavigatorProvider implements vscode.WebviewViewProvider
         });
     }
 
-    private retrieveSearchResultHTML(result: string) {
+    private prepareResponse(result: string) {
         const $ = cheerio.load(result);
         const $resultsTable = $('table.results');
 
         const $allLinks = $resultsTable.find('a');
+        const $icons = $resultsTable.find('td.icon img');
+        const resultCount = $icons.length;
 
+        $icons.remove();
         $allLinks.removeAttr('onmouseover');
         $allLinks.removeAttr('onmouseout');
 
-        $resultsTable.find('td.icon img').each((i, el) => {
-            const $img = $(el);
-
-            $img.attr('src', this.getResourceUri('img/docIcon.svg')?.toString());
-        });
-
-        return $resultsTable.html();
+        return { message: `Found ${resultCount}`, html: $resultsTable.html() };
     }
 
     /**
@@ -106,11 +103,12 @@ export default class DocsNavigatorProvider implements vscode.WebviewViewProvider
                 </head>
                 <body>
                     <form class="bv-search-form">
-                        <input type="text" class="bv-search-input"/>
-                        <button type="submit">Search</button>
+                    <input type="text" class="bv-search-input" placeholder="Search"/>
+                        <div class="bv-search-status"><div class="bv-search-status-loader"></div></div>
+                        <div class="bv-search-feedback">Type something to search</div>
                     </form>
-
                     <div class="bv-result"></div>
+
 
                     <script nonce="${nonce}" src="${this.getResourceUri('js/docsNavigator.js')}"></script>
                 </body>

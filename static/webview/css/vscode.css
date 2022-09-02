@@ -53,6 +53,7 @@ button {
     outline-offset: 2px !important;
     color: var(--vscode-button-foreground);
     background: var(--vscode-button-background);
+    border: 2px;
 }
 
 button:hover {
@@ -83,6 +84,7 @@ textarea {
     color: var(--vscode-input-foreground);
     outline-color: var(--vscode-input-border);
     background-color: var(--vscode-input-background);
+    border-radius: 2px;
 }
 
 input::placeholder,
