@@ -47,38 +47,38 @@
         "commands": [
             {
                 "command": "sfccBeaver.extract",
-                "title": "🦫 sf extract"
+                "title": "🦫 Extract"
             },
             {
                 "command": "sfccBeaver.override",
-                "title": "🦫 sf override"
+                "title": "🦫 Override"
             },
             {
                 "command": "sfccBeaver.unixpath",
-                "title": "🦫 unix path"
+                "title": "🦫 Unix path"
             },
             {
                 "command": "sfccBeaver.refreshCartridgeList",
-                "title": "Refresh cartridge list",
+                "title": "🦫 Refresh cartridge list",
                 "icon": "$(refresh)"
             },
             {
                 "command": "sfccBeaver.pinCartridge",
-                "title": "Pin cartridge",
+                "title": "🦫 Pin cartridge",
                 "icon": "$(pin)"
             },
             {
                 "command": "sfccBeaver.unpinCartridge",
-                "title": "Unpin cartridge",
+                "title": "🦫 Unpin cartridge",
                 "icon": "$(close)"
             },
             {
                 "command": "sfccBeaver.openDocsDetails",
-                "title": "Open documentation"
+                "title": "Open Documentation Details"
             },
             {
                 "command": "sfccBeaver.openClassDetails",
-                "title": "Open class"
+                "title": "Open Class Documentation"
             }
         ],
         "menus": {
@@ -89,6 +89,14 @@
                 },
                 {
                     "command": "sfccBeaver.unpinCartridge",
+                    "when": "false"
+                },
+                {
+                    "command": "sfccBeaver.openClassDetails",
+                    "when": "false"
+                },
+                {
+                    "command": "sfccBeaver.openDocsDetails",
                     "when": "false"
                 }
             ],
@@ -162,14 +170,18 @@
         "eslint": "^8.11.0",
         "glob": "^7.2.0",
         "mocha": "^9.2.2",
+        "sass": "^1.54.8",
+        "sass-loader": "^13.0.2",
         "ts-loader": "^9.2.8",
         "ts-node": "^10.7.0",
         "typescript": "^4.6.3",
-        "webpack": "^5.70.0",
+        "webpack": "^5.74.0",
         "webpack-cli": "^4.9.2"
     },
     "dependencies": {
+        "@types/vscode-webview": "^1.57.0",
         "axios": "^0.27.2",
+        "cash-dom": "^8.1.1",
         "cheerio": "^1.0.0-rc.12",
         "fast-glob": "^3.2.11",
         "normalize-url": "^7.0.3"
