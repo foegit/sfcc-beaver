@@ -25,6 +25,7 @@
     const getSearchResult = (query) => vscode.postMessage({ type: 'beaver:webview:docs:search', query });
     const triggerSearch = () => {
         if (searchStatus !== 'progress') {
+            updateSearchFeedback('Searching...');
             getSearchResult(searchInput.value);
             updateStatus('progress');
         }

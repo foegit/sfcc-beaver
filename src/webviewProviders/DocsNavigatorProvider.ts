@@ -51,6 +51,17 @@ export default class DocsNavigatorProvider implements vscode.WebviewViewProvider
         });
     }
 
+    private generateCountMessage(resultsCount: number) {
+        if (resultsCount === 0) {
+            return 'Nothing found. Check for typo or try rephrase';
+        }
+        if (resultsCount === 1) {
+            return 'One topic is found';
+        }
+
+        return `${resultsCount} topics found`;
+    }
+
     private prepareResponse(result: string) {
         const $ = cheerio.load(result);
         const $resultsTable = $('table.results');
@@ -63,7 +74,7 @@ export default class DocsNavigatorProvider implements vscode.WebviewViewProvider
         $allLinks.removeAttr('onmouseover');
         $allLinks.removeAttr('onmouseout');
 
-        return { message: `Found ${resultCount}`, html: $resultsTable.html() };
+        return { message: this.generateCountMessage(resultCount), html: $resultsTable.html() };
     }
 
     /**
