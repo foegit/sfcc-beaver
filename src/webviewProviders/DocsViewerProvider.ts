@@ -72,6 +72,19 @@ export default class DocsViewerProvider {
         $body.find('.copyright, .copyright_table').remove();
         $body.find('.banner').remove();
 
+        const $breadcrumbs = $body.find('.help_breadcrumbs');
+
+        if ($breadcrumbs.length > 0) {
+            const $allLinks = $breadcrumbs.find('a');
+
+            $breadcrumbs.empty();
+
+            $allLinks.each((i, $el) => {
+                $breadcrumbs.append($el);
+                $breadcrumbs.append(' | ');
+            });
+        }
+
         return $body.html();
     }
 
