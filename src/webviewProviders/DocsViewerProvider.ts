@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import axios from 'axios';
 import normalizeUrl from 'normalize-url';
+import * as cheerio from 'cheerio';
 import WebviewTool from '../classes/tools/WebviewTool';
 
 class PayloadData {
@@ -25,7 +26,7 @@ export default class DocsViewerProvider {
     public static readonly viewType = 'docsViewer';
 
     private readonly _panel: vscode.WebviewPanel;
-    private readonly _extensionUri: vscode.Uri;
+    private readonly extensionUrl: vscode.Uri;
 
     private readonly _data: PayloadData | undefined;
     private _disposables: vscode.Disposable[] = [];
@@ -62,23 +63,41 @@ export default class DocsViewerProvider {
         return new DocsViewerProvider(panel, extensionUri);
     }
 
+    prepareDocumentationPage(htmlResponse: string) {
+        const $ = cheerio.load(htmlResponse);
+        const $body = $('body');
+
+        $body.find('script').remove();
+        $body.find('#cookieConsent').remove();
+        $body.find('.copyright, .copyright_table').remove();
+        $body.find('.banner').remove();
+
+        return $body.html();
+    }
+
     async loadDocumentationTopic(topicURL: string) {
+        console.debug('Start loading documentation page');
 
         const content = await axios.get(topicURL);
 
+        this._panel.webview.postMessage({
+            type: 'beaver:host:docs:startLoading'
+        });
 
-        this._panel.webview.html = content.data;
+        return this._panel.webview.postMessage({
+            type: 'beaver:host:docs:updateDetails',
+            originalURL: topicURL,
+            html: this.prepareDocumentationPage(content.data)
+        });
     }
 
     public static revive(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
         DocsViewerProvider.currentDocsViewerPanel = new DocsViewerProvider(panel, extensionUri);
     }
 
-
-
     private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri, data?: PayloadData) {
         this._panel = panel;
-        this._extensionUri = extensionUri;
+        this.extensionUrl = extensionUri;
         this._data = data;
 
 
@@ -106,9 +125,14 @@ export default class DocsViewerProvider {
         // Handle messages from the webview
         this._panel.webview.onDidReceiveMessage(
             async message => {
-                switch (message.command) {
+                switch (message.type) {
                     case 'alert':
                         vscode.window.showErrorMessage(message.text);
+                        return;
+                    case 'beaver:host:docs:openExternalLink':
+                        if (message.url && message.url !== '#') {
+                            vscode.env.openExternal(vscode.Uri.parse(message.url));
+                        }
                         return;
                 }
             },
@@ -132,22 +156,6 @@ export default class DocsViewerProvider {
     }
 
     private _getHtmlForWebview(webview: vscode.Webview) {
-        // Local path to main script run in the webview
-        const scriptPathOnDisk = vscode.Uri.joinPath(this._extensionUri, 'static', 'docs', 'main.js');
-
-
-        // And the uri we use to load this script in the webview
-        const scriptUri = webview.asWebviewUri(scriptPathOnDisk);
-
-        // Local path to css styles
-        const styleResetPath = vscode.Uri.joinPath(this._extensionUri, 'static', 'docs', 'reset.css');
-        const stylesPathMainPath = vscode.Uri.joinPath(this._extensionUri, 'static', 'docs', 'vscode.css');
-
-        // Uri to load styles into webview
-        const stylesResetUri = webview.asWebviewUri(styleResetPath);
-        const stylesMainUri = webview.asWebviewUri(stylesPathMainPath);
-
-        // Use a nonce to only allow specific scripts to be run
         const nonce = WebviewTool.getNonce();
 
         return `<!DOCTYPE html>
@@ -164,25 +172,35 @@ export default class DocsViewerProvider {
 
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-                <link href="${stylesResetUri}" rel="stylesheet">
-                <link href="${stylesMainUri}" rel="stylesheet">
+                <link href="${this.getResourceUri('css/reset.css')}" rel="stylesheet" />
+                <link href="${this.getResourceUri('css/vscode.css')}" rel="stylesheet" />
+                <link href="${this.getResourceUri('css/docsViewer.css')}" rel="stylesheet" />
+                <link href="${this.getResourceUri('css/customLoader.css')}" rel="stylesheet" />
 
-                <title>Cat Coding</title>
+
+                <title>🦫 SFCC Docs</title>
             </head>
             <body>
-                Loading...
-                <script nonce="${nonce}" src="${scriptUri}"></script>
+                <div class="bv-custom-loader-wrapper progress"><div class="bv-custom-loader"></div></div>
+                <div class="bv-details-content"></div>
+                <script nonce="${nonce}" src="${this.getResourceUri('js/docsViewer.js')}"></script>
             </body>
             </html>`;
     }
 
     static getWebviewOptions(extensionUri: vscode.Uri): vscode.WebviewOptions {
         return {
-            // Enable javascript in the webview
             enableScripts: true,
-
-            // And restrict the webview to only loading content from our extension's `media` directory.
-            localResourceRoots: [vscode.Uri.joinPath(extensionUri, 'static', 'docs')]
+            localResourceRoots: [vscode.Uri.joinPath(extensionUri)]
         };
     }
+
+        /**
+     * Create URL to webview static resource
+     */
+        private getResourceUri(resourceRelativePath: string) {
+            return this._panel.webview.asWebviewUri(
+                vscode.Uri.joinPath(this.extensionUrl, 'static/webview2', resourceRelativePath)
+            );
+        }
 }

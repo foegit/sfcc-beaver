@@ -1,0 +1,39 @@
+.bv-custom-loader-wrapper {
+    width: 100%;
+    height: 3px;
+    background-color: var(--vscode-editorOverviewRuler-bracketMatchForeground);
+    border-radius: 2px;
+    position: relative;
+
+}
+
+.bv-custom-loader-wrapper.success {
+    background-color: var(--vscode-charts-green);
+}
+
+.bv-custom-loader-wrapper.fail {
+    background-color: var(--vscode-charts-red);
+}
+
+.bv-custom-loader {
+    width: 10%;
+    height: 100%;
+    position: absolute;
+    right: 90%;
+    background-color: var(--vscode-button-background);
+    border-radius: 2px;
+    display: none;
+}
+
+.bv-custom-loader-wrapper.progress .bv-custom-loader {
+    display: block;
+    animation-name: example;
+    animation-duration: 4s;
+    animation-iteration-count: infinite;
+}
+
+@keyframes example {
+    0% { right: 90%; }
+    50% { right: 0%; }
+    100% { right: 90%; }
+}

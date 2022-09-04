@@ -21,8 +21,9 @@ export default class WebviewMgr {
         if (vscode.window.registerWebviewPanelSerializer) {
             vscode.window.registerWebviewPanelSerializer(DocsViewerProvider.viewType, {
                 async deserializeWebviewPanel(webviewPanel: vscode.WebviewPanel, state: any) {
-                    // remove existing panel
-                    webviewPanel.dispose();
+                    webviewPanel.webview.options = DocsViewerProvider.getWebviewOptions(context.extensionUri);
+
+                    DocsViewerProvider.revive(webviewPanel, context.extensionUri);
                 }
             });
         }
