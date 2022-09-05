@@ -3,6 +3,7 @@
 
 import $ from 'cash-dom';
 import { updateStatus, SUCCESS, PROGRESS } from './utils/customLoader';
+import { getFullURL } from './utils/sfccDocsUtils';
 
 const $details = $('.bv-details-content');
 const $openInBrowserBtn = $('.bv-open-in-browser');
@@ -38,9 +39,23 @@ function openExternalLink(url) {
     vscode.postMessage({type: 'beaver:host:docs:openExternalLink', url });
 }
 
+function loadLink(url) {
+    vscode.postMessage({type: 'beaver:client:docs:loadLink', url });
+}
+
 function initListeners() {
     $openInBrowserBtn.on('click', () => {
         openExternalLink($openInBrowserBtn.attr('href'));
+    });
+
+    $(document).on('click', 'a', (event) => {
+        const $link = $(event.currentTarget);
+        const href = $link.attr('href');
+
+
+        if (href) {
+            loadLink(getFullURL(href));
+        }
     });
 
     window.addEventListener('message', ({ data }) => {

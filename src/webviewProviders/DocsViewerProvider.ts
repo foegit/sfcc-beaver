@@ -3,6 +3,7 @@ import axios from 'axios';
 import normalizeUrl from 'normalize-url';
 import * as cheerio from 'cheerio';
 import WebviewTool from '../classes/tools/WebviewTool';
+import { url } from 'inspector';
 
 class PayloadData {
     public relativeLink: string;
@@ -75,13 +76,15 @@ export default class DocsViewerProvider {
         const $breadcrumbs = $body.find('.help_breadcrumbs');
 
         if ($breadcrumbs.length > 0) {
-            const $allLinks = $breadcrumbs.find('a');
+            const $allBreadcrumbsLinks = $breadcrumbs.find('a');
 
             $breadcrumbs.empty();
 
-            $allLinks.each((i, $el) => {
+            $allBreadcrumbsLinks.each((i, $el) => {
                 $breadcrumbs.append($el);
-                $breadcrumbs.append(' | ');
+                if ($allBreadcrumbsLinks.length !== i + 1) {
+                    $breadcrumbs.append(' / ');
+                }
             });
         }
 
@@ -147,6 +150,12 @@ export default class DocsViewerProvider {
                             vscode.env.openExternal(vscode.Uri.parse(message.url));
                         }
                         return;
+                    case 'beaver:client:docs:loadLink':
+                        if (message.url && message.url !== '#') {
+                            console.log('LOADING ' + message.url);
+                            this.loadDocumentationTopic(message.url);
+                        }
+                    return;
                 }
             },
             null,
@@ -194,6 +203,7 @@ export default class DocsViewerProvider {
                 <title>🦫 SFCC Docs</title>
             </head>
             <body>
+                <div href="#" class="bv-open-in-browser"></div>
                 <div class="bv-custom-loader-wrapper progress"><div class="bv-custom-loader"></div></div>
                 <div class="bv-details-content"></div>
                 <script nonce="${nonce}" src="${this.getResourceUri('js/docsViewer.js')}"></script>
