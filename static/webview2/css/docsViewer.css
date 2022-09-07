@@ -22,7 +22,9 @@ body {
     font-weight: bold;
 }
 
-.help_breadcrumbs,
+.help_breadcrumbs {
+    padding-top: 0.5em;
+}
 .hierarchy,
 .className {
     padding-bottom: 1em;
@@ -123,4 +125,15 @@ h1, h2, h3 {
 h4, h5, h6 {
     margin-top: 0.5em;
     margin-bottom: 0.5em;
+}
+
+.pre.codeblock {
+    border: 1px solid;
+    border-radius: 2px;
+    padding: 0.5em;
+    overflow-x: scroll;
+}
+.pre.codeblock code {
+    font-family: var(--vscode-editor-font-family);
+    line-height: 1.1em;
 }

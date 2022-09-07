@@ -3,7 +3,7 @@ import axios from 'axios';
 import normalizeUrl from 'normalize-url';
 import * as cheerio from 'cheerio';
 import WebviewTool from '../classes/tools/WebviewTool';
-import { url } from 'inspector';
+import Clipboard from '../classes/Clipboard';
 
 class PayloadData {
     public relativeLink: string;
@@ -13,6 +13,15 @@ class PayloadData {
         this.relativeLink = url;
         this.baseURL = url;
     }
+}
+
+class HistoryItem {
+    constructor(public absUrl: string ) {};
+}
+
+class History {
+    private history: Array<HistoryItem> = [];
+    private activeIndex: number = 0;
 }
 
 /**
@@ -29,8 +38,8 @@ export default class DocsViewerProvider {
     private readonly _panel: vscode.WebviewPanel;
     private readonly extensionUrl: vscode.Uri;
 
-    private readonly _data: PayloadData | undefined;
     private _disposables: vscode.Disposable[] = [];
+    private history: Array<HistoryItem> = [];
 
     public static createOrShow(extensionUri: vscode.Uri, data: PayloadData) {
         if (!DocsViewerProvider.currentDocsViewerPanel) {
@@ -44,6 +53,32 @@ export default class DocsViewerProvider {
         const contentUrl = normalizeUrl(`${baseURL}/${data.relativeLink}`);
 
         DocsViewerProvider.currentDocsViewerPanel.loadDocumentationTopic(contentUrl);
+    }
+
+    public openInBrowserCurrent() {
+        const lastHistory = this.history[this.history.length - 1];
+
+        vscode.env.openExternal(vscode.Uri.parse(lastHistory.absUrl));
+    }
+
+    public copyCurrentURLToClipbord() {
+        const lastHistory = this.history[this.history.length - 1];
+
+        if (lastHistory) {
+            Clipboard.toClipboard(lastHistory.absUrl);
+        }
+    }
+
+    public moveBack() {
+        if (this.history.length > 2) {
+            const lastHistory = this.history[this.history.length - 2];
+
+            this.loadDocumentationTopic(lastHistory.absUrl);
+        }
+    }
+
+    public moveForward() {
+        // TODO
     }
 
     public static openClassDoc(extensionUri: vscode.Uri, classPath: string) {
@@ -103,6 +138,9 @@ export default class DocsViewerProvider {
     }
 
     async loadDocumentationTopic(topicURL: string) {
+        this.history.push(new HistoryItem(topicURL));
+        console.log(this.history);
+
         console.debug('Start loading documentation page');
 
         this._panel.webview.postMessage({
@@ -122,10 +160,9 @@ export default class DocsViewerProvider {
         DocsViewerProvider.currentDocsViewerPanel = new DocsViewerProvider(panel, extensionUri);
     }
 
-    private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri, data?: PayloadData) {
+    private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
         this._panel = panel;
         this.extensionUrl = extensionUri;
-        this._data = data;
 
 
         this._panel.title = '🦫 SFCC Docs';
@@ -164,6 +201,10 @@ export default class DocsViewerProvider {
                     case 'beaver:client:docs:loadLink':
                         if (message.url && message.url !== '#') {
                             console.log('LOADING ' + message.url);
+                            this.loadDocumentationTopic(message.url);
+                        }
+                    case 'beaver:client:docs:back':
+                        if (message.url && message.url !== '#') {
                             this.loadDocumentationTopic(message.url);
                         }
                     return;
@@ -222,9 +263,10 @@ export default class DocsViewerProvider {
             </html>`;
     }
 
-    static getWebviewOptions(extensionUri: vscode.Uri): vscode.WebviewOptions {
+    static getWebviewOptions(extensionUri: vscode.Uri) {
         return {
             enableScripts: true,
+            enableFindWidget: true,
             localResourceRoots: [vscode.Uri.joinPath(extensionUri)]
         };
     }

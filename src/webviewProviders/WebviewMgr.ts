@@ -17,6 +17,26 @@ export default class WebviewMgr {
                 DocsViewerProvider.createOrShow(context.extensionUri, data);
             })
         );
+        context.subscriptions.push(
+            vscode.commands.registerCommand('sfccBeaver.docsOpenInBrowser', (data) => {
+                DocsViewerProvider.currentDocsViewerPanel?.openInBrowserCurrent();
+            })
+        );
+        context.subscriptions.push(
+            vscode.commands.registerCommand('sfccBeaver.docsCopyToClipboard', (data) => {
+                DocsViewerProvider.currentDocsViewerPanel?.copyCurrentURLToClipbord();
+            })
+        );
+        context.subscriptions.push(
+            vscode.commands.registerCommand('sfccBeaver.docsNavigationBack', (data) => {
+                DocsViewerProvider.currentDocsViewerPanel?.moveBack();
+            })
+        );
+        context.subscriptions.push(
+            vscode.commands.registerCommand('sfccBeaver.docsNavigationForward', (data) => {
+                DocsViewerProvider.currentDocsViewerPanel?.moveForward();
+            })
+        );
 
         if (vscode.window.registerWebviewPanelSerializer) {
             vscode.window.registerWebviewPanelSerializer(DocsViewerProvider.viewType, {
