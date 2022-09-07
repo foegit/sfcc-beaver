@@ -3,7 +3,7 @@
 .bv-result .link {
     font-weight: bold;
     text-decoration: none;
-    color: var(--vscode-charts-green)
+    color: var(--vscode-charts-green);
 }
 
 .bv-result .description {

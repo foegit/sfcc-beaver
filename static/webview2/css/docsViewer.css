@@ -1,0 +1,126 @@
+a {
+    text-decoration: none;
+    color: var(--vscode-charts-green);
+}
+
+a:hover {
+    text-decoration: underline;
+    color: var(--vscode-charts-green);
+}
+
+p, ul {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+body {
+    color: var(--vscode-editorOverviewRuler-bracketMatchForeground);
+}
+
+.className {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.help_breadcrumbs,
+.hierarchy,
+.className {
+    padding-bottom: 1em;
+}
+
+
+.hierarchy>div:nth-child(2) {
+    padding-left: 1em;
+}
+
+.hierarchy>div:nth-child(3) {
+    padding-left: 2em;
+}
+
+.hierarchy>div:nth-child(4) {
+    padding-left: 3em;
+}
+
+.hierarchy>div:nth-child(5) {
+    padding-left: 4em;
+}
+
+.hierarchy>div:nth-child(6) {
+    padding-left: 5em;
+}
+
+.classSummary {
+    padding-left: 1em;
+}
+
+.classSummaryDetail .subclass {
+    padding-top: 1em;
+}
+
+.section .header {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 1em 0;
+    border-bottom: 1px solid;
+}
+
+.section .subHeader {
+    font-weight: bold;
+    margin: 0.5em;
+}
+.section .summaryItem>span {
+    font-weight: bold;
+}
+
+.section .summaryItem {
+    padding-left: 1em;
+}
+
+.section .summaryItem .description {
+    padding-left: 1em;
+    padding: 0.5em 0 0.5em 1em;
+    font-weight: normal;
+}
+
+.detailItem .description, .detailItem .parameters {
+    padding: 0.5em 0 0.5em 1em;
+}
+
+.detailSignature {
+    padding: 5px;
+    border-radius: 2px;
+}
+
+.detailSignature .emphasis {
+    font-weight: bold;
+}
+
+.detailSignature {
+    background: var(--vscode-editor-hoverHighlightBackground);
+}
+.parameterTitle {
+    font-weight: bold;
+}
+
+.parameterDetail {
+    padding-left: 0.5em;
+}
+
+.parameterName {
+    font-style: italic;
+}
+
+code {
+    color: var(--vscode-charts-foreground);
+    font-family: var(--vscode-font-family);
+}
+
+h1, h2, h3 {
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+h4, h5, h6 {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}

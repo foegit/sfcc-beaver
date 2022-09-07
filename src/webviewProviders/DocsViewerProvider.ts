@@ -72,6 +72,15 @@ export default class DocsViewerProvider {
         $body.find('#cookieConsent').remove();
         $body.find('.copyright, .copyright_table').remove();
         $body.find('.banner').remove();
+        $body.find('.packageName').remove();
+        $body.find('.detailName').remove();
+        $body.find('hr').remove();
+        $body.find('a').removeAttr('target');
+        const $hierarchy = $body.find('.hierarchy');
+
+        if ($hierarchy.length > 0) {
+            $hierarchy.find('img').remove();
+        }
 
         const $breadcrumbs = $body.find('.help_breadcrumbs');
 
@@ -88,17 +97,19 @@ export default class DocsViewerProvider {
             });
         }
 
+        $body.find('.header:contains("Method Summary")').closest('.section').remove();
+
         return $body.html();
     }
 
     async loadDocumentationTopic(topicURL: string) {
         console.debug('Start loading documentation page');
 
-        const content = await axios.get(topicURL);
-
         this._panel.webview.postMessage({
             type: 'beaver:host:docs:startLoading'
         });
+
+        const content = await axios.get(topicURL);
 
         return this._panel.webview.postMessage({
             type: 'beaver:host:docs:updateDetails',

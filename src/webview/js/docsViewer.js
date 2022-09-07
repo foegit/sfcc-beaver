@@ -40,7 +40,13 @@ function openExternalLink(url) {
 }
 
 function loadLink(url) {
+    updateStatus(PROGRESS);
     vscode.postMessage({type: 'beaver:client:docs:loadLink', url });
+}
+
+function handleAnchorLink(href) {
+    const $element = $(`[name="${href.replace(/^#/, '')}"]`);
+    $element[0]?.scrollIntoView();
 }
 
 function initListeners() {
@@ -51,6 +57,17 @@ function initListeners() {
     $(document).on('click', 'a', (event) => {
         const $link = $(event.currentTarget);
         const href = $link.attr('href');
+
+        if (href?.startsWith('#')) {
+            // anchor
+            console.log('We have an anchor here!!' + href);
+            return handleAnchorLink(href);
+        }
+
+        if (href?.startsWith('http')) {
+            // anchor
+            return;
+        }
 
 
         if (href) {
@@ -65,6 +82,7 @@ function initListeners() {
                 return;
             }
             case 'beaver:host:docs:startLoading': {
+                console.log('loading started');
                 updateStatus(PROGRESS);
             }
         }
