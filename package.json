@@ -2,7 +2,7 @@
     "name": "sfcc-beaver",
     "displayName": "SFCC Beaver",
     "description": "A beaver who is an experienced developer (of its dam) will help you with your work routine",
-    "version": "1.6.2",
+    "version": "2.0.0",
     "icon": "static/simpleLogo.png",
     "repository": "https://github.com/foegit/sfcc-beaver",
     "publisher": "SerhiiHlavatskyi",
@@ -140,26 +140,26 @@
                 }
             ],
             "editor/title": [
-              {
-                "command": "sfccBeaver.docsOpenInBrowser",
-                "group": "navigation@2",
-                "when": "activeWebviewPanelId == docsViewer"
-              },
-              {
-                "command": "sfccBeaver.docsCopyToClipboard",
-                "group": "navigation@2",
-                "when": "activeWebviewPanelId == docsViewer"
-              },
-              {
-                "command": "sfccBeaver.docsNavigationBack",
-                "group": "navigation@1",
-                "when": "activeWebviewPanelId == docsViewer"
-              },
-              {
-                "command": "sfccBeaver.docsNavigationForward",
-                "group": "navigation@1",
-                "when": "activeWebviewPanelId == docsViewer"
-              }
+                {
+                    "command": "sfccBeaver.docsOpenInBrowser",
+                    "group": "navigation@2",
+                    "when": "activeWebviewPanelId == docsViewer"
+                },
+                {
+                    "command": "sfccBeaver.docsCopyToClipboard",
+                    "group": "navigation@2",
+                    "when": "activeWebviewPanelId == docsViewer"
+                },
+                {
+                    "command": "sfccBeaver.docsNavigationBack",
+                    "group": "navigation@1",
+                    "when": "activeWebviewPanelId == docsViewer"
+                },
+                {
+                    "command": "sfccBeaver.docsNavigationForward",
+                    "group": "navigation@1",
+                    "when": "activeWebviewPanelId == docsViewer"
+                }
             ]
         },
         "viewsContainers": {
