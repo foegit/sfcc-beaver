@@ -39,9 +39,23 @@ function openExternalLink(url) {
     vscode.postMessage({type: 'beaver:host:docs:openExternalLink', url });
 }
 
+function resetHistory(url) {
+    vscode.postMessage({type: 'beaver:client:docs:restoreHistory', url });
+}
+
+function goBack(url) {
+    vscode.postMessage({type: 'beaver:client:docs:goBack', url });
+}
+
+function goForward(url) {
+    vscode.postMessage({type: 'beaver:client:docs:goForward', url });
+}
+
 function loadLink(url) {
-    updateStatus(PROGRESS);
-    vscode.postMessage({type: 'beaver:client:docs:loadLink', url });
+    if (url !== $openInBrowserBtn.attr('href')) {
+        updateStatus(PROGRESS);
+        vscode.postMessage({type: 'beaver:client:docs:loadLink', url });
+    }
 }
 
 function handleAnchorLink(href) {
@@ -72,6 +86,14 @@ function initListeners() {
 
         if (href) {
             loadLink(getFullURL(href));
+        }
+    });
+
+    $(document).on('mouseup', (event) => {
+        if (event.button === 3) {
+            goBack();
+        } else if (event.button === 4) {
+            goForward();
         }
     });
 
@@ -106,7 +128,11 @@ function init() {
         try {
             const savedData = JSON.parse(currentState.lastHostData);
 
-            return updateDetails(savedData);
+            updateDetails(savedData);
+            if (savedData.originalURL) {
+                console.log('RESET HISTORY!!')
+                resetHistory(savedData.originalURL);
+            }
         } catch (err) {
             console.error(`Error happened during parsing of cached data: ${err}`);
             setState({ lastHostData: '' }); // restoring it to default state

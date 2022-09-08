@@ -4,25 +4,12 @@ import normalizeUrl from 'normalize-url';
 import * as cheerio from 'cheerio';
 import WebviewTool from '../classes/tools/WebviewTool';
 import Clipboard from '../classes/Clipboard';
+import SimpleHistory from './helpers/SimpleHistory';
+import URLHistoryItem from './types/URLHistoryItem';
+import CreateOrShowOptions from './types/CreateOrShowOptions';
+import LoadDocumentationOptions from './types/LoadDocumentationOptions';
 
-class PayloadData {
-    public relativeLink: string;
-    public baseURL: string;
 
-    constructor(url: string) {
-        this.relativeLink = url;
-        this.baseURL = url;
-    }
-}
-
-class HistoryItem {
-    constructor(public absUrl: string ) {};
-}
-
-class History {
-    private history: Array<HistoryItem> = [];
-    private activeIndex: number = 0;
-}
 
 /**
  * Manages cat coding webview panels
@@ -35,17 +22,17 @@ export default class DocsViewerProvider {
 
     public static readonly viewType = 'docsViewer';
 
-    private readonly _panel: vscode.WebviewPanel;
+    private readonly webviewPanel: vscode.WebviewPanel;
     private readonly extensionUrl: vscode.Uri;
 
     private _disposables: vscode.Disposable[] = [];
-    private history: Array<HistoryItem> = [];
+    private history: SimpleHistory<URLHistoryItem> = new SimpleHistory();
 
-    public static createOrShow(extensionUri: vscode.Uri, data: PayloadData) {
+    public static createOrShow(extensionUri: vscode.Uri, data: CreateOrShowOptions) {
         if (!DocsViewerProvider.currentDocsViewerPanel) {
             DocsViewerProvider.currentDocsViewerPanel = DocsViewerProvider.createDocsViewerPanel(extensionUri);
         } else {
-            DocsViewerProvider.currentDocsViewerPanel._panel.reveal(vscode.ViewColumn.Beside);
+            DocsViewerProvider.currentDocsViewerPanel.webviewPanel.reveal(vscode.ViewColumn.Beside);
         }
 
         const baseURL = data.baseURL || 'https://documentation.b2c.commercecloud.salesforce.com/DOC2/topic';
@@ -56,29 +43,39 @@ export default class DocsViewerProvider {
     }
 
     public openInBrowserCurrent() {
-        const lastHistory = this.history[this.history.length - 1];
+        const lastHistory = this.history.getActive();
 
-        vscode.env.openExternal(vscode.Uri.parse(lastHistory.absUrl));
+        if (lastHistory) {
+            vscode.env.openExternal(vscode.Uri.parse(lastHistory.url));
+        }
     }
 
     public copyCurrentURLToClipbord() {
-        const lastHistory = this.history[this.history.length - 1];
+        const lastHistory = this.history.getActive();
 
         if (lastHistory) {
-            Clipboard.toClipboard(lastHistory.absUrl);
+            Clipboard.toClipboard(lastHistory.url);
         }
     }
 
-    public moveBack() {
-        if (this.history.length > 2) {
-            const lastHistory = this.history[this.history.length - 2];
+    public openPreviousPage() {
+        const prevItem = this.history.goBack();
 
-            this.loadDocumentationTopic(lastHistory.absUrl);
+        if (prevItem) {
+            this.loadDocumentationTopic(prevItem.url, {
+                skipHistory: true
+            });
         }
     }
 
-    public moveForward() {
-        // TODO
+    public openNextPage() {
+        const nextItem = this.history.goForward();
+
+        if (nextItem) {
+            this.loadDocumentationTopic(nextItem.url, {
+                skipHistory: true
+            });
+        }
     }
 
     public static openClassDoc(extensionUri: vscode.Uri, classPath: string) {
@@ -137,21 +134,24 @@ export default class DocsViewerProvider {
         return $body.html();
     }
 
-    async loadDocumentationTopic(topicURL: string) {
-        this.history.push(new HistoryItem(topicURL));
-        console.log(this.history);
+    async loadDocumentationTopic(url: string, options? : LoadDocumentationOptions) {
+        console.log(`Start loading documentation page: "${url}"`);
 
-        console.debug('Start loading documentation page');
+        const safeOptions = options || new LoadDocumentationOptions();
 
-        this._panel.webview.postMessage({
+        if (!safeOptions.skipHistory) {
+            this.history.push(new URLHistoryItem(url));
+        }
+
+        this.webviewPanel.webview.postMessage({
             type: 'beaver:host:docs:startLoading'
         });
 
-        const content = await axios.get(topicURL);
+        const content = await axios.get(url);
 
-        return this._panel.webview.postMessage({
+        return this.webviewPanel.webview.postMessage({
             type: 'beaver:host:docs:updateDetails',
-            originalURL: topicURL,
+            originalURL: url,
             html: this.prepareDocumentationPage(content.data)
         });
     }
@@ -161,33 +161,22 @@ export default class DocsViewerProvider {
     }
 
     private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
-        this._panel = panel;
+        this.webviewPanel = panel;
         this.extensionUrl = extensionUri;
 
 
-        this._panel.title = '🦫 SFCC Docs';
+        this.webviewPanel.title = '🦫 SFCC Docs';
 
-        this._panel.webview.html = this._getHtmlForWebview(this._panel.webview);
+        this.webviewPanel.webview.html = this._getHtmlForWebview(this.webviewPanel.webview);
 
         // Set the webview's initial html content
 
         // Listen for when the panel is disposed
         // This happens when the user closes the panel or when the panel is closed programmatically
-        this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
-
-        // Update the content based on view changes
-        this._panel.onDidChangeViewState(
-            e => {
-                if (this._panel.visible) {
-                    console.log('CHANGED');
-                }
-            },
-            null,
-            this._disposables
-        );
+        this.webviewPanel.onDidDispose(() => this.dispose(), null, this._disposables);
 
         // Handle messages from the webview
-        this._panel.webview.onDidReceiveMessage(
+        this.webviewPanel.webview.onDidReceiveMessage(
             async message => {
                 switch (message.type) {
                     case 'alert':
@@ -199,15 +188,25 @@ export default class DocsViewerProvider {
                         }
                         return;
                     case 'beaver:client:docs:loadLink':
-                        if (message.url && message.url !== '#') {
-                            console.log('LOADING ' + message.url);
+                        const currentURL = this.history.getActive();
+
+                        if (message.url && message.url !== '#' && currentURL.url !== message.url) {
+                            console.log('Loading new page');
                             this.loadDocumentationTopic(message.url);
                         }
-                    case 'beaver:client:docs:back':
-                        if (message.url && message.url !== '#') {
-                            this.loadDocumentationTopic(message.url);
+                        return;
+                    case 'beaver:client:docs:restoreHistory':
+                        if (message.url) {
+                            this.history = new SimpleHistory();
+                            this.history.push(new URLHistoryItem(message.url));
                         }
-                    return;
+                        return;
+                    case 'beaver:client:docs:goBack':
+                        this.openPreviousPage();
+                        return;
+                    case 'beaver:client:docs:goForward':
+                        this.openNextPage();
+                        return;
                 }
             },
             null,
@@ -219,7 +218,7 @@ export default class DocsViewerProvider {
         DocsViewerProvider.currentDocsViewerPanel = undefined;
 
         // Clean up our resources
-        this._panel.dispose();
+        this.webviewPanel.dispose();
 
         while (this._disposables.length) {
             const x = this._disposables.pop();
@@ -275,7 +274,7 @@ export default class DocsViewerProvider {
      * Create URL to webview static resource
      */
         private getResourceUri(resourceRelativePath: string) {
-            return this._panel.webview.asWebviewUri(
+            return this.webviewPanel.webview.asWebviewUri(
                 vscode.Uri.joinPath(this.extensionUrl, 'static/webview2', resourceRelativePath)
             );
         }

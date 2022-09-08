@@ -29,12 +29,12 @@ export default class WebviewMgr {
         );
         context.subscriptions.push(
             vscode.commands.registerCommand('sfccBeaver.docsNavigationBack', (data) => {
-                DocsViewerProvider.currentDocsViewerPanel?.moveBack();
+                DocsViewerProvider.currentDocsViewerPanel?.openPreviousPage();
             })
         );
         context.subscriptions.push(
             vscode.commands.registerCommand('sfccBeaver.docsNavigationForward', (data) => {
-                DocsViewerProvider.currentDocsViewerPanel?.moveForward();
+                DocsViewerProvider.currentDocsViewerPanel?.openNextPage();
             })
         );
 
