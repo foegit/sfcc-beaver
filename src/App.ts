@@ -7,10 +7,11 @@ import path = require('path');
 import BeaverError, { ErrCodes } from './classes/errors/BeaverError';
 import SettingTool from './classes/tools/SettingTool';
 import { CartridgesObserver } from './classes/treeViews/CartridgeObserver';
-import { JobsObserver } from './classes/treeViews/JobsObserver';
 import CartridgeTreeItem from './classes/treeViews/treeItems/CartridgeTreeItem';
 import { copyInclude, copyUnixPath } from './commands/copy';
 import { overrideFile } from './commands/override';
+import HoverManager from './classes/hover/HoverManager';
+import WebviewMgr from './webviewProviders/WebviewMgr';
 
 class App {
     public uniqueTime: string;
@@ -26,12 +27,10 @@ class App {
         const overrideFileCommand = vscode.commands.registerCommand('sfccBeaver.override', overrideFile);
         const copyUnixPathCommand = vscode.commands.registerCommand('sfccBeaver.unixpath', copyUnixPath);
         const cartridgesObserver = new CartridgesObserver();
-        const jobsObserver = new JobsObserver();
         vscode.window.registerTreeDataProvider('cartridgesObserver', cartridgesObserver);
 
-        if (false) {
-            vscode.window.registerTreeDataProvider('jobsObserver', jobsObserver);
-        }
+        // const jobsObserver = new JobsObserver();
+        // vscode.window.registerTreeDataProvider('jobsObserver', jobsObserver);
 
         vscode.commands.registerCommand('sfccBeaver.refreshCartridgeList', async () => {
             await this.indexCartridges();
@@ -49,12 +48,16 @@ class App {
             cartridgesObserver.refresh();
         });
 
+
         // Samples of `window.registerTreeDataProvider`
 
         // TODO: one day give it an explanation
         context.subscriptions.push(copyPathCommand);
         context.subscriptions.push(overrideFileCommand);
         context.subscriptions.push(copyUnixPathCommand);
+
+        HoverManager.init(context);
+        WebviewMgr.init(context);
 
         this.workspaceState = context.workspaceState;
         this.indexCartridges();

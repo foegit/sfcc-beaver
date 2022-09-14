@@ -1,0 +1,67 @@
+/* Docs provider styles */
+
+.bv-result .link {
+    font-weight: bold;
+    text-decoration: none;
+    color: var(--vscode-charts-green);
+}
+
+.bv-result .description {
+    color: var(--vscode-editorOverviewRuler-bracketMatchForeground);
+    padding-bottom: 1em;
+}
+
+.bv-search-input:--vscode-button-backgroundafter {
+    content: '';
+    width: 20px;
+    height: 2px;
+    background-color: var(--vscode-button-background);
+}
+
+.bv-search-status {
+    width: 100%;
+    height: 3px;
+    background-color: var(--vscode-editorOverviewRuler-bracketMatchForeground);
+    border-radius: 2px;
+    position: relative;
+
+}
+
+.bv-search-status.success {
+    background-color: var(--vscode-charts-green);
+}
+
+.bv-search-status.fail {
+    background-color: var(--vscode-charts-red);
+}
+
+.bv-search-status-loader {
+    width: 10%;
+    height: 100%;
+    position: absolute;
+    right: 90%;
+    background-color: var(--vscode-button-background);
+    border-radius: 2px;
+    display: none;
+}
+
+.bv-search-status.progress .bv-search-status-loader {
+    display: block;
+    animation-name: example;
+    animation-duration: 4s;
+    animation-iteration-count: infinite;
+}
+
+.bv-search-feedback {
+    padding-bottom: 10px;
+}
+
+.bv-search-feedback.error {
+    color: var(--vscode-charts-red);
+}
+
+@keyframes example {
+    0% { right: 90%; }
+    50% { right: 0%; }
+    100% { right: 90%; }
+}

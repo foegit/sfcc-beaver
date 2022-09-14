@@ -1,47 +1,53 @@
 # 🦫 SFCC Beaver
 
-Beaver who is an experience developer (including his dam) will take care about routine tasks on SFCC projects.
+It is a VS Code extension that automates routine tasks for SFCC Developer.
 
-💡 Please keep in mind, Beaver supports only SFRA projects. However, some of the feature are compatible with SiteGen.
+**The key features are:**
 
-## Features
+- 🪜 **Override Files**
+With `override` command you can copy (override) the currently opened file to another cartridge.
 
-### ⭐ Overview
+- 📚 **Copy Paths**
+With `extract` command you can copy (extract) needed resource such as script file, ISML template or resource message to clipboard and paste it to the place where you need it.
+Also you can copy full unix-like path of the file which may be useful when sharing things with a team.
 
-This extension provides a set of command to automate routine tasks. To activate command press `⌨ F1` or `⌨ Ctrl+Shift+P` and start typing name of the command:
+- 🔎 **Search in Documentation**
+Search in SFCC documentation without leaving VS Code. You can also share a link or open in browser a particular topic.
 
-- **🦫 sf extract** command
-  - get a require of active script file
-  - get an isinclude of active template file
-  - get a call of Resource.msg for open .properties file
-- **🦫 unix path** command
-  - get a path of your file related to the project root
-- **🦫 sf override** command
-  - override active file to another cartridge
+> **💡Compatibility**
+Beaver fully supports only SFRA projects. However, some of the feature are compatible with SiteGen as well.
 
-### 🪚 Extract
+## ⭐ Usage
 
-Depends on the file type, you can automatically extract an import statement for this file.
+Once installed, you can start using Beaver features.
 
-1. Open a file you need to import
-    - For resources, focus cursor on property you want to use
-2. Call _sf extract_ and appropriate import will be copied to the clipboard:
-    - `var fileName = require({filePath});` for JavaScript, JSON files
-    - `<isinclude template='{templatePath}' />` for ISML file
-    - `Resource.msg('{activeLinePropName}', '{fileName}', null)` for .properties files
+### Commands
 
-### 🪵 Override
+Beaver adds to VS Code few commands. To trigger a command you need to open command pallette (press `F1` or `Ctrl + Shift + P`) and enter the command name.
 
-Depends on the file type, you can automatically override a file to another cartridge
+- **🦫 Extract** command copies to clipboard require of the file depends on type.
+  - for script (JS) file copy require: `var fileName = require('*/filePath')`
+  - for template (ISML) file copy isinclude: `<isinclude template='templatePath' />`
+  - for resource (PROPERTIES) file copy active line as `Resource.msg('{activeLinePropName}', '{fileName}', null)`
 
-1. Open file you need to override
-    - For resources, focus cursor on property you want to use
-2. Call _sf extract_ and Beaver will override it for you
+- **🦫 Unix path** command copies file path relatively to the project root folder.
+- **🦫 Override** command overrides current file to another cartridge
 
-## Road Map
+### Beaver Dam
 
-Beaver works hard helping you, but it also learns a lot of new stuff to help you even more:
+Beaver introduces a new panel called Beaver Dam. There two items:
 
-- Creating commonly used templates like steptypes, bm_extension, controller, the entire cartridge, and PD component
-- Managing meta through OCAPI
-- Help managing PageDesigner pages
+- **Cartridges** is a active cartridge list where you can pin/unpin cartridge for overriding.
+- **Documentation**. There you can search in SFCC docs without leaving VS Code.
+
+### Hovers
+
+If you hover over the API class such as `require('dw/web/URLUtils')` you see a tip with `🦫 Open docs` suggestion. Clicking it will open appropriate documentation topic.
+
+## 👍 Recommendations
+
+Install the icons extension **[🦫 SFCC Beaver - Icons](https://marketplace.visualstudio.com/items?itemName=SerhiiHlavatskyi.sfcc-beaver-icons 'Open marketplace')** to make your project look better.
+
+## 📨 Feedback
+
+Found a 🪲bug or want to improve something? Feel free to open an issue on GitHub: <https://github.com/foegit/sfcc-beaver/issues>

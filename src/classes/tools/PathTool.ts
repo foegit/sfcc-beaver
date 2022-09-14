@@ -16,6 +16,18 @@ export default class PathTool {
     }
 
     /**
+     * Checks if there is such folder in given path
+     * @param fsPath - windows- or unix-like path
+     * @param subPath - folder name to check
+     */
+    static hasSubPath(fsPath: string, subPath: string): boolean {
+        const folders = subPath.split(/[\\/]/);
+        const matchRegExp = new RegExp(`.*([\\\\/])${folders.join('([\\\\/])')}(?:\\1|$)`);
+
+        return matchRegExp.test(fsPath);
+    }
+
+    /**
      * Gets folder start index in given path starting from separator (/)
      * @param fsPath - windows- or unix-like path
      * @param folderName - folder name to search

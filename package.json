@@ -1,8 +1,8 @@
 {
     "name": "sfcc-beaver",
     "displayName": "SFCC Beaver",
-    "description": "A beaver who is an experienced developer (of its dam) will help you with your work routine",
-    "version": "1.6.0",
+    "description": "An extension for SFCC developers to automate routine tasks",
+    "version": "2.0.0",
     "icon": "static/simpleLogo.png",
     "repository": "https://github.com/foegit/sfcc-beaver",
     "publisher": "SerhiiHlavatskyi",
@@ -12,12 +12,16 @@
     "categories": [
         "Other"
     ],
+    "keywords": [
+        "sfcc",
+        "salesforce",
+        "demandware",
+        "dw",
+        "cartridge",
+        "commerce cloud"
+    ],
     "activationEvents": [
-        "onCommand:sfccBeaver.extract",
-        "onView:cartridgesObserver",
-        "onView:jobObserver",
-        "onCommand:sfccBeaver.unixpath",
-        "onCommand:sfccBeaver.override"
+        "*"
     ],
     "main": "./dist/extension.js",
     "contributes": {
@@ -43,30 +47,58 @@
         "commands": [
             {
                 "command": "sfccBeaver.extract",
-                "title": "🦫 sf extract"
+                "title": "🦫 Extract"
             },
             {
                 "command": "sfccBeaver.override",
-                "title": "🦫 sf override"
+                "title": "🦫 Override"
             },
             {
                 "command": "sfccBeaver.unixpath",
-                "title": "🦫 unix path"
+                "title": "🦫 Unix path"
             },
             {
                 "command": "sfccBeaver.refreshCartridgeList",
-                "title": "Refresh cartridge list",
+                "title": "🦫 Refresh cartridge list",
                 "icon": "$(refresh)"
             },
             {
                 "command": "sfccBeaver.pinCartridge",
-                "title": "Pin cartridge",
+                "title": "🦫 Pin cartridge",
                 "icon": "$(pin)"
             },
             {
                 "command": "sfccBeaver.unpinCartridge",
-                "title": "Unpin cartridge",
+                "title": "🦫 Unpin cartridge",
                 "icon": "$(close)"
+            },
+            {
+                "command": "sfccBeaver.openDocsDetails",
+                "title": "Open Documentation Details"
+            },
+            {
+                "command": "sfccBeaver.openClassDetails",
+                "title": "Open Class Documentation"
+            },
+            {
+                "command": "sfccBeaver.docsOpenInBrowser",
+                "title": "Open Class Documentation",
+                "icon": "$(link-external)"
+            },
+            {
+                "command": "sfccBeaver.docsCopyToClipboard",
+                "title": "Copy link to clipboard",
+                "icon": "$(copy)"
+            },
+            {
+                "command": "sfccBeaver.docsNavigationBack",
+                "title": "Go back",
+                "icon": "$(arrow-left)"
+            },
+            {
+                "command": "sfccBeaver.docsNavigationForward",
+                "title": "Go forward",
+                "icon": "$(arrow-right)"
             }
         ],
         "menus": {
@@ -77,6 +109,14 @@
                 },
                 {
                     "command": "sfccBeaver.unpinCartridge",
+                    "when": "false"
+                },
+                {
+                    "command": "sfccBeaver.openClassDetails",
+                    "when": "false"
+                },
+                {
+                    "command": "sfccBeaver.openDocsDetails",
                     "when": "false"
                 }
             ],
@@ -98,6 +138,28 @@
                     "when": "view == cartridgesObserver && viewItem == sfccPinnedCartridgeTreeItem",
                     "group": "inline"
                 }
+            ],
+            "editor/title": [
+                {
+                    "command": "sfccBeaver.docsOpenInBrowser",
+                    "group": "navigation@2",
+                    "when": "activeWebviewPanelId == docsViewer"
+                },
+                {
+                    "command": "sfccBeaver.docsCopyToClipboard",
+                    "group": "navigation@2",
+                    "when": "activeWebviewPanelId == docsViewer"
+                },
+                {
+                    "command": "sfccBeaver.docsNavigationBack",
+                    "group": "navigation@1",
+                    "when": "activeWebviewPanelId == docsViewer"
+                },
+                {
+                    "command": "sfccBeaver.docsNavigationForward",
+                    "group": "navigation@1",
+                    "when": "activeWebviewPanelId == docsViewer"
+                }
             ]
         },
         "viewsContainers": {
@@ -105,16 +167,22 @@
                 {
                     "id": "beaver-dam",
                     "title": "Beaver Dam",
-                    "icon": "static/sfccBeaverIcon.svg"
+                    "icon": "static/simpleLogo.svg"
                 }
             ]
         },
         "views": {
             "beaver-dam": [
                 {
-                    "id": "cartridgesObserver",
                     "name": "Cartridges",
+                    "id": "cartridgesObserver",
                     "contextualTitle": "Cartridge Overview"
+                },
+                {
+                    "name": "Documentation",
+                    "id": "docsNavigator",
+                    "type": "webview",
+                    "contextualTitle": "Documentation Search"
                 }
             ]
         }
@@ -144,13 +212,20 @@
         "eslint": "^8.11.0",
         "glob": "^7.2.0",
         "mocha": "^9.2.2",
+        "sass": "^1.54.8",
+        "sass-loader": "^13.0.2",
         "ts-loader": "^9.2.8",
         "ts-node": "^10.7.0",
         "typescript": "^4.6.3",
-        "webpack": "^5.70.0",
+        "webpack": "^5.74.0",
         "webpack-cli": "^4.9.2"
     },
     "dependencies": {
-        "fast-glob": "^3.2.11"
+        "@types/vscode-webview": "^1.57.0",
+        "axios": "^0.27.2",
+        "cash-dom": "^8.1.1",
+        "cheerio": "^1.0.0-rc.12",
+        "fast-glob": "^3.2.11",
+        "normalize-url": "^7.0.3"
     }
 }

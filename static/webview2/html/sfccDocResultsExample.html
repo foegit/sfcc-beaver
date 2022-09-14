@@ -1,0 +1,794 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!------------------------------------------------------------------------------
+ ! Copyright (c) 2000, 2007 IBM Corporation and others.
+ ! All rights reserved. This program and the accompanying materials
+ ! are made available under the terms of the Eclipse Public License v1.0
+ ! which accompanies this distribution, and is available at
+ ! http://www.eclipse.org/legal/epl-v10.html
+ !
+ ! Contributors:
+ !     IBM Corporation - initial API and implementation
+ ------------------------------------------------------------------------------->
+
+
+
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="-1">
+
+    <title>Search Results</title>
+
+    <style type="text/css">
+        /*******************************************************************************
+ * Copyright (c) 2000, 2011 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+
+        body {
+            background-color: #FFFFFF;
+            color: WindowText;
+            font: icon;
+            padding: 0px;
+            border: 0px;
+            margin-top: 5px;
+            margin-bottom: 8px;
+            margin-left: 5px;
+            margin-right: 5px;
+            cursor: default;
+        }
+
+        table {
+            font: icon;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        a {
+            text-decoration: none;
+            padding: 0px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .category {
+            font-weight: bold;
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+
+        .sectiontitle {
+            background-color: #dddbda;
+            font-weight: bold;
+            margin-top: 7px;
+        }
+
+        .results .active {
+            background: Highlight;
+            color: HighlightText;
+            width: 100%;
+            height: 100%;
+        }
+
+        .showall {
+            text-decoration: underline;
+            color: #0066FF;
+            cursor: pointer;
+        }
+
+        #menu {
+            position: absolute;
+            display: none;
+            background: #dddbda;
+            border: 2px outset;
+            padding: 2px 0px;
+        }
+
+        .selectedMenuItem {
+            background: Highlight;
+            color: HighlightText;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        .unselectedMenuItem {
+            background: #dddbda;
+            color: WindowText;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        .icon {
+            width: 23px;
+            padding-left: 0px;
+        }
+
+        .description {
+            display: block;
+        }
+    </style>
+
+
+    <base target="ContentViewFrame">
+    <script language="JavaScript" src="utils.js"></script>
+    <script language="JavaScript" src="list.js"></script>
+    <script language="JavaScript" src="view.js"></script>
+    <script language="JavaScript">
+        var cookiesRequired = "This\u0020feature\u0020requires\u0020cookies\u0020to\u0020be\u0020enabled\u0020in\u0020your\u0020browser\u002E";
+        var showCategories = false;
+        var scope = "All\u0020topics";
+
+        function refresh() {
+            window.location.replace("searchView.jsp?searchWord\u003DcustomerMgr\u0026maxHits\u003D\u0035\u0030\u0030");
+        }
+
+        function isShowDescriptions() {
+            var value = getCookie("showDescriptions");
+            return value ? value == "true" : true;
+        }
+
+        function setShowCategories(value) {
+            parent.searchToolbarFrame.setButtonState("show_categories", value);
+            var searchWord = "customerMgr";
+            window.location = "searchView.jsp?searchWord=" + encodeURIComponent(searchWord)
+                + "&showSearchCategories=" + value +
+                "&scope=" + encodeURIComponent(scope);
+        }
+
+        function setShowDescriptions(value) {
+            setCookie("showDescriptions", value);
+            var newValue = isShowDescriptions();
+            parent.searchToolbarFrame.setButtonState("show_descriptions", newValue);
+            if (value != newValue) {
+                alert(cookiesRequired);
+            } else {
+                setCSSRule(".description", "display", value ? "block" : "none");
+            }
+        }
+
+        function toggleShowCategories() {
+            setShowCategories(!showCategories);
+        }
+
+        function toggleShowDescriptions() {
+            setShowDescriptions(!isShowDescriptions());
+        }
+
+        function onShow() {
+        }
+    </script>
+
+
+</head>
+
+<body dir="ltr">
+
+
+    <p><b>17 matches in All topics&#58;</b>
+
+        &nbsp;<a class="showall" onclick="rescope();">Change scope</a>
+
+    </p>
+
+
+    <table class="results" cellspacing='0'>
+
+
+
+        <tr class='list' id='r0'>
+            <td class='icon'>
+
+
+
+                <img src="images/topic.gif" alt="" />
+
+
+
+            </td>
+            <td align='left'>
+                <a class='link' id='a0'
+                    href="&#46;&#46;&#47;topic&#47;com&#46;demandware&#46;dochelp&#47;DWAPI&#47;scriptapi&#47;html&#47;api&#47;class_dw_customer_CustomerMgr&#46;html&#63;resultof&#61;%22%63%75%73%74%6f%6d%65%72%4d%67%72%22%20%22%63%75%73%74%6f%6d%65%72%6d%67%72%22%20"
+                    onmouseover="showStatus(event);return true;" onmouseout="clearStatus();return true;"
+                    title="Salesforce B2C Commerce 22&#46;9">
+
+
+
+                    Class CustomerMgr</a>
+            </td>
+        </tr>
+
+
+        <tr id='d0'>
+            <td class='icon'>
+            </td>
+            <td align='left'>
+                <div class="description">
+                    Overview API Versioning Deprecated dw&#46;customer Class CustomerMgr Object
+                    dw&#46;customer&#46;CustomerMgr Provides helper methods for managing customers and customer
+                    profiles&#46; Note&#58; &#46;&#46;&#46;
+                </div>
+            </td>
+        </tr>
+
+
+        <tr class='list' id='r1'>
+            <td class='icon'>
+
+
+
+                <img src="images/topic.gif" alt="" />
+
+
+
+            </td>
+            <td align='left'>
+                <a class='link' id='a1'
+                    href="&#46;&#46;&#47;topic&#47;com&#46;demandware&#46;dochelp&#47;content&#47;b2c_commerce&#47;topics&#47;customers&#47;b2c_apis_for_customer_search&#46;html&#63;resultof&#61;%22%63%75%73%74%6f%6d%65%72%4d%67%72%22%20%22%63%75%73%74%6f%6d%65%72%6d%67%72%22%20"
+                    onmouseover="showStatus(event);return true;" onmouseout="clearStatus();return true;"
+                    title="Salesforce B2C Commerce 22&#46;9">
+
+
+
+                    APIs for Customer Search</a>
+            </td>
+        </tr>
+
+
+        <tr id='d1'>
+            <td class='icon'>
+            </td>
+            <td align='left'>
+                <div class="description">
+                    You can use the search relevance functionality to improved performance&#46;
+                </div>
+            </td>
+        </tr>
+
+
+        <tr class='list' id='r2'>
+            <td class='icon'>
+
+
+
+                <img src="images/topic.gif" alt="" />
+
+
+
+            </td>
+            <td align='left'>
+                <a class='link' id='a2'
+                    href="&#46;&#46;&#47;topic&#47;com&#46;demandware&#46;dochelp&#47;content&#47;b2c_commerce&#47;topics&#47;pricebooks&#47;b2c_future_prices_preview&#46;html&#63;resultof&#61;%22%63%75%73%74%6f%6d%65%72%4d%67%72%22%20%22%63%75%73%74%6f%6d%65%72%6d%67%72%22%20"
+                    onmouseover="showStatus(event);return true;" onmouseout="clearStatus();return true;"
+                    title="Salesforce B2C Commerce 22&#46;9">
+
+
+
+                    Future Prices Preview</a>
+            </td>
+        </tr>
+
+
+        <tr id='d2'>
+            <td class='icon'>
+            </td>
+            <td align='left'>
+                <div class="description">
+                    Use the Toolkit Preview to confirm future dated prices for products on your site&#46;
+                </div>
+            </td>
+        </tr>
+
+
+        <tr class='list' id='r3'>
+            <td class='icon'>
+
+
+
+                <img src="images/topic.gif" alt="" />
+
+
+
+            </td>
+            <td align='left'>
+                <a class='link' id='a3'
+                    href="&#46;&#46;&#47;topic&#47;com&#46;demandware&#46;dochelp&#47;content&#47;b2c_commerce&#47;topics&#47;jobs&#47;b2c_pipelet_to_script_conversion&#46;html&#63;resultof&#61;%22%63%75%73%74%6f%6d%65%72%4d%67%72%22%20%22%63%75%73%74%6f%6d%65%72%6d%67%72%22%20"
+                    onmouseover="showStatus(event);return true;" onmouseout="clearStatus();return true;"
+                    title="Salesforce B2C Commerce 22&#46;9">
+
+
+
+                    Pipelet to Script Method or Job Step Conversion</a>
+            </td>
+        </tr>
+
+
+        <tr id='d3'>
+            <td class='icon'>
+            </td>
+            <td align='left'>
+                <div class="description">
+                    Some pipelets have a script method or job step equivalent&#46; We recommend using the script method
+                    or job step instead of the pipelet&#46; Any pipelet can be called directly from a controller&#46;
+                </div>
+            </td>
+        </tr>
+
+
+        <tr class='list' id='r4'>
+            <td class='icon'>
+
+
+
+                <img src="images/topic.gif" alt="" />
+
+
+
+            </td>
+            <td align='left'>
+                <a class='link' id='a4'
+                    href="&#46;&#46;&#47;topic&#47;com&#46;demandware&#46;dochelp&#47;content&#47;b2c_commerce&#47;topics&#47;permissions&#47;b2c_storefront_password_protection&#46;html&#63;resultof&#61;%22%63%75%73%74%6f%6d%65%72%4d%67%72%22%20%22%63%75%73%74%6f%6d%65%72%6d%67%72%22%20"
+                    onmouseover="showStatus(event);return true;" onmouseout="clearStatus();return true;"
+                    title="Salesforce B2C Commerce 22&#46;9">
+
+
+
+                    Storefront Password Protection and Login</a>
+            </td>
+        </tr>
+
+
+        <tr id='d4'>
+            <td class='icon'>
+            </td>
+            <td align='left'>
+                <div class="description">
+                    To prevent shoppers from finding your storefront during development and testing&#44; restrict
+                    access&#46; Limit storefront access to merchants and other people involved in the project&#46; This
+                    limit prevents cra
+                </div>
+            </td>
+        </tr>
+
+
+        <tr class='list' id='r5'>
+            <td class='icon'>
+
+
+
+                <img src="images/topic.gif" alt="" />
+
+
+
+            </td>
+            <td align='left'>
+                <a class='link' id='a5'
+                    href="&#46;&#46;&#47;topic&#47;com&#46;demandware&#46;dochelp&#47;content&#47;b2c_commerce&#47;topics&#47;sfra&#47;b2c_save_form_data&#46;html&#63;resultof&#61;%22%63%75%73%74%6f%6d%65%72%4d%67%72%22%20%22%63%75%73%74%6f%6d%65%72%6d%67%72%22%20"
+                    onmouseover="showStatus(event);return true;" onmouseout="clearStatus();return true;"
+                    title="Salesforce B2C Commerce 22&#46;9">
+
+
+
+                    Saving Form Data</a>
+            </td>
+        </tr>
+
+
+        <tr id='d5'>
+            <td class='icon'>
+            </td>
+            <td align='left'>
+                <div class="description">
+                    The route&#58;BeforeComplete event is used to store form data&#46; Different APIs are used to save
+                    data&#44; depending on the type of form&#46;
+                </div>
+            </td>
+        </tr>
+
+
+        <tr class='list' id='r6'>
+            <td class='icon'>
+
+
+
+                <img src="images/topic.gif" alt="" />
+
+
+
+            </td>
+            <td align='left'>
+                <a class='link' id='a6'
+                    href="&#46;&#46;&#47;topic&#47;com&#46;demandware&#46;dochelp&#47;DWAPI&#47;scriptapi&#47;html&#47;api&#47;package_dw_customer&#46;html&#63;resultof&#61;%22%63%75%73%74%6f%6d%65%72%4d%67%72%22%20%22%63%75%73%74%6f%6d%65%72%6d%67%72%22%20"
+                    onmouseover="showStatus(event);return true;" onmouseout="clearStatus();return true;"
+                    title="Salesforce B2C Commerce 22&#46;9">
+
+
+
+                    Package dw&#46;customer</a>
+            </td>
+        </tr>
+
+
+        <tr id='d6'>
+            <td class='icon'>
+            </td>
+            <td align='left'>
+                <div class="description">
+                    dw&#46;customer NameDescription AddressBook Represents a set of addresses associated with a specific
+                    customer&#46; AgentUserMgr Provides helper methods for handling agent user func&#46;&#46;&#46;
+                </div>
+            </td>
+        </tr>
+
+
+        <tr class='list' id='r7'>
+            <td class='icon'>
+
+
+
+                <img src="images/topic.gif" alt="" />
+
+
+
+            </td>
+            <td align='left'>
+                <a class='link' id='a7'
+                    href="&#46;&#46;&#47;topic&#47;com&#46;demandware&#46;dochelp&#47;DWAPI&#47;scriptapi&#47;html&#47;api&#47;class_dw_customer_CustomerPasswordConstraints&#46;html&#63;resultof&#61;%22%63%75%73%74%6f%6d%65%72%4d%67%72%22%20%22%63%75%73%74%6f%6d%65%72%6d%67%72%22%20"
+                    onmouseover="showStatus(event);return true;" onmouseout="clearStatus();return true;"
+                    title="Salesforce B2C Commerce 22&#46;9">
+
+
+
+                    Class CustomerPasswordConstraints</a>
+            </td>
+        </tr>
+
+
+        <tr id='d7'>
+            <td class='icon'>
+            </td>
+            <td align='left'>
+                <div class="description">
+                    Overview API Versioning Deprecated dw&#46;customer Class CustomerPasswordConstraints Object
+                    dw&#46;customer&#46;CustomerPasswordConstraints Provides access to the constraints of
+                    custom&#46;&#46;&#46;
+                </div>
+            </td>
+        </tr>
+
+
+        <tr class='list' id='r8'>
+            <td class='icon'>
+
+
+
+                <img src="images/topic.gif" alt="" />
+
+
+
+            </td>
+            <td align='left'>
+                <a class='link' id='a8'
+                    href="&#46;&#46;&#47;topic&#47;com&#46;demandware&#46;dochelp&#47;LegacyDevDoc&#47;SiteGenesisPasswords&#46;html&#63;resultof&#61;%22%63%75%73%74%6f%6d%65%72%4d%67%72%22%20%22%63%75%73%74%6f%6d%65%72%6d%67%72%22%20"
+                    onmouseover="showStatus(event);return true;" onmouseout="clearStatus();return true;"
+                    title="Salesforce B2C Commerce 22&#46;9">
+
+
+
+                    SiteGenesis Passwords</a>
+            </td>
+        </tr>
+
+
+        <tr id='d8'>
+            <td class='icon'>
+            </td>
+            <td align='left'>
+                <div class="description">
+                    This topic describes how to create secure passwords for SiteGenesis Pipelines &#40;SGPP&#41; and
+                    SiteGenesis JavaScript Controllers &#40;SGJC&#41;&#46;
+                </div>
+            </td>
+        </tr>
+
+
+        <tr class='list' id='r9'>
+            <td class='icon'>
+
+
+
+                <img src="images/topic.gif" alt="" />
+
+
+
+            </td>
+            <td align='left'>
+                <a class='link' id='a9'
+                    href="&#46;&#46;&#47;topic&#47;com&#46;demandware&#46;dochelp&#47;content&#47;b2c_commerce&#47;topics&#47;b2c_security_best_practices&#47;b2c_developer_authentication_and_authorization&#46;html&#63;resultof&#61;%22%63%75%73%74%6f%6d%65%72%4d%67%72%22%20%22%63%75%73%74%6f%6d%65%72%6d%67%72%22%20"
+                    onmouseover="showStatus(event);return true;" onmouseout="clearStatus();return true;"
+                    title="Salesforce B2C Commerce 22&#46;9">
+
+
+
+                    Authentication and Authorization</a>
+            </td>
+        </tr>
+
+
+        <tr id='d9'>
+            <td class='icon'>
+            </td>
+            <td align='left'>
+                <div class="description">
+                    Exploitation of access control vulnerabilities is a core skill of attackers&#46; To protect against
+                    the attackers&#44; enforce server&#45;side access control checks for business functions such as
+                    account manageme
+                </div>
+            </td>
+        </tr>
+
+
+        <tr class='list' id='r10'>
+            <td class='icon'>
+
+
+
+                <img src="images/topic.gif" alt="" />
+
+
+
+            </td>
+            <td align='left'>
+                <a class='link' id='a10'
+                    href="&#46;&#46;&#47;topic&#47;com&#46;demandware&#46;dochelp&#47;ScriptDebuggerAPI&#47;latest&#47;usage&#47;ObjectMembers&#46;html&#63;resultof&#61;%22%63%75%73%74%6f%6d%65%72%4d%67%72%22%20%22%63%75%73%74%6f%6d%65%72%6d%67%72%22%20"
+                    onmouseover="showStatus(event);return true;" onmouseout="clearStatus();return true;"
+                    title="Salesforce B2C Commerce 22&#46;9">
+
+
+
+                    SDAPI Variables&#44; Objects and Object Members 2&#46;0</a>
+            </td>
+        </tr>
+
+
+        <tr id='d10'>
+            <td class='icon'>
+            </td>
+            <td align='left'>
+                <div class="description">
+
+                </div>
+            </td>
+        </tr>
+
+
+        <tr class='list' id='r11'>
+            <td class='icon'>
+
+
+
+                <img src="images/topic.gif" alt="" />
+
+
+
+            </td>
+            <td align='left'>
+                <a class='link' id='a11'
+                    href="&#46;&#46;&#47;topic&#47;com&#46;demandware&#46;dochelp&#47;DWAPI&#47;quota&#47;html&#47;API_Quotas&#46;html&#63;resultof&#61;%22%63%75%73%74%6f%6d%65%72%4d%67%72%22%20%22%63%75%73%74%6f%6d%65%72%6d%67%72%22%20"
+                    onmouseover="showStatus(event);return true;" onmouseout="clearStatus();return true;"
+                    title="Salesforce B2C Commerce 22&#46;9">
+
+
+
+                    API Quotas</a>
+            </td>
+        </tr>
+
+
+        <tr id='d11'>
+            <td class='icon'>
+            </td>
+            <td align='left'>
+                <div class="description">
+                    API quotas may define limits on number of object instances&#44; object sizes&#44; runtimes&#44;
+                    number of executions per page&#44; or prevent the execution of a B2C Commerce Script method
+                    &#46;&#46;&#46;
+                </div>
+            </td>
+        </tr>
+
+
+        <tr class='list' id='r12'>
+            <td class='icon'>
+
+
+
+                <img src="images/topic.gif" alt="" />
+
+
+
+            </td>
+            <td align='left'>
+                <a class='link' id='a12'
+                    href="&#46;&#46;&#47;topic&#47;com&#46;demandware&#46;dochelp&#47;DWAPI&#47;scriptapi&#47;html&#47;api&#47;class_dw_object_SystemObjectMgr&#46;html&#63;resultof&#61;%22%63%75%73%74%6f%6d%65%72%4d%67%72%22%20%22%63%75%73%74%6f%6d%65%72%6d%67%72%22%20"
+                    onmouseover="showStatus(event);return true;" onmouseout="clearStatus();return true;"
+                    title="Salesforce B2C Commerce 22&#46;9">
+
+
+
+                    Class SystemObjectMgr</a>
+            </td>
+        </tr>
+
+
+        <tr id='d12'>
+            <td class='icon'>
+            </td>
+            <td align='left'>
+                <div class="description">
+                    Overview API Versioning Deprecated dw&#46;object Class SystemObjectMgr Object
+                    dw&#46;object&#46;SystemObjectMgr Manager class which provides methods for querying for system
+                    objects wit&#46;&#46;&#46;
+                </div>
+            </td>
+        </tr>
+
+
+        <tr class='list' id='r13'>
+            <td class='icon'>
+
+
+
+                <img src="images/topic.gif" alt="" />
+
+
+
+            </td>
+            <td align='left'>
+                <a class='link' id='a13'
+                    href="&#46;&#46;&#47;topic&#47;com&#46;demandware&#46;dochelp&#47;ScriptDebuggerAPI&#47;latest&#47;Resources&#47;Threads&#46;html&#63;resultof&#61;%22%63%75%73%74%6f%6d%65%72%4d%67%72%22%20%22%63%75%73%74%6f%6d%65%72%6d%67%72%22%20"
+                    onmouseover="showStatus(event);return true;" onmouseout="clearStatus();return true;"
+                    title="Salesforce B2C Commerce 22&#46;9">
+
+
+
+                    Threads Resource &#40;Debugger API 2&#46;0&#41;</a>
+            </td>
+        </tr>
+
+
+        <tr id='d13'>
+            <td class='icon'>
+            </td>
+            <td align='left'>
+                <div class="description">
+
+                </div>
+            </td>
+        </tr>
+
+
+        <tr class='list' id='r14'>
+            <td class='icon'>
+
+
+
+                <img src="images/topic.gif" alt="" />
+
+
+
+            </td>
+            <td align='left'>
+                <a class='link' id='a14'
+                    href="&#46;&#46;&#47;topic&#47;com&#46;demandware&#46;dochelp&#47;LegacyDevDoc&#47;SGJCForms&#46;html&#63;resultof&#61;%22%63%75%73%74%6f%6d%65%72%4d%67%72%22%20%22%63%75%73%74%6f%6d%65%72%6d%67%72%22%20"
+                    onmouseover="showStatus(event);return true;" onmouseout="clearStatus();return true;"
+                    title="Salesforce B2C Commerce 22&#46;9">
+
+
+
+                    SGJC Forms</a>
+            </td>
+        </tr>
+
+
+        <tr id='d14'>
+            <td class='icon'>
+            </td>
+            <td align='left'>
+                <div class="description">
+
+                </div>
+            </td>
+        </tr>
+
+
+        <tr class='list' id='r15'>
+            <td class='icon'>
+
+
+
+                <img src="images/topic.gif" alt="" />
+
+
+
+            </td>
+            <td align='left'>
+                <a class='link' id='a15'
+                    href="&#46;&#46;&#47;topic&#47;com&#46;demandware&#46;dochelp&#47;DWAPI&#47;scriptapi&#47;html&#47;api&#47;packageList&#46;html&#63;resultof&#61;%22%63%75%73%74%6f%6d%65%72%4d%67%72%22%20%22%63%75%73%74%6f%6d%65%72%6d%67%72%22%20"
+                    onmouseover="showStatus(event);return true;" onmouseout="clearStatus();return true;"
+                    title="Salesforce B2C Commerce 22&#46;9">
+
+
+
+                    Packages</a>
+            </td>
+        </tr>
+
+
+        <tr id='d15'>
+            <td class='icon'>
+            </td>
+            <td align='left'>
+                <div class="description">
+                    B2C Commerce Script 22&#46;9 All Classes NameDescription global The global object is a
+                    pre&#45;defined object that serves as a placeholder for the global properties and functions
+                    o&#46;&#46;&#46;
+                </div>
+            </td>
+        </tr>
+
+
+        <tr class='list' id='r16'>
+            <td class='icon'>
+
+
+
+                <img src="images/topic.gif" alt="" />
+
+
+
+            </td>
+            <td align='left'>
+                <a class='link' id='a16'
+                    href="&#46;&#46;&#47;topic&#47;com&#46;demandware&#46;dochelp&#47;DWAPI&#47;scriptapi&#47;html&#47;api&#47;classList&#46;html&#63;resultof&#61;%22%63%75%73%74%6f%6d%65%72%4d%67%72%22%20%22%63%75%73%74%6f%6d%65%72%6d%67%72%22%20"
+                    onmouseover="showStatus(event);return true;" onmouseout="clearStatus();return true;"
+                    title="Salesforce B2C Commerce 22&#46;9">
+
+
+
+                    All Classes</a>
+            </td>
+        </tr>
+
+
+        <tr id='d16'>
+            <td class='icon'>
+            </td>
+            <td align='left'>
+                <div class="description">
+                    NameDescription global The global object is a pre&#45;defined object that serves as a placeholder
+                    for the global properties and functions of JavaScript&#46; AbstractItem An item wh&#46;&#46;&#46;
+                </div>
+            </td>
+        </tr>
+
+    </table>
+
+
+
+    <script language="JavaScript">
+        selectTopicById('');
+    </script>
+
+</body>
+
+</html>

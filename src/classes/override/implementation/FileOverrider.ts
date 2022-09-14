@@ -98,7 +98,7 @@ class FileOverrider {
     protected getTargetPath(currentCartridge: SFCCCartridge) {
         const currentPath = this.activeEditor.document.uri.fsPath;
 
-        if (PathTool.hasFolder(currentPath, 'modules')) {
+        if (PathTool.hasSubPath(currentPath, 'cartridges/modules')) {
             throw new BeaverError(ErrCodes.modulesOverride);
         }
 
