@@ -35,7 +35,7 @@ export default class ApiDocsHoverProvider {
         if (!this.activeEditor) {
             return;
         }
-        const regExp = /require\((['"])\w+\/\w+\/\w+(['"])\)/g;
+        const regExp = /require\((['"])dw\/\w+\/\w+(['"])\)/g;
         const text = this.activeEditor.document.getText();
         const hovers: vscode.DecorationOptions[] = [];
         let match;

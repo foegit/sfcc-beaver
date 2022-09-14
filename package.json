@@ -1,7 +1,7 @@
 {
     "name": "sfcc-beaver",
     "displayName": "SFCC Beaver",
-    "description": "A beaver who is an experienced developer (of its dam) will help you with your work routine",
+    "description": "An extension for SFCC developers to automate routine tasks",
     "version": "2.0.0",
     "icon": "static/simpleLogo.png",
     "repository": "https://github.com/foegit/sfcc-beaver",
