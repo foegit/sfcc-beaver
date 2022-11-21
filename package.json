@@ -47,29 +47,31 @@
         "commands": [
             {
                 "command": "sfccBeaver.extract",
-                "title": "🦫 Extract"
+                "title": "bb Extract file to clipboard",
+                "icon": "static/icons/extract.svg"
             },
             {
                 "command": "sfccBeaver.override",
-                "title": "🦫 Override"
+                "title": "bb Override File",
+                "icon": "static/icons/override.svg"
             },
             {
                 "command": "sfccBeaver.unixpath",
-                "title": "🦫 Unix path"
+                "title": "bb Copy Unix path"
             },
             {
                 "command": "sfccBeaver.refreshCartridgeList",
-                "title": "🦫 Refresh cartridge list",
+                "title": "bb Refresh cartridge list",
                 "icon": "$(refresh)"
             },
             {
                 "command": "sfccBeaver.pinCartridge",
-                "title": "🦫 Pin cartridge",
+                "title": "Pin cartridge",
                 "icon": "$(pin)"
             },
             {
                 "command": "sfccBeaver.unpinCartridge",
-                "title": "🦫 Unpin cartridge",
+                "title": "Unpin cartridge",
                 "icon": "$(close)"
             },
             {
@@ -103,6 +105,14 @@
         ],
         "menus": {
             "commandPalette": [
+                {
+                    "command": "sfccBeaver.extract",
+                    "when": "resourcePath =~ /.*(\\/|\\\\)cartridge(\\/|\\\\).*/"
+                },
+                {
+                    "command": "sfccBeaver.override",
+                    "when": "resourcePath =~ /.*(\\/|\\\\)cartridge(\\/|\\\\).*/"
+                },
                 {
                     "command": "sfccBeaver.pinCartridge",
                     "when": "false"
@@ -159,6 +169,16 @@
                     "command": "sfccBeaver.docsNavigationForward",
                     "group": "navigation@1",
                     "when": "activeWebviewPanelId == docsViewer"
+                },
+                {
+                    "command": "sfccBeaver.extract",
+                    "group": "navigation@2",
+                    "when": "resourcePath =~ /.*(\\/|\\\\)cartridge(\\/|\\\\).*/ && !isInDiffEditor"
+                },
+                {
+                    "command": "sfccBeaver.override",
+                    "group": "navigation@2",
+                    "when": "resourcePath =~ /.*(\\/|\\\\)cartridge(\\/|\\\\).*/ && !isInDiffEditor"
                 }
             ]
         },
