@@ -30,6 +30,7 @@ class CartridgePickItem implements vscode.QuickPickItem {
         }
     }
 }
+
 class FileOverrider {
     constructor(
         private activeEditor : vscode.TextEditor,
@@ -52,7 +53,7 @@ class FileOverrider {
         }
 
         if (targetCartridge.getName() === 'app_storefront_base') {
-            vscode.window.showWarningMessage('You overrode SFRA base cartridge');
+            vscode.window.showWarningMessage('You override SFRA base cartridge!');
         }
 
         this.overrideForCartridge(targetCartridge);
@@ -87,7 +88,7 @@ class FileOverrider {
         });
 
         const selectedCartridgeItem = await vscode.window.showQuickPick(selectionList, {
-            title: '$Select the target cartridge'
+            title: 'Select the cartridge'
         }) || '';
 
 
