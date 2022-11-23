@@ -1,48 +1,50 @@
 # 🦫 SFCC Beaver
 
-It is a VS Code extension that automates routine tasks for SFCC Developer.
+Automate your routine tasks on SFCC projects such as:
 
-**The key features are:**
-
-- 🪜 **Override Files**
-With `override` command you can copy (override) the currently opened file to another cartridge.
-
-- 📚 **Copy Paths**
-With `extract` command you can copy (extract) needed resource such as script file, ISML template or resource message to clipboard and paste it to the place where you need it.
-Also you can copy full unix-like path of the file which may be useful when sharing things with a team.
-
-- 🔎 **Search in Documentation**
-Search in SFCC documentation without leaving VS Code. You can also share a link or open in browser a particular topic.
+- overriding files from one cartridge to another
+- copying file path/require/include into clipboard
+- searching in documentation
 
 > **💡Compatibility**
 Beaver fully supports only SFRA projects. However, some of the feature are compatible with SiteGen as well.
 
 ## ⭐ Usage
 
-Once installed, you can start using Beaver features.
+### Extract/Override
+
+Using extract and override buttons you can save time and make less errors.
+
+![alt text](static/overrideExtractExample.png)
+
+- ![alt text](static/extract.png) - copy current file's include into clipboard
+- ![alt text](static/override.png) - override current file into another cartridge
+
+> 💡 You can use commands to t
 
 ### Commands
 
-Beaver adds to VS Code few commands. To trigger a command you need to open command pallette (press `F1` or `Ctrl + Shift + P`) and enter the command name.
+Beaver adds several new commands that you can run manually.
 
-- **🦫 Extract** command copies to clipboard require of the file depends on type.
+To run a command you need to open the command pallette (press `F1` or `Ctrl + Shift + P`) and enter the command name.
+
+- **Extract file to clipboard** command copies to clipboard require of the file depends on type.
   - for script (JS) file copy require: `var fileName = require('*/filePath')`
   - for template (ISML) file copy isinclude: `<isinclude template='templatePath' />`
   - for resource (PROPERTIES) file copy active line as `Resource.msg('{activeLinePropName}', '{fileName}', null)`
-
-- **🦫 Unix path** command copies file path relatively to the project root folder.
-- **🦫 Override** command overrides current file to another cartridge
+- **Copy Unix path** command copies file path relatively to the project root folder.
+- **Override File** command overrides current file to another cartridge
 
 ### Beaver Dam
 
 Beaver introduces a new panel called Beaver Dam. There two items:
 
 - **Cartridges** is a active cartridge list where you can pin/unpin cartridge for overriding.
-- **Documentation**. There you can search in SFCC docs without leaving VS Code.
+- **Documentation**. Search in docs without leaving VS Code.
 
 ### Hovers
 
-If you hover over the API class such as `require('dw/web/URLUtils')` you see a tip with `🦫 Open docs` suggestion. Clicking it will open appropriate documentation topic.
+If you hover over the API class such as `require('dw/web/URLUtils')` you see a tip with `🦫 Open docs` suggestion. Clicking it will open corresponding documentation topic.
 
 ## 👍 Recommendations
 

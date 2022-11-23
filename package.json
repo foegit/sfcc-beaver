@@ -47,21 +47,21 @@
         "commands": [
             {
                 "command": "sfccBeaver.extract",
-                "title": "bb Extract file to clipboard",
+                "title": "Extract file to clipboard",
                 "icon": "static/icons/extract.svg"
             },
             {
                 "command": "sfccBeaver.override",
-                "title": "bb Override File",
+                "title": "Override File",
                 "icon": "static/icons/override.svg"
             },
             {
                 "command": "sfccBeaver.unixpath",
-                "title": "bb Copy Unix path"
+                "title": "Copy Unix path"
             },
             {
                 "command": "sfccBeaver.refreshCartridgeList",
-                "title": "bb Refresh cartridge list",
+                "title": "Refresh cartridge list",
                 "icon": "$(refresh)"
             },
             {
