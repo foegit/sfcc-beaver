@@ -217,7 +217,12 @@
         "pretest": "npm run compile-tests && npm run compile && npm run lint",
         "lint": "eslint src --ext ts",
         "test": "node ./out/test/runTest.js",
-        "unit": "mocha --require ts-node/register src/test/unit/**/*.ts"
+        "unit": "mocha --require ts-node/register src/test/unit/**/*.ts",
+        "prminor": "vsce publish --pre-release minor",
+        "prmajor": "vsce publish --pre-release minor",
+        "rpatch": "vsce release patch",
+        "rminor": "vsce release minor",
+        "rmajor": "vsce release major"
     },
     "devDependencies": {
         "@types/chai": "^4.3.1",
