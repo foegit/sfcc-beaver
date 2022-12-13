@@ -2,7 +2,7 @@
     "name": "sfcc-beaver",
     "displayName": "SFCC Beaver",
     "description": "An extension for SFCC developers to automate routine tasks",
-    "version": "2.2.0",
+    "version": "2.3.0",
     "icon": "static/simpleLogo.png",
     "repository": "https://github.com/foegit/sfcc-beaver",
     "publisher": "SerhiiHlavatskyi",
