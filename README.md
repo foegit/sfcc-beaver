@@ -28,12 +28,12 @@ Beaver adds several new commands that you can run manually.
 
 To run a command you need to open the command pallette (press `F1` or `Ctrl + Shift + P`) and enter the command name.
 
-- **Extract file to clipboard** command copies to clipboard require of the file depends on type.
-  - for script (JS) file copy require: `var fileName = require('*/filePath')`
-  - for template (ISML) file copy isinclude: `<isinclude template='templatePath' />`
-  - for resource (PROPERTIES) file copy active line as `Resource.msg('{activeLinePropName}', '{fileName}', null)`
-- **Copy Unix path** command copies file path relatively to the project root folder.
-- **Override File** command overrides current file to another cartridge
+- **▰ Extract** Swiss-kni command copies to clipboard require of the file depends on type.
+  - for scripts file copy require: `var fileName = require('*/filePath')`
+  - for templates file copy isinclude: `<isinclude template='templatePath' />`
+  - for resource properties file copy active line as `Resource.msg('{activeLinePropName}', '{fileName}', null)`
+- **▰ Copy unix path** command copies file path relatively to the project root folder.
+- **▰ Override** command overrides current file to another cartridge
 
 ### Beaver Dam
 
@@ -44,7 +44,7 @@ Beaver introduces a new panel called Beaver Dam. There two items:
 
 ### Hovers
 
-If you hover over the API class such as `require('dw/web/URLUtils')` you see a tip with `🦫 Open docs` suggestion. Clicking it will open corresponding documentation topic.
+If you hover over the API class such as `require('dw/web/URLUtils')` you see a tip with `▰ Open docs` suggestion. Clicking it will open corresponding documentation topic.
 
 ## 👍 Recommendations
 

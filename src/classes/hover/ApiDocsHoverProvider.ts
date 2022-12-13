@@ -49,7 +49,7 @@ export default class ApiDocsHoverProvider {
 
             const encodedArgs = encodeURIComponent(JSON.stringify([ classRequire]));
             const commentCommandUri = vscode.Uri.parse('command:sfccBeaver.openClassDetails?' + encodedArgs);
-            const hoverMessage = new vscode.MarkdownString(`[🦫 Open Docs](${commentCommandUri})`);
+            const hoverMessage = new vscode.MarkdownString(`[▰ Open docs](${commentCommandUri})`);
 
             hoverMessage.isTrusted = true;
 

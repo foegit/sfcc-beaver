@@ -5,8 +5,8 @@ var server = require('server');
 
 server.extend(module.superModule);
 
-server.append('{endpoint}', function(res, req, next) {
-    
+server.append('{endpoint}', function (req, res, next) {
+
     next();
 });
 

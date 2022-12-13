@@ -45,7 +45,7 @@ export default class SFCCProjectFile {
     }
 
     public getSFCCPath() : string {
-        if (['.js', 'json', '.ds', ''].includes(this.fileType)) {
+        if (['.js', '.json', '.ds', ''].includes(this.fileType)) {
             // return general path for scripts and json
             return this.getCartridgeRelativePath();
         }

@@ -47,17 +47,17 @@
         "commands": [
             {
                 "command": "sfccBeaver.extract",
-                "title": "Extract file to clipboard",
+                "title": "▰ Extract",
                 "icon": "static/icons/extract.svg"
             },
             {
                 "command": "sfccBeaver.override",
-                "title": "Override File",
+                "title": "▰ Override",
                 "icon": "static/icons/override.svg"
             },
             {
                 "command": "sfccBeaver.unixpath",
-                "title": "Copy Unix path"
+                "title": "▰ Copy unix path"
             },
             {
                 "command": "sfccBeaver.refreshCartridgeList",
@@ -173,7 +173,7 @@
                 {
                     "command": "sfccBeaver.extract",
                     "group": "navigation@2",
-                    "when": "resourcePath =~ /.*(\\/|\\\\)cartridge(\\/|\\\\).*/ && !isInDiffEditor"
+                    "when": "resourcePath =~ /.*(\\/|\\\\)cartridge(\\/|\\\\).*/ && resourcePath =~ /^((?!cartridge(\\/|\\\\)client).)*$/ && !isInDiffEditor"
                 },
                 {
                     "command": "sfccBeaver.override",
