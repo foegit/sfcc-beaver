@@ -220,9 +220,9 @@
         "unit": "mocha --require ts-node/register src/test/unit/**/*.ts",
         "prminor": "vsce publish --pre-release minor",
         "prmajor": "vsce publish --pre-release minor",
-        "rpatch": "vsce release patch",
-        "rminor": "vsce release minor",
-        "rmajor": "vsce release major"
+        "rpatch": "vsce publish patch",
+        "rminor": "vsce publish minor",
+        "rmajor": "vsce publish major"
     },
     "devDependencies": {
         "@types/chai": "^4.3.1",
