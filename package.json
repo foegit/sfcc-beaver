@@ -1,256 +1,256 @@
 {
-    "name": "sfcc-beaver",
-    "displayName": "SFCC Beaver",
-    "description": "An extension for SFCC developers to automate routine tasks",
-    "version": "2.3.0",
-    "icon": "static/simpleLogo.png",
-    "repository": "https://github.com/foegit/sfcc-beaver",
-    "publisher": "SerhiiHlavatskyi",
-    "engines": {
-        "vscode": "^1.66.0"
-    },
-    "categories": [
-        "Other"
-    ],
-    "keywords": [
-        "sfcc",
-        "salesforce",
-        "demandware",
-        "dw",
-        "cartridge",
-        "commerce cloud"
-    ],
-    "activationEvents": [
-        "*"
-    ],
-    "main": "./dist/extension.js",
-    "contributes": {
-        "configuration": {
-            "title": "SFCC Beaver",
-            "properties": {
-                "sfccBeaver.addLineNumberForUnix": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "Adds line number (#11) for extracted unix path."
-                },
-                "sfccBeaver.pinnedCartridges": {
-                    "type": "array",
-                    "items": {
-                        "type": "string",
-                        "description": "Name of the cartridge"
-                    },
-                    "default": [],
-                    "description": "Comma separated list of pinned cartridges."
-                }
-            }
+  "name": "sfcc-beaver",
+  "displayName": "SFCC Beaver",
+  "description": "An extension for SFCC developers to automate routine tasks",
+  "version": "2.3.0",
+  "icon": "static/simpleLogo.png",
+  "repository": "https://github.com/foegit/sfcc-beaver",
+  "publisher": "SerhiiHlavatskyi",
+  "engines": {
+    "vscode": "^1.66.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "sfcc",
+    "salesforce",
+    "demandware",
+    "dw",
+    "cartridge",
+    "commerce cloud"
+  ],
+  "activationEvents": [
+    "*"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "SFCC Beaver",
+      "properties": {
+        "sfccBeaver.addLineNumberForUnix": {
+          "type": "boolean",
+          "default": false,
+          "description": "Adds line number (#11) for extracted unix path."
         },
-        "commands": [
-            {
-                "command": "sfccBeaver.extract",
-                "title": "▰ Extract",
-                "icon": "static/icons/extract.svg"
-            },
-            {
-                "command": "sfccBeaver.override",
-                "title": "▰ Override",
-                "icon": "static/icons/override.svg"
-            },
-            {
-                "command": "sfccBeaver.unixpath",
-                "title": "▰ Copy unix path"
-            },
-            {
-                "command": "sfccBeaver.refreshCartridgeList",
-                "title": "Refresh cartridge list",
-                "icon": "$(refresh)"
-            },
-            {
-                "command": "sfccBeaver.pinCartridge",
-                "title": "Pin cartridge",
-                "icon": "$(pin)"
-            },
-            {
-                "command": "sfccBeaver.unpinCartridge",
-                "title": "Unpin cartridge",
-                "icon": "$(close)"
-            },
-            {
-                "command": "sfccBeaver.openDocsDetails",
-                "title": "Open Documentation Details"
-            },
-            {
-                "command": "sfccBeaver.openClassDetails",
-                "title": "Open Class Documentation"
-            },
-            {
-                "command": "sfccBeaver.docsOpenInBrowser",
-                "title": "Open Class Documentation",
-                "icon": "$(link-external)"
-            },
-            {
-                "command": "sfccBeaver.docsCopyToClipboard",
-                "title": "Copy link to clipboard",
-                "icon": "$(copy)"
-            },
-            {
-                "command": "sfccBeaver.docsNavigationBack",
-                "title": "Go back",
-                "icon": "$(arrow-left)"
-            },
-            {
-                "command": "sfccBeaver.docsNavigationForward",
-                "title": "Go forward",
-                "icon": "$(arrow-right)"
-            }
-        ],
-        "menus": {
-            "commandPalette": [
-                {
-                    "command": "sfccBeaver.extract",
-                    "when": "resourcePath =~ /.*(\\/|\\\\)cartridge(\\/|\\\\).*/"
-                },
-                {
-                    "command": "sfccBeaver.override",
-                    "when": "resourcePath =~ /.*(\\/|\\\\)cartridge(\\/|\\\\).*/"
-                },
-                {
-                    "command": "sfccBeaver.pinCartridge",
-                    "when": "false"
-                },
-                {
-                    "command": "sfccBeaver.unpinCartridge",
-                    "when": "false"
-                },
-                {
-                    "command": "sfccBeaver.openClassDetails",
-                    "when": "false"
-                },
-                {
-                    "command": "sfccBeaver.openDocsDetails",
-                    "when": "false"
-                }
-            ],
-            "view/title": [
-                {
-                    "command": "sfccBeaver.refreshCartridgeList",
-                    "when": "view == cartridgesObserver",
-                    "group": "navigation"
-                }
-            ],
-            "view/item/context": [
-                {
-                    "command": "sfccBeaver.pinCartridge",
-                    "when": "view == cartridgesObserver && viewItem == sfccCartridgeTreeItem",
-                    "group": "inline"
-                },
-                {
-                    "command": "sfccBeaver.unpinCartridge",
-                    "when": "view == cartridgesObserver && viewItem == sfccPinnedCartridgeTreeItem",
-                    "group": "inline"
-                }
-            ],
-            "editor/title": [
-                {
-                    "command": "sfccBeaver.docsOpenInBrowser",
-                    "group": "navigation@2",
-                    "when": "activeWebviewPanelId == docsViewer"
-                },
-                {
-                    "command": "sfccBeaver.docsCopyToClipboard",
-                    "group": "navigation@2",
-                    "when": "activeWebviewPanelId == docsViewer"
-                },
-                {
-                    "command": "sfccBeaver.docsNavigationBack",
-                    "group": "navigation@1",
-                    "when": "activeWebviewPanelId == docsViewer"
-                },
-                {
-                    "command": "sfccBeaver.docsNavigationForward",
-                    "group": "navigation@1",
-                    "when": "activeWebviewPanelId == docsViewer"
-                },
-                {
-                    "command": "sfccBeaver.extract",
-                    "group": "navigation@2",
-                    "when": "resourcePath =~ /.*(\\/|\\\\)cartridge(\\/|\\\\).*/ && resourcePath =~ /^((?!cartridge(\\/|\\\\)client).)*$/ && !isInDiffEditor"
-                },
-                {
-                    "command": "sfccBeaver.override",
-                    "group": "navigation@2",
-                    "when": "resourcePath =~ /.*(\\/|\\\\)cartridge(\\/|\\\\).*/ && !isInDiffEditor"
-                }
-            ]
-        },
-        "viewsContainers": {
-            "activitybar": [
-                {
-                    "id": "beaver-dam",
-                    "title": "Beaver Dam",
-                    "icon": "static/simpleLogo.svg"
-                }
-            ]
-        },
-        "views": {
-            "beaver-dam": [
-                {
-                    "name": "Cartridges",
-                    "id": "cartridgesObserver",
-                    "contextualTitle": "Cartridge Overview"
-                },
-                {
-                    "name": "Documentation",
-                    "id": "docsNavigator",
-                    "type": "webview",
-                    "contextualTitle": "Documentation Search"
-                }
-            ]
+        "sfccBeaver.pinnedCartridges": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "Name of the cartridge"
+          },
+          "default": [],
+          "description": "Comma separated list of pinned cartridges."
         }
+      }
     },
-    "scripts": {
-        "vscode:prepublish": "npm run package",
-        "compile": "webpack",
-        "watch": "webpack --watch",
-        "package": "webpack --mode production --devtool hidden-source-map",
-        "compile-tests": "tsc -p . --outDir out",
-        "watch-tests": "tsc -p . -w --outDir out",
-        "pretest": "npm run compile-tests && npm run compile && npm run lint",
-        "lint": "eslint src --ext ts",
-        "test": "node ./out/test/runTest.js",
-        "unit": "mocha --require ts-node/register src/test/unit/**/*.ts",
-        "prminor": "vsce publish --pre-release minor",
-        "prmajor": "vsce publish --pre-release minor",
-        "rpatch": "vsce publish patch",
-        "rminor": "vsce publish minor",
-        "rmajor": "vsce publish major"
+    "commands": [
+      {
+        "command": "sfccBeaver.extract",
+        "title": "▰ Extract",
+        "icon": "static/icons/extract.svg"
+      },
+      {
+        "command": "sfccBeaver.override",
+        "title": "▰ Override",
+        "icon": "static/icons/override.svg"
+      },
+      {
+        "command": "sfccBeaver.unixpath",
+        "title": "▰ Copy unix path"
+      },
+      {
+        "command": "sfccBeaver.refreshCartridgeList",
+        "title": "Refresh cartridge list",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "sfccBeaver.pinCartridge",
+        "title": "Pin cartridge",
+        "icon": "$(pin)"
+      },
+      {
+        "command": "sfccBeaver.unpinCartridge",
+        "title": "Unpin cartridge",
+        "icon": "$(close)"
+      },
+      {
+        "command": "sfccBeaver.openDocsDetails",
+        "title": "Open Documentation Details"
+      },
+      {
+        "command": "sfccBeaver.openClassDetails",
+        "title": "Open Class Documentation"
+      },
+      {
+        "command": "sfccBeaver.docsOpenInBrowser",
+        "title": "Open Class Documentation",
+        "icon": "$(link-external)"
+      },
+      {
+        "command": "sfccBeaver.docsCopyToClipboard",
+        "title": "Copy link to clipboard",
+        "icon": "$(copy)"
+      },
+      {
+        "command": "sfccBeaver.docsNavigationBack",
+        "title": "Go back",
+        "icon": "$(arrow-left)"
+      },
+      {
+        "command": "sfccBeaver.docsNavigationForward",
+        "title": "Go forward",
+        "icon": "$(arrow-right)"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "sfccBeaver.extract",
+          "when": "resourcePath =~ /.*(\\/|\\\\)cartridge(\\/|\\\\).*/"
+        },
+        {
+          "command": "sfccBeaver.override",
+          "when": "resourcePath =~ /.*(\\/|\\\\)cartridge(\\/|\\\\).*/"
+        },
+        {
+          "command": "sfccBeaver.pinCartridge",
+          "when": "false"
+        },
+        {
+          "command": "sfccBeaver.unpinCartridge",
+          "when": "false"
+        },
+        {
+          "command": "sfccBeaver.openClassDetails",
+          "when": "false"
+        },
+        {
+          "command": "sfccBeaver.openDocsDetails",
+          "when": "false"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "sfccBeaver.refreshCartridgeList",
+          "when": "view == cartridgesObserver",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "sfccBeaver.pinCartridge",
+          "when": "view == cartridgesObserver && viewItem == sfccCartridgeTreeItem",
+          "group": "inline"
+        },
+        {
+          "command": "sfccBeaver.unpinCartridge",
+          "when": "view == cartridgesObserver && viewItem == sfccPinnedCartridgeTreeItem",
+          "group": "inline"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "sfccBeaver.docsOpenInBrowser",
+          "group": "navigation@2",
+          "when": "activeWebviewPanelId == docsViewer"
+        },
+        {
+          "command": "sfccBeaver.docsCopyToClipboard",
+          "group": "navigation@2",
+          "when": "activeWebviewPanelId == docsViewer"
+        },
+        {
+          "command": "sfccBeaver.docsNavigationBack",
+          "group": "navigation@1",
+          "when": "activeWebviewPanelId == docsViewer"
+        },
+        {
+          "command": "sfccBeaver.docsNavigationForward",
+          "group": "navigation@1",
+          "when": "activeWebviewPanelId == docsViewer"
+        },
+        {
+          "command": "sfccBeaver.extract",
+          "group": "navigation@2",
+          "when": "resourcePath =~ /.*(\\/|\\\\)cartridge(\\/|\\\\).*/ && resourcePath =~ /^((?!cartridge(\\/|\\\\)client).)*$/ && !isInDiffEditor"
+        },
+        {
+          "command": "sfccBeaver.override",
+          "group": "navigation@2",
+          "when": "resourcePath =~ /.*(\\/|\\\\)cartridge(\\/|\\\\).*/ && !isInDiffEditor"
+        }
+      ]
     },
-    "devDependencies": {
-        "@types/chai": "^4.3.1",
-        "@types/glob": "^7.2.0",
-        "@types/mocha": "^9.1.0",
-        "@types/node": "14.x",
-        "@types/vscode": "^1.66.0",
-        "@typescript-eslint/eslint-plugin": "^5.16.0",
-        "@typescript-eslint/parser": "^5.16.0",
-        "@vscode/test-electron": "^2.1.3",
-        "chai": "^4.3.6",
-        "eslint": "^8.11.0",
-        "glob": "^7.2.0",
-        "mocha": "^9.2.2",
-        "sass": "^1.54.8",
-        "sass-loader": "^13.0.2",
-        "ts-loader": "^9.2.8",
-        "ts-node": "^10.7.0",
-        "typescript": "^4.6.3",
-        "webpack": "^5.74.0",
-        "webpack-cli": "^4.9.2"
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "beaver-dam",
+          "title": "Beaver Dam",
+          "icon": "static/simpleLogo.svg"
+        }
+      ]
     },
-    "dependencies": {
-        "@types/vscode-webview": "^1.57.0",
-        "axios": "^0.27.2",
-        "cash-dom": "^8.1.1",
-        "cheerio": "^1.0.0-rc.12",
-        "fast-glob": "^3.2.11",
-        "normalize-url": "^7.0.3"
+    "views": {
+      "beaver-dam": [
+        {
+          "name": "Cartridges",
+          "id": "cartridgesObserver",
+          "contextualTitle": "Cartridge Overview"
+        },
+        {
+          "name": "Documentation",
+          "id": "docsNavigator",
+          "type": "webview",
+          "contextualTitle": "Documentation Search"
+        }
+      ]
     }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "webpack",
+    "watch": "webpack --watch",
+    "package": "webpack --mode production --devtool hidden-source-map",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js",
+    "unit": "mocha --require ts-node/register src/test/unit/**/*.ts",
+    "pre-release-minor": "vsce publish --pre-release minor",
+    "pre-release-major": "vsce publish --pre-release minor",
+    "release-patch": "vsce publish patch",
+    "release-minor": "vsce publish minor",
+    "release-major": "vsce publish major"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.3.1",
+    "@types/glob": "^7.2.0",
+    "@types/mocha": "^9.1.0",
+    "@types/node": "14.x",
+    "@types/vscode": "^1.66.0",
+    "@typescript-eslint/eslint-plugin": "^5.16.0",
+    "@typescript-eslint/parser": "^5.16.0",
+    "@vscode/test-electron": "^2.1.3",
+    "chai": "^4.3.6",
+    "eslint": "^8.11.0",
+    "glob": "^7.2.0",
+    "mocha": "^9.2.2",
+    "sass": "^1.54.8",
+    "sass-loader": "^13.0.2",
+    "ts-loader": "^9.2.8",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.6.3",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.9.2"
+  },
+  "dependencies": {
+    "@types/vscode-webview": "^1.57.0",
+    "axios": "^0.27.2",
+    "cash-dom": "^8.1.1",
+    "cheerio": "^1.0.0-rc.12",
+    "fast-glob": "^3.2.11",
+    "normalize-url": "^7.0.3"
+  }
 }
