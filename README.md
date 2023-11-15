@@ -1,10 +1,13 @@
 # 🦫 SFCC Beaver
 
-Automate your routine tasks on SFCC projects such as:
+Swiss-knife extension for SFCC developers
 
-- overriding files from one cartridge to another
-- copying file path/require/include into clipboard
-- searching in documentation
+Currently supports:
+
+- easy overriding files from one cartridge to another with
+- copying file path/require/include into clipboard so it can be quickly inserted to other file
+- built-in documentation search.
+  - this feature temporary not available due to recent documentation portal migration, but it will be back soon.
 
 > **💡Compatibility**
 Beaver fully supports only SFRA projects. However, some of the feature are compatible with SiteGen as well.
@@ -13,15 +16,13 @@ Beaver fully supports only SFRA projects. However, some of the feature are compa
 
 ### Extract/Override
 
-Using extract and override buttons you can save time and make less errors.
+Use top VS Code panel to easily create a copy of an active file in another cartridge ![alt text](static/extract.png)
+
+or copy current file path into clipboard ![alt text](static/override.png)
 
 ![alt text](static/overrideExtractExample.png)
 
-- ![alt text](static/extract.png) - copy current file's include into clipboard
-- ![alt text](static/override.png) - override current file into another cartridge
-
-> 💡 You can use commands to t
-
+> 💡 You can use Command Pallette to do it even quicker.
 ### Commands
 
 Beaver adds several new commands that you can run manually.
@@ -37,7 +38,7 @@ To run a command you need to open the command pallette (press `F1` or `Ctrl + Sh
 
 ### Beaver Dam
 
-Beaver introduces a new panel called Beaver Dam. There two items:
+Beaver introduces a new side section called Beaver Dam. There are two items currently:
 
 - **Cartridges** is a active cartridge list where you can pin/unpin cartridge for overriding.
 - **Documentation**. Search in docs without leaving VS Code.
