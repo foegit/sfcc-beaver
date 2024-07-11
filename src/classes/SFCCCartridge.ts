@@ -1,30 +1,31 @@
 import SettingTool from './tools/SettingTool';
 
-
 class TypeConfig {
     constructor(
-        public priority : number,
+        public priority: number,
         public emoji: string,
         public icon: string = 'cloud'
     ) {}
 }
 export default class SFCCCartridge {
-    private path : string;
-    private name : string = '';
-    private type : string = '';
-    private typeConfig : TypeConfig;
+    private path: string;
+    private name: string = '';
+    private type: string = '';
+    private typeConfig: TypeConfig;
 
-    constructor(path : string) {
+    constructor(path: string) {
         this.path = path;
         this.type = this.getType();
-        this.typeConfig = SFCCCartridge.typePriority.get(this.type) || new TypeConfig(0, '⚪️');
+        this.typeConfig =
+            SFCCCartridge.typePriority.get(this.type) ||
+            new TypeConfig(0, '⚪️');
     }
 
-    getCartridgePath() : string {
+    getCartridgePath(): string {
         return this.path;
     }
 
-    getName() : string {
+    getName(): string {
         if (!this.name) {
             const parsedPath = this.path.match(/^.*[\/\\](.*)$/);
 
@@ -43,10 +44,14 @@ export default class SFCCCartridge {
         ['bc', new TypeConfig(100, '🔵')],
         ['bm', new TypeConfig(100, '🔵')],
         ['core', new TypeConfig(-1000, '🟣')],
-        ['sfraBase', new TypeConfig(-2000, '🌩️')]
+        ['sfraBase', new TypeConfig(-2000, '🌩️')],
     ]);
 
-    static sfraBaseCartridges: string[] = ['app_storefront_base', 'modules', 'bm_app_storefront_base'];
+    static sfraBaseCartridges: string[] = [
+        'app_storefront_base',
+        'modules',
+        'bm_app_storefront_base',
+    ];
 
     private getType(): string {
         const cartridgeName = this.getName();
@@ -72,6 +77,8 @@ export default class SFCCCartridge {
     public getPrintableName() {
         return this.getName();
     }
+
+    public getHooks() {}
 
     static parseOriginalName(printableCartridgeName: string): string {
         return printableCartridgeName;

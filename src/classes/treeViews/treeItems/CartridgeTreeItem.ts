@@ -4,10 +4,12 @@ export default class CartridgeTreeItem extends TreeItem {
     private sfccCartridge: SFCCCartridge;
 
     constructor(sfccCartridge: SFCCCartridge) {
-        super(sfccCartridge.getPrintableName());
+        super(sfccCartridge.getName());
 
         this.sfccCartridge = sfccCartridge;
-        this.contextValue = sfccCartridge.isPinned() ? 'sfccPinnedCartridgeTreeItem' : 'sfccCartridgeTreeItem';
+        this.contextValue = sfccCartridge.isPinned()
+            ? 'sfccPinnedCartridgeTreeItem'
+            : 'sfccCartridgeTreeItem';
         this.iconPath = new ThemeIcon(this.sfccCartridge.getIcon());
     }
 
