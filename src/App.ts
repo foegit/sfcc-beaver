@@ -11,9 +11,9 @@ import CartridgeTreeItem from './classes/treeViews/treeItems/CartridgeTreeItem';
 import HoverManager from './classes/hover/HoverManager';
 import WebviewMgr from './webviewProviders/WebviewMgr';
 import CommandMgr from './commands/CommandMgr';
-import { HookObserver } from './classes/treeViews/HookObserver';
-import { HookImplementationSubTreeItem } from './classes/treeViews/treeItems/HookImplementationTreeItem';
+import { HookObserver } from './classes/treeViews/hooks/HookObserver';
 import FsTool from './classes/tools/FsTool';
+import { HookDetailsTreeItem } from './classes/treeViews/hooks/HookDetailsTreeItem';
 
 class App {
     public uniqueTime: string;
@@ -45,7 +45,7 @@ class App {
 
         vscode.commands.registerCommand(
             'sfccBeaver.openHookFile',
-            async (hookItem: HookImplementationSubTreeItem) => {
+            async (hookItem: HookDetailsTreeItem) => {
                 const workspaceFolder = FsTool.getCurrentWorkspaceFolder();
 
                 var openPath = vscode.Uri.parse(
