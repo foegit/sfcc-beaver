@@ -1,5 +1,6 @@
 export type HookImplementation = {
     location: string;
+    definitionFileLocation: string;
     connected: boolean;
 };
 

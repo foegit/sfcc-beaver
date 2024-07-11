@@ -84,6 +84,11 @@
         "icon": "$(go-to-file)"
       },
       {
+        "command": "sfccBeaver.openHookDefinitionFile",
+        "title": "Open hooks.js",
+        "icon": "$(references)"
+      },
+      {
         "command": "sfccBeaver.pinCartridge",
         "title": "Pin cartridge",
         "icon": "$(pin)"
@@ -183,7 +188,7 @@
           "group": "inline"
         },
         {
-          "command": "sfccBeaver.openHookFile",
+          "command": "sfccBeaver.openHookDefinitionFile",
           "when": "view == hooksObserver && viewItem == hookFileItem",
           "group": "inline"
         },

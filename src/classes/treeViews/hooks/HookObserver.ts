@@ -5,7 +5,7 @@ import FsTool from '../../tools/FsTool';
 import { HookDetailsTreeItem } from './HookDetailsTreeItem';
 import HookLabelTreeItem from './HookLabelTreeItem';
 import { HookPoint, normalizeScriptPath, SFCCHookDefinition, sortHooks } from './hooksHelpers';
-import { commands, Event, EventEmitter, TreeDataProvider, TreeItem } from 'vscode';
+import { commands, Event, EventEmitter, TreeDataProvider, TreeItem, Uri, window, workspace } from 'vscode';
 import SettingTool from '../../tools/SettingTool';
 
 export class HookObserver implements TreeDataProvider<TreeItem> {
@@ -66,6 +66,7 @@ export class HookObserver implements TreeDataProvider<TreeItem> {
                 hookMap.get(sfccHook.name)!.implementation.push({
                     location: scriptFilePath,
                     connected: FsTool.fileExist(scriptFilePath),
+                    definitionFileLocation: hooksFilePath,
                 });
             });
         });
@@ -89,6 +90,26 @@ export class HookObserver implements TreeDataProvider<TreeItem> {
             await SettingTool.removeFromList('pinnedHooks', treeItem.hookPoint.name);
             await this.loadHookPoints();
             this.refresh();
+        });
+
+        commands.registerCommand('sfccBeaver.openHookFile', async (hookItem: HookDetailsTreeItem) => {
+            const workspaceFolder = FsTool.getCurrentWorkspaceFolder();
+
+            var openPath = Uri.parse('file://' + workspaceFolder.uri.path + hookItem.hookImplementation.location);
+
+            const textDocument = await workspace.openTextDocument(openPath);
+            await window.showTextDocument(textDocument);
+        });
+
+        commands.registerCommand('sfccBeaver.openHookDefinitionFile', async (hookItem: HookDetailsTreeItem) => {
+            const workspaceFolder = FsTool.getCurrentWorkspaceFolder();
+
+            var openPath = Uri.parse(
+                'file://' + workspaceFolder.uri.path + hookItem.hookImplementation.definitionFileLocation
+            );
+
+            const textDocument = await workspace.openTextDocument(openPath);
+            await window.showTextDocument(textDocument);
         });
     }
 

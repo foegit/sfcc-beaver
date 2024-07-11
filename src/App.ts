@@ -28,58 +28,26 @@ class App {
         const cartridgesObserver = new CartridgesObserver();
         const hooksObserver = new HookObserver();
 
-        vscode.window.registerTreeDataProvider(
-            'cartridgesObserver',
-            cartridgesObserver
-        );
+        vscode.window.registerTreeDataProvider('cartridgesObserver', cartridgesObserver);
 
         vscode.window.registerTreeDataProvider('hooksObserver', hooksObserver);
 
-        vscode.commands.registerCommand(
-            'sfccBeaver.refreshCartridgeList',
-            async () => {
-                await this.indexCartridges();
-                cartridgesObserver.refresh();
-            }
-        );
+        vscode.commands.registerCommand('sfccBeaver.refreshCartridgeList', async () => {
+            await this.indexCartridges();
+            cartridgesObserver.refresh();
+        });
 
-        vscode.commands.registerCommand(
-            'sfccBeaver.openHookFile',
-            async (hookItem: HookDetailsTreeItem) => {
-                const workspaceFolder = FsTool.getCurrentWorkspaceFolder();
+        vscode.commands.registerCommand('sfccBeaver.pinCartridge', async (cartridgeItem: CartridgeTreeItem) => {
+            await SettingTool.addPinnedCartridge(cartridgeItem.getName());
+            await this.indexCartridges();
+            cartridgesObserver.refresh();
+        });
 
-                var openPath = vscode.Uri.parse(
-                    'file://' +
-                        workspaceFolder.uri.path +
-                        hookItem.hookImplementation.location
-                );
-
-                const textDocument = await vscode.workspace.openTextDocument(
-                    openPath
-                );
-                await vscode.window.showTextDocument(textDocument);
-            }
-        );
-
-        vscode.commands.registerCommand(
-            'sfccBeaver.pinCartridge',
-            async (cartridgeItem: CartridgeTreeItem) => {
-                await SettingTool.addPinnedCartridge(cartridgeItem.getName());
-                await this.indexCartridges();
-                cartridgesObserver.refresh();
-            }
-        );
-
-        vscode.commands.registerCommand(
-            'sfccBeaver.unpinCartridge',
-            async (cartridgeItem: CartridgeTreeItem) => {
-                await SettingTool.removePinnedCartridge(
-                    cartridgeItem.getName()
-                );
-                await this.indexCartridges();
-                cartridgesObserver.refresh();
-            }
-        );
+        vscode.commands.registerCommand('sfccBeaver.unpinCartridge', async (cartridgeItem: CartridgeTreeItem) => {
+            await SettingTool.removePinnedCartridge(cartridgeItem.getName());
+            await this.indexCartridges();
+            cartridgesObserver.refresh();
+        });
 
         CommandMgr.init(context);
         HoverManager.init(context);
@@ -98,22 +66,12 @@ class App {
 
         const projectFiles = await fg('**/.project', {
             cwd: workspaceFolder.uri.fsPath,
-            ignore: [
-                '**/node_modules/**',
-                '**/cartridge/**',
-                '**/test/mocks/**',
-            ],
+            ignore: ['**/node_modules/**', '**/cartridge/**', '**/test/mocks/**'],
         });
 
         const cartridges = projectFiles.map((filepath) => {
-            const projectFileFullPath = path.resolve(
-                workspaceFolder.uri.fsPath,
-                filepath
-            );
-            const cartridgePath = projectFileFullPath.replace(
-                /[\/\\]\.project/,
-                ''
-            );
+            const projectFileFullPath = path.resolve(workspaceFolder.uri.fsPath, filepath);
+            const cartridgePath = projectFileFullPath.replace(/[\/\\]\.project/, '');
 
             return cartridgePath;
         });
