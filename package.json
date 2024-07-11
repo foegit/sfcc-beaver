@@ -277,8 +277,8 @@
     "lint": "eslint src --ext ts",
     "test": "node ./out/test/runTest.js",
     "unit": "mocha --require ts-node/register src/test/unit/**/*.ts",
-    "pre-release-minor": "vsce publish --pre-release minor",
-    "pre-release-major": "vsce publish --pre-release minor",
+    "rc-minor": "vsce publish --pre-release minor",
+    "rc-major": "vsce publish --pre-release major",
     "release-patch": "vsce publish patch",
     "release-minor": "vsce publish minor",
     "release-major": "vsce publish major"
