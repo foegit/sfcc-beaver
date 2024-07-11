@@ -4,11 +4,24 @@ import * as fs from 'fs';
 import BeaverError, { ErrCodes } from '../errors/BeaverError';
 import * as path from 'path';
 import FsTool from '../tools/FsTool';
-import HookTreeItem, { HookTreeSubItem } from './treeItems/HookTreeItem';
+
+import HookImplementationTreeItem, {
+    HookImplementationSubTreeItem,
+} from './treeItems/HookImplementationTreeItem';
 
 export type HookSFCCDefinitionType = {
     name: string;
     script: string;
+};
+
+export type HookImplementationType = {
+    location: string;
+    connected: boolean;
+};
+
+export type HookType = {
+    name: string;
+    implementation: HookImplementationType[];
 };
 
 export type ParsedHookType = {
@@ -19,6 +32,20 @@ export type ParsedHookType = {
         hooks: HookSFCCDefinitionType[];
     };
 };
+
+function normalizeScriptPath(path: string) {
+    const relativePath = path.replace('~', './'); // ensure no "~"
+
+    if (/.*\.js/.test(relativePath)) {
+        return relativePath;
+    }
+
+    return `${relativePath}.js`;
+}
+
+function isHookConnected(path: string) {
+    fs;
+}
 
 export class HookObserver implements vscode.TreeDataProvider<vscode.TreeItem> {
     private _onDidChangeTreeData: vscode.EventEmitter<
@@ -36,14 +63,16 @@ export class HookObserver implements vscode.TreeDataProvider<vscode.TreeItem> {
         return element;
     }
 
-    async getChildren(element?: HookTreeItem): Promise<vscode.TreeItem[]> {
+    async getChildren(
+        element?: HookImplementationTreeItem
+    ): Promise<vscode.TreeItem[]> {
         if (!vscode.workspace.workspaceFolders) {
             throw new BeaverError(ErrCodes.noActiveEditor);
         }
 
-        if (element) {
-            return element.hook.hooks.hooks.map(
-                (hook) => new HookTreeSubItem(hook)
+        if (element && element instanceof HookImplementationTreeItem) {
+            return element.hook.implementation.map(
+                (hook) => new HookImplementationSubTreeItem(hook)
             );
         }
 
@@ -58,6 +87,10 @@ export class HookObserver implements vscode.TreeDataProvider<vscode.TreeItem> {
             ],
         });
 
+        const hookMap: {
+            [key: string]: HookType;
+        } = {};
+
         const hooksRegistry: ParsedHookType[] = [];
 
         packageFiles.forEach((filePath) => {
@@ -67,27 +100,51 @@ export class HookObserver implements vscode.TreeDataProvider<vscode.TreeItem> {
                 return;
             }
 
-            const hookPath = path.resolve(
-                filePath.replace('package.json', ''),
-                content.hooks
+            const cartridgeRoot = filePath.replace('package.json', '');
+            const hooksFilePath = path.resolve(cartridgeRoot, content.hooks);
+            const hooksFileLocationRoot = hooksFilePath.replace(
+                'hooks.json',
+                ''
             );
 
-            const hooks = FsTool.parseCurrentProjectJsonFile(hookPath);
+            const hooks: { hooks: HookSFCCDefinitionType[] } =
+                FsTool.parseCurrentProjectJsonFile(hooksFilePath);
             const cartridgeNameParse = filePath.match(/.*\/(.*)\/package.json/);
+
+            hooks.hooks.map((h) => {
+                if (!hookMap[h.name]) {
+                    hookMap[h.name] = {
+                        name: h.name,
+                        implementation: [],
+                    };
+                }
+
+                const scriptFilePath = path.resolve(
+                    hooksFileLocationRoot,
+                    normalizeScriptPath(h.script)
+                );
+
+                hookMap[h.name].implementation.push({
+                    location: scriptFilePath,
+                    connected: FsTool.fileExist(scriptFilePath),
+                });
+            });
 
             hooksRegistry.push({
                 cartridge: cartridgeNameParse
                     ? cartridgeNameParse[1]
                     : 'Unknown',
-                hooksFile: hookPath,
+                hooksFile: hooksFilePath,
                 packageJsonFile: filePath,
                 hooks,
             });
         });
 
-        const treeItems: vscode.TreeItem[] = hooksRegistry.map((hook) => {
-            return new HookTreeItem(hook);
-        });
+        const treeItems = Object.keys(hookMap)
+            .sort((key1, key2) => key1.localeCompare(key2))
+            .map((hookName) => {
+                return new HookImplementationTreeItem(hookMap[hookName]);
+            });
 
         return Promise.resolve(treeItems);
     }

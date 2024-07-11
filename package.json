@@ -65,6 +65,11 @@
         "icon": "$(refresh)"
       },
       {
+        "command": "sfccBeaver.openHookFile",
+        "title": "Open hook file",
+        "icon": "$(go-to-file)"
+      },
+      {
         "command": "sfccBeaver.pinCartridge",
         "title": "Pin cartridge",
         "icon": "$(pin)"
@@ -146,6 +151,11 @@
         {
           "command": "sfccBeaver.unpinCartridge",
           "when": "view == cartridgesObserver && viewItem == sfccPinnedCartridgeTreeItem",
+          "group": "inline"
+        },
+        {
+          "command": "sfccBeaver.openHookFile",
+          "when": "view == hooksObserver && viewItem == hookFileItem",
           "group": "inline"
         }
       ],

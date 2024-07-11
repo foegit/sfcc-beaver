@@ -4,12 +4,16 @@ import * as path from 'path';
 import BeaverError, { ErrCodes } from '../errors/BeaverError';
 
 export default class FsTool {
-    static parseCurrentProjectJsonFile(filePath: string) {
+    static getCurrentWorkspaceFolder() {
         if (!vscode.workspace.workspaceFolders) {
             throw new BeaverError(ErrCodes.noActiveEditor);
         }
 
-        const [workspaceFolder] = vscode.workspace.workspaceFolders;
+        return vscode.workspace.workspaceFolders[0];
+    }
+
+    static parseCurrentProjectJsonFile(filePath: string) {
+        const workspaceFolder = FsTool.getCurrentWorkspaceFolder();
 
         try {
             const absoluteFilePath = path.join(
@@ -30,5 +34,16 @@ export default class FsTool {
             }
             return null;
         }
+    }
+
+    static fileExist(filePath: string) {
+        const workspaceFolder = FsTool.getCurrentWorkspaceFolder();
+
+        const absoluteFilePath = path.join(
+            workspaceFolder.uri.fsPath,
+            filePath
+        );
+
+        return fs.existsSync(absoluteFilePath);
     }
 }

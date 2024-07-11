@@ -12,6 +12,8 @@ import HoverManager from './classes/hover/HoverManager';
 import WebviewMgr from './webviewProviders/WebviewMgr';
 import CommandMgr from './commands/CommandMgr';
 import { HookObserver } from './classes/treeViews/HookObserver';
+import { HookImplementationSubTreeItem } from './classes/treeViews/treeItems/HookImplementationTreeItem';
+import FsTool from './classes/tools/FsTool';
 
 class App {
     public uniqueTime: string;
@@ -40,6 +42,25 @@ class App {
                 cartridgesObserver.refresh();
             }
         );
+
+        vscode.commands.registerCommand(
+            'sfccBeaver.openHookFile',
+            async (hookItem: HookImplementationSubTreeItem) => {
+                const workspaceFolder = FsTool.getCurrentWorkspaceFolder();
+
+                var openPath = vscode.Uri.parse(
+                    'file://' +
+                        workspaceFolder.uri.path +
+                        hookItem.hook.location
+                );
+
+                const textDocument = await vscode.workspace.openTextDocument(
+                    openPath
+                );
+                await vscode.window.showTextDocument(textDocument);
+            }
+        );
+
         vscode.commands.registerCommand(
             'sfccBeaver.pinCartridge',
             async (cartridgeItem: CartridgeTreeItem) => {
