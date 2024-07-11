@@ -1,11 +1,11 @@
 import { ThemeColor, ThemeIcon, TreeItem } from 'vscode';
-import { HookImplementationType } from './HookObserver';
+import { HookImplementation } from './hooksHelpers';
 
 export class HookDetailsTreeItem extends TreeItem {
-    public hook: HookImplementationType;
-
-    constructor(hook: HookImplementationType) {
-        const parsedLocation = /^.*\/(.*)\/cartridge(.*)$/.exec(hook.location);
+    constructor(public hookImplementation: HookImplementation) {
+        const parsedLocation = /^.*\/(.*)\/cartridge(.*)$/.exec(
+            hookImplementation.location
+        );
         const cartridge = parsedLocation
             ? parsedLocation[1]
             : 'Unknown cartridge';
@@ -13,16 +13,14 @@ export class HookDetailsTreeItem extends TreeItem {
         super(cartridge);
 
         this.description = parsedLocation ? parsedLocation[2] : '';
-
-        this.hook = hook;
         this.contextValue = 'hookFileItem';
-        this.iconPath = hook.connected
+        this.iconPath = hookImplementation.connected
             ? new ThemeIcon('code')
-            : new ThemeIcon('bracket-error', new ThemeColor('charts.red'));
+            : new ThemeIcon('code', new ThemeColor('charts.red'));
         this.command = {
             command: 'sfccBeaver.openHookFile',
             arguments: [this],
-            title: 'Open Hook',
+            title: 'Open Hook Implementation',
         };
     }
 }

@@ -1,50 +1,38 @@
-import { ThemeIcon, TreeItem } from 'vscode';
-import * as vscode from 'vscode';
+import {
+    ThemeColor,
+    ThemeIcon,
+    TreeItem,
+    TreeItemCollapsibleState,
+} from 'vscode';
+import { getHookType, HookPoint, HookTypes } from './hooksHelpers';
 
-import { HookType } from './HookObserver';
-
-const systemHooks = [
-    'dw.order.calculate',
-    'dw.order.calculateShipping',
-    'dw.order.calculateTax',
-    'dw.system.request.onSession',
-    'dw.system.request.onRequest',
-];
-
-function getIcon(hook: HookType) {
-    if (hook.implementation.some((i) => !i.connected)) {
-        return new ThemeIcon('bug', new vscode.ThemeColor('charts.red'));
+function getIcon(hookPoint: HookPoint) {
+    if (hookPoint.implementation.some((i) => !i.connected)) {
+        return new ThemeIcon('flame', new ThemeColor('charts.red'));
     }
 
-    if (systemHooks.includes(hook.name)) {
-        return new ThemeIcon('cloud', new vscode.ThemeColor('charts.blue'));
+    switch (getHookType(hookPoint.name)) {
+        case HookTypes.system:
+            return new ThemeIcon('cloud', new ThemeColor('charts.blue'));
+        case HookTypes.commerceApi:
+            return new ThemeIcon('database', new ThemeColor('charts.purple'));
+        default:
+            return new ThemeIcon('note', new ThemeColor('charts.green'));
     }
+}
 
-    if (hook.name.startsWith('dw.ocapi')) {
-        return new ThemeIcon('database', new vscode.ThemeColor('charts.blue'));
-    }
+function getDescription(hook: HookPoint) {
+    const amount = hook.implementation.length;
 
-    return new ThemeIcon('plug', new vscode.ThemeColor('charts.purple'));
+    return amount === 1 ? '(1 hook)' : `(${amount} hooks)`;
 }
 
 export default class HookLabelTreeItem extends TreeItem {
-    public hook: HookType;
+    constructor(public hookPoint: HookPoint) {
+        super(hookPoint.name, TreeItemCollapsibleState.Collapsed);
 
-    constructor(hook: HookType) {
-        super(hook.name, vscode.TreeItemCollapsibleState.Collapsed);
-
-        this.hook = hook;
-        this.description = hook.implementation.length.toString();
-
-        this.contextValue = 'hookImplementation';
-        this.iconPath = getIcon(hook);
-    }
-
-    public getName() {
-        return this.hook.name + 'sss';
-    }
-
-    getTreeItem(element: vscode.TreeItem): vscode.TreeItem {
-        return element;
+        this.description = getDescription(hookPoint);
+        this.iconPath = getIcon(hookPoint);
+        this.contextValue = 'hookLabelTreeItem';
     }
 }

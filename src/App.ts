@@ -51,7 +51,7 @@ class App {
                 var openPath = vscode.Uri.parse(
                     'file://' +
                         workspaceFolder.uri.path +
-                        hookItem.hook.location
+                        hookItem.hookImplementation.location
                 );
 
                 const textDocument = await vscode.workspace.openTextDocument(
