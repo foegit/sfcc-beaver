@@ -41,6 +41,15 @@
           },
           "default": [],
           "description": "Comma separated list of pinned cartridges."
+        },
+        "sfccBeaver.pinnedHooks": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "Name of the hook"
+          },
+          "default": [],
+          "description": "Comma separated list of pinned hooks."
         }
       }
     },
@@ -83,6 +92,16 @@
         "command": "sfccBeaver.unpinCartridge",
         "title": "Unpin cartridge",
         "icon": "$(close)"
+      },
+      {
+        "command": "sfccBeaver.pinHook",
+        "title": "Pin hook",
+        "icon": "$(pin)"
+      },
+      {
+        "command": "sfccBeaver.unpinHook",
+        "title": "Unpin hook",
+        "icon": "$(pin)"
       },
       {
         "command": "sfccBeaver.openDocsDetails",
@@ -166,6 +185,16 @@
         {
           "command": "sfccBeaver.openHookFile",
           "when": "view == hooksObserver && viewItem == hookFileItem",
+          "group": "inline"
+        },
+        {
+          "command": "sfccBeaver.pinHook",
+          "when": "view == hooksObserver && viewItem == hookLabelTreeItem",
+          "group": "inline"
+        },
+        {
+          "command": "sfccBeaver.unpinHook",
+          "when": "view == hooksObserver && viewItem == hookLabelTreeItemPinned",
           "group": "inline"
         }
       ],

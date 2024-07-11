@@ -6,6 +6,7 @@ export type HookImplementation = {
 export type HookPoint = {
     name: string;
     implementation: HookImplementation[];
+    pinned: boolean;
 };
 
 export type SFCCHookDefinition = {
@@ -62,6 +63,18 @@ export function sortHooks(hooks: HookPoint[], sortBy?: string) {
     }
 
     return [...hooks].sort((hook1, hook2) => {
+        if (hook1.pinned && hook2.pinned) {
+            return hook1.name.localeCompare(hook2.name);
+        }
+
+        if (hook1.pinned) {
+            return -1;
+        }
+
+        if (hook2.pinned) {
+            return 1;
+        }
+
         const hook1Value = hookTypeToValue(getHookType(hook1.name));
         const hook2Value = hookTypeToValue(getHookType(hook2.name));
 

@@ -1,5 +1,15 @@
-import { ThemeIcon, TreeItem } from 'vscode';
+import { ThemeColor, ThemeIcon, TreeItem } from 'vscode';
 import SFCCCartridge from '../../SFCCCartridge';
+import { getPinnedIcon } from '../../../helpers/iconHelpers';
+
+function getIcon(sfccCartridge: SFCCCartridge) {
+    if (sfccCartridge.isPinned()) {
+        return getPinnedIcon();
+    }
+
+    return new ThemeIcon(sfccCartridge.getIcon());
+}
+
 export default class CartridgeTreeItem extends TreeItem {
     private sfccCartridge: SFCCCartridge;
 
@@ -7,10 +17,8 @@ export default class CartridgeTreeItem extends TreeItem {
         super(sfccCartridge.getName());
 
         this.sfccCartridge = sfccCartridge;
-        this.contextValue = sfccCartridge.isPinned()
-            ? 'sfccPinnedCartridgeTreeItem'
-            : 'sfccCartridgeTreeItem';
-        this.iconPath = new ThemeIcon(this.sfccCartridge.getIcon());
+        this.contextValue = sfccCartridge.isPinned() ? 'sfccPinnedCartridgeTreeItem' : 'sfccCartridgeTreeItem';
+        this.iconPath = getIcon(this.sfccCartridge);
     }
 
     public getName() {

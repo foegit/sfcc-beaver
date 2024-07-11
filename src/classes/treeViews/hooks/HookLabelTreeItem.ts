@@ -1,23 +1,23 @@
-import {
-    ThemeColor,
-    ThemeIcon,
-    TreeItem,
-    TreeItemCollapsibleState,
-} from 'vscode';
+import { ThemeIcon, TreeItem, TreeItemCollapsibleState } from 'vscode';
 import { getHookType, HookPoint, HookTypes } from './hooksHelpers';
+import { colors, getPinnedIcon } from '../../../helpers/iconHelpers';
 
 function getIcon(hookPoint: HookPoint) {
     if (hookPoint.implementation.some((i) => !i.connected)) {
-        return new ThemeIcon('flame', new ThemeColor('charts.red'));
+        return new ThemeIcon('flame', colors.red);
+    }
+
+    if (hookPoint.pinned) {
+        return getPinnedIcon();
     }
 
     switch (getHookType(hookPoint.name)) {
         case HookTypes.system:
-            return new ThemeIcon('cloud', new ThemeColor('charts.blue'));
+            return new ThemeIcon('verified-filled', colors.blue);
         case HookTypes.commerceApi:
-            return new ThemeIcon('database', new ThemeColor('charts.purple'));
+            return new ThemeIcon('verified-filled', colors.purple);
         default:
-            return new ThemeIcon('note', new ThemeColor('charts.green'));
+            return new ThemeIcon('file-code', colors.green);
     }
 }
 
@@ -36,9 +36,7 @@ function getDescription(hookPoint: HookPoint) {
     const amount = hookPoint.implementation.length;
     const type = getHookType(hookPoint.name);
 
-    return `${typeToDisplayValue(type)} · ${
-        amount === 1 ? '1 extend' : `${amount} extends`
-    }`;
+    return `${typeToDisplayValue(type)} · ${amount === 1 ? '1 extend' : `${amount} extends`}`;
 }
 
 export default class HookLabelTreeItem extends TreeItem {
@@ -47,6 +45,6 @@ export default class HookLabelTreeItem extends TreeItem {
 
         this.description = getDescription(hookPoint);
         this.iconPath = getIcon(hookPoint);
-        this.contextValue = 'hookLabelTreeItem';
+        this.contextValue = hookPoint.pinned ? 'hookLabelTreeItemPinned' : 'hookLabelTreeItem';
     }
 }

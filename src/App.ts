@@ -44,14 +44,6 @@ class App {
         );
 
         vscode.commands.registerCommand(
-            'sfccBeaver.refreshHooksList',
-            async () => {
-                await hooksObserver.loadHookPoints();
-                hooksObserver.refresh();
-            }
-        );
-
-        vscode.commands.registerCommand(
             'sfccBeaver.openHookFile',
             async (hookItem: HookDetailsTreeItem) => {
                 const workspaceFolder = FsTool.getCurrentWorkspaceFolder();
