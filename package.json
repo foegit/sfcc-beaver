@@ -61,7 +61,12 @@
       },
       {
         "command": "sfccBeaver.refreshCartridgeList",
-        "title": "Refresh cartridge list",
+        "title": "Refresh Cartridges List",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "sfccBeaver.refreshHooksList",
+        "title": "Refresh Hooks List",
         "icon": "$(refresh)"
       },
       {
@@ -139,6 +144,11 @@
         {
           "command": "sfccBeaver.refreshCartridgeList",
           "when": "view == cartridgesObserver",
+          "group": "navigation"
+        },
+        {
+          "command": "sfccBeaver.refreshHooksList",
+          "when": "view == hooksObserver",
           "group": "navigation"
         }
       ],
