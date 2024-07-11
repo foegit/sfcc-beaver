@@ -21,10 +21,24 @@ function getIcon(hookPoint: HookPoint) {
     }
 }
 
-function getDescription(hook: HookPoint) {
-    const amount = hook.implementation.length;
+function typeToDisplayValue(hookType: HookTypes) {
+    switch (hookType) {
+        case HookTypes.system:
+            return 'system';
+        case HookTypes.commerceApi:
+            return 'API';
+        default:
+            return 'custom';
+    }
+}
 
-    return amount === 1 ? '(1 hook)' : `(${amount} hooks)`;
+function getDescription(hookPoint: HookPoint) {
+    const amount = hookPoint.implementation.length;
+    const type = getHookType(hookPoint.name);
+
+    return `${typeToDisplayValue(type)} · ${
+        amount === 1 ? '1 extend' : `${amount} extends`
+    }`;
 }
 
 export default class HookLabelTreeItem extends TreeItem {
