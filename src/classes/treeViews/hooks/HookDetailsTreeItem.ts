@@ -1,14 +1,11 @@
 import { ThemeColor, ThemeIcon, TreeItem } from 'vscode';
 import { HookImplementation } from './hooksHelpers';
+import PathTool from '../../tools/PathTool';
 
 export class HookDetailsTreeItem extends TreeItem {
     constructor(public hookImplementation: HookImplementation) {
-        const parsedLocation = /^.*\/(.*)\/cartridge(.*)$/.exec(
-            hookImplementation.location
-        );
-        const cartridge = parsedLocation
-            ? parsedLocation[1]
-            : 'Unknown cartridge';
+        const parsedLocation = /^.*\/(.*)\/cartridge(.*)$/.exec(PathTool.toPosixPath(hookImplementation.location));
+        const cartridge = parsedLocation ? parsedLocation[1] : 'Unknown cartridge';
 
         super(cartridge);
 

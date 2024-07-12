@@ -8,6 +8,7 @@ import IFileCreator from '../IFileCreator';
 import IFileAppender from '../IFileAppender';
 import PathTool from '../../tools/PathTool';
 import StaticFileAppender from './FileAppenders/StaticFileAppender';
+import EditorTool from '../../tools/EditorTool';
 
 class CartridgePickItem implements vscode.QuickPickItem {
     label: string;
@@ -15,11 +16,7 @@ class CartridgePickItem implements vscode.QuickPickItem {
     description?: string | undefined;
     detail?: string | undefined;
 
-    constructor(
-        sfccCartridge: SFCCCartridge,
-        isTargetFileExists: boolean,
-        isCurrentCartridge: boolean
-    ) {
+    constructor(sfccCartridge: SFCCCartridge, isTargetFileExists: boolean, isCurrentCartridge: boolean) {
         this.sfccCartridge = sfccCartridge;
         this.label = `$(${sfccCartridge.getIcon()}) ${sfccCartridge.getName()}`;
 
@@ -59,9 +56,7 @@ class FileOverrider {
         }
 
         if (targetCartridge.getName() === 'app_storefront_base') {
-            vscode.window.showWarningMessage(
-                'You override SFRA base cartridge!'
-            );
+            vscode.window.showWarningMessage('You override SFRA base cartridge!');
         }
 
         this.overrideForCartridge(targetCartridge);
@@ -85,33 +80,22 @@ class FileOverrider {
 
         const sfccCartridges = await this.sfccProject.getSortedCartridges();
 
-        const selectionList: CartridgePickItem[] = sfccCartridges.map(
-            (sfccCartridge) => {
-                const targetPath = this.getTargetPath(sfccCartridge);
-                const isTargetFileExists = fs.existsSync(targetPath);
+        const selectionList: CartridgePickItem[] = sfccCartridges.map((sfccCartridge) => {
+            const targetPath = this.getTargetPath(sfccCartridge);
+            const isTargetFileExists = fs.existsSync(targetPath);
 
-                const selectedCartridgeRegExp = new RegExp(
-                    `^.*[\\\\/]${sfccCartridge.getName()}[\\\\/].*$`
-                );
-                const isCurrentCartridge =
-                    selectedCartridgeRegExp.test(currentCartridgePath);
+            const selectedCartridgeRegExp = new RegExp(`^.*[\\\\/]${sfccCartridge.getName()}[\\\\/].*$`);
+            const isCurrentCartridge = selectedCartridgeRegExp.test(currentCartridgePath);
 
-                return new CartridgePickItem(
-                    sfccCartridge,
-                    isTargetFileExists,
-                    isCurrentCartridge
-                );
-            }
-        );
+            return new CartridgePickItem(sfccCartridge, isTargetFileExists, isCurrentCartridge);
+        });
 
         const selectedCartridgeItem =
             (await vscode.window.showQuickPick(selectionList, {
                 title: 'Select the cartridge',
             })) || '';
 
-        return selectedCartridgeItem
-            ? selectedCartridgeItem.sfccCartridge
-            : null;
+        return selectedCartridgeItem ? selectedCartridgeItem.sfccCartridge : null;
     }
 
     protected getTargetPath(currentCartridge: SFCCCartridge) {
@@ -125,13 +109,9 @@ class FileOverrider {
             throw new BeaverError(ErrCodes.notInCartridgeOverride);
         }
 
-        const relativeCurrentCartridge = /^.*(cartridge[\/\\].*)$/.exec(
-            currentPath
-        );
+        const relativeCurrentCartridge = /^.*(cartridge[\/\\].*)$/.exec(currentPath);
         const targetCartridgePath = currentCartridge.getCartridgePath();
-        const pathToCreate = relativeCurrentCartridge
-            ? relativeCurrentCartridge[1]
-            : '';
+        const pathToCreate = relativeCurrentCartridge ? relativeCurrentCartridge[1] : '';
         const fullTargetPath = path.join(targetCartridgePath, pathToCreate);
 
         return fullTargetPath;
@@ -161,11 +141,7 @@ class FileOverrider {
     }
 
     private async focusOnFile(filePath: string) {
-        var openPath = vscode.Uri.parse('file://' + filePath);
-
-        const textDocument = await vscode.workspace.openTextDocument(openPath);
-        await vscode.window.showTextDocument(textDocument);
-
+        const textDocument = await EditorTool.focusOnFile(filePath);
         const targetPosition = this.getFocusPosition(textDocument);
 
         vscode.commands
@@ -183,9 +159,7 @@ class FileOverrider {
             );
     }
 
-    protected getFocusPosition(
-        createdTextDocument: vscode.TextDocument
-    ): vscode.Position {
+    protected getFocusPosition(createdTextDocument: vscode.TextDocument): vscode.Position {
         return new vscode.Position(createdTextDocument.lineCount, 0);
     }
 }

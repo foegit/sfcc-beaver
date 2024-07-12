@@ -7,6 +7,8 @@ import HookLabelTreeItem from './HookLabelTreeItem';
 import { HookPoint, normalizeScriptPath, SFCCHookDefinition, sortHooks } from './hooksHelpers';
 import { commands, Event, EventEmitter, TreeDataProvider, TreeItem, Uri, window, workspace } from 'vscode';
 import SettingTool from '../../tools/SettingTool';
+import PathTool from '../../tools/PathTool';
+import EditorTool from '../../tools/EditorTool';
 
 export class HookObserver implements TreeDataProvider<TreeItem> {
     private _onDidChangeTreeData: EventEmitter<TreeItem | undefined | void> = new EventEmitter<
@@ -27,6 +29,7 @@ export class HookObserver implements TreeDataProvider<TreeItem> {
     private showSystem: boolean = true;
     private showCommerceApi: boolean = true;
     private showCustom: boolean = true;
+    private lastClickedDetailsTreeItem: HookDetailsTreeItem | null = null;
 
     async loadHookPoints() {
         const workspaceFolder = FsTool.getCurrentWorkspaceFolder();
@@ -47,7 +50,7 @@ export class HookObserver implements TreeDataProvider<TreeItem> {
             }
 
             const cartridgeRoot = filePath.replace('package.json', '');
-            const hooksFilePath = path.resolve(cartridgeRoot, content.hooks);
+            const hooksFilePath = path.join(cartridgeRoot, content.hooks);
             const hooksFileRootFolder = hooksFilePath.replace('hooks.json', '');
 
             const hooks: { hooks: SFCCHookDefinition[] } = FsTool.parseCurrentProjectJsonFile(hooksFilePath);
@@ -61,7 +64,7 @@ export class HookObserver implements TreeDataProvider<TreeItem> {
                     });
                 }
 
-                const scriptFilePath = path.resolve(hooksFileRootFolder, normalizeScriptPath(sfccHook.script));
+                const scriptFilePath = path.join(hooksFileRootFolder, normalizeScriptPath(sfccHook.script));
 
                 hookMap.get(sfccHook.name)!.implementation.push({
                     location: scriptFilePath,
@@ -93,23 +96,15 @@ export class HookObserver implements TreeDataProvider<TreeItem> {
         });
 
         commands.registerCommand('sfccBeaver.openHookFile', async (hookItem: HookDetailsTreeItem) => {
-            const workspaceFolder = FsTool.getCurrentWorkspaceFolder();
+            await EditorTool.focusOnWorkspaceFile(hookItem.hookImplementation.location, {
+                preview: this.lastClickedDetailsTreeItem !== hookItem, //double click
+            });
 
-            var openPath = Uri.parse('file://' + workspaceFolder.uri.path + hookItem.hookImplementation.location);
-
-            const textDocument = await workspace.openTextDocument(openPath);
-            await window.showTextDocument(textDocument);
+            this.lastClickedDetailsTreeItem = hookItem;
         });
 
         commands.registerCommand('sfccBeaver.openHookDefinitionFile', async (hookItem: HookDetailsTreeItem) => {
-            const workspaceFolder = FsTool.getCurrentWorkspaceFolder();
-
-            var openPath = Uri.parse(
-                'file://' + workspaceFolder.uri.path + hookItem.hookImplementation.definitionFileLocation
-            );
-
-            const textDocument = await workspace.openTextDocument(openPath);
-            await window.showTextDocument(textDocument);
+            EditorTool.focusOnWorkspaceFile(hookItem.hookImplementation.definitionFileLocation);
         });
     }
 

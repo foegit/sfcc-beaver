@@ -1,25 +1,23 @@
-import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
 import BeaverError, { ErrCodes } from '../errors/BeaverError';
+import PathTool from './PathTool';
+import { Uri, window, workspace } from 'vscode';
 
 export default class FsTool {
     static getCurrentWorkspaceFolder() {
-        if (!vscode.workspace.workspaceFolders) {
+        if (!workspace.workspaceFolders) {
             throw new BeaverError(ErrCodes.noActiveEditor);
         }
 
-        return vscode.workspace.workspaceFolders[0];
+        return workspace.workspaceFolders[0];
     }
 
     static parseCurrentProjectJsonFile(filePath: string) {
         const workspaceFolder = FsTool.getCurrentWorkspaceFolder();
 
         try {
-            const absoluteFilePath = path.join(
-                workspaceFolder.uri.fsPath,
-                filePath
-            );
+            const absoluteFilePath = path.join(workspaceFolder.uri.fsPath, filePath);
             if (!fs.existsSync(absoluteFilePath)) {
                 throw new Error('File not found');
             }
@@ -39,10 +37,7 @@ export default class FsTool {
     static fileExist(filePath: string) {
         const workspaceFolder = FsTool.getCurrentWorkspaceFolder();
 
-        const absoluteFilePath = path.join(
-            workspaceFolder.uri.fsPath,
-            filePath
-        );
+        const absoluteFilePath = path.join(workspaceFolder.uri.fsPath, filePath);
 
         return fs.existsSync(absoluteFilePath);
     }
