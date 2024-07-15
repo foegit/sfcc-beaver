@@ -55,6 +55,8 @@ class App {
 
         this.workspaceState = context.workspaceState;
         this.indexCartridges();
+
+        vscode.commands.executeCommand('setContext', 'sfccBeaver.extActivated', true);
     }
 
     public async indexCartridges(): Promise<void> {

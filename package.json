@@ -24,7 +24,7 @@
     "scapi"
   ],
   "activationEvents": [
-    "*"
+    "workspaceContains:**/.project"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -263,18 +263,21 @@
         {
           "name": "Cartridges",
           "id": "cartridgesObserver",
-          "contextualTitle": "Cartridge Overview"
+          "contextualTitle": "Cartridge Overview",
+          "when": "sfccBeaver.extActivated"
         },
         {
           "name": "Documentation",
           "id": "docsNavigator",
           "type": "webview",
-          "contextualTitle": "Documentation Search"
+          "contextualTitle": "Documentation Search",
+          "when": "sfccBeaver.extActivated"
         },
         {
           "name": "Hooks",
           "id": "hooksObserver",
-          "contextualTitle": "Hooks Overview"
+          "contextualTitle": "Hooks Overview",
+          "when": "sfccBeaver.extActivated"
         }
       ]
     }
