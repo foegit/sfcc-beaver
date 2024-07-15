@@ -1,5 +1,4 @@
 import * as fg from 'fast-glob';
-import BeaverError, { ErrCodes } from '../../errors/BeaverError';
 import * as path from 'path';
 import FsTool from '../../tools/FsTool';
 import { HookDetailsTreeItem } from './HookDetailsTreeItem';
@@ -7,8 +6,8 @@ import HookLabelTreeItem from './HookLabelTreeItem';
 import { HookPoint, normalizeScriptPath, SFCCHookDefinition, sortHooks } from './hooksHelpers';
 import { commands, Event, EventEmitter, TreeDataProvider, TreeItem, Uri, window, workspace } from 'vscode';
 import SettingTool from '../../tools/SettingTool';
-import PathTool from '../../tools/PathTool';
 import EditorTool from '../../tools/EditorTool';
+import { copyToClipboard } from '../../../helpers/clipboard';
 
 export class HookObserver implements TreeDataProvider<TreeItem> {
     private _onDidChangeTreeData: EventEmitter<TreeItem | undefined | void> = new EventEmitter<
@@ -81,6 +80,10 @@ export class HookObserver implements TreeDataProvider<TreeItem> {
         commands.registerCommand('sfccBeaver.refreshHooksList', async () => {
             await this.loadHookPoints();
             this.refresh();
+        });
+
+        commands.registerCommand('sfccBeaver.copyHookName', async (treeItem: HookLabelTreeItem) => {
+            copyToClipboard(treeItem.hookPoint.name);
         });
 
         commands.registerCommand('sfccBeaver.pinHook', async (treeItem: HookLabelTreeItem) => {

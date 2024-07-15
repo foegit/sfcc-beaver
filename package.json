@@ -18,7 +18,10 @@
     "demandware",
     "dw",
     "cartridge",
-    "commerce cloud"
+    "commerce cloud",
+    "pwakit",
+    "ocapi",
+    "scapi"
   ],
   "activationEvents": [
     "*"
@@ -102,6 +105,11 @@
         "command": "sfccBeaver.pinHook",
         "title": "Pin hook",
         "icon": "$(pin)"
+      },
+      {
+        "command": "sfccBeaver.copyHookName",
+        "title": "Copy hook name",
+        "icon": "$(copy)"
       },
       {
         "command": "sfccBeaver.unpinHook",
@@ -190,6 +198,11 @@
         {
           "command": "sfccBeaver.openHookDefinitionFile",
           "when": "view == hooksObserver && viewItem == hookFileItem",
+          "group": "inline"
+        },
+        {
+          "command": "sfccBeaver.copyHookName",
+          "when": "view == hooksObserver && viewItem == hookLabelTreeItem",
           "group": "inline"
         },
         {

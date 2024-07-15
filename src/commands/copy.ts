@@ -1,9 +1,9 @@
 import * as vscode from 'vscode';
 import BeaverError, { ErrCodes } from '../classes/errors/BeaverError';
 import FileExtractorFactory from '../classes/extract/FileExtractorFactory';
-import Clipboard from '../classes/Clipboard';
 import { handleError } from './error';
 import SFCCProjectFile from '../classes/SFCCProjectFile';
+import { copyToClipboard } from '../helpers/clipboard';
 
 export function copyInclude() {
     try {
@@ -18,7 +18,7 @@ export function copyInclude() {
 
         const snippet = FileExtractorFactory.getHandler(sfccFile.extension).getSnippet(sfccFile, activeTextEditor);
 
-        Clipboard.toClipboard(snippet);
+        copyToClipboard(snippet);
     } catch (error) {
         handleError(error);
     }
@@ -37,9 +37,8 @@ export function copyUnixPath() {
 
         const snippet = FileExtractorFactory.getHandler('unix').getSnippet(sfccFile, activeTextEditor);
 
-        Clipboard.toClipboard(snippet);
+        copyToClipboard(snippet);
     } catch (error) {
         handleError(error);
     }
 }
-
