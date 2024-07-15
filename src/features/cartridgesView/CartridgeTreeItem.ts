@@ -1,6 +1,6 @@
-import { ThemeColor, ThemeIcon, TreeItem } from 'vscode';
-import SFCCCartridge from '../../SFCCCartridge';
-import { getPinnedIcon } from '../../../helpers/iconHelpers';
+import { ThemeIcon, TreeItem } from 'vscode';
+import { getPinnedIcon } from '../../helpers/iconHelpers';
+import SFCCCartridge from '../../classes/SFCCCartridge';
 
 function getIcon(sfccCartridge: SFCCCartridge) {
     if (sfccCartridge.isPinned()) {

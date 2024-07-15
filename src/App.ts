@@ -6,14 +6,13 @@ import path = require('path');
 
 import BeaverError, { ErrCodes } from './classes/errors/BeaverError';
 import SettingTool from './classes/tools/SettingTool';
-import { CartridgesObserver } from './classes/treeViews/CartridgeObserver';
-import CartridgeTreeItem from './classes/treeViews/treeItems/CartridgeTreeItem';
+import { CartridgesObserver } from './features/cartridgesView/CartridgeObserver';
+
 import HoverManager from './classes/hover/HoverManager';
 import WebviewMgr from './webviewProviders/WebviewMgr';
 import CommandMgr from './commands/CommandMgr';
-import { HookObserver } from './classes/treeViews/hooks/HookObserver';
-import FsTool from './classes/tools/FsTool';
-import { HookDetailsTreeItem } from './classes/treeViews/hooks/HookDetailsTreeItem';
+import { HookObserver } from './features/hooksView/HookObserver';
+import CartridgeTreeItem from './features/cartridgesView/CartridgeTreeItem';
 
 class App {
     public uniqueTime: string;

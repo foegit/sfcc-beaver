@@ -1,13 +1,13 @@
 import * as fg from 'fast-glob';
 import * as path from 'path';
-import FsTool from '../../tools/FsTool';
 import { HookDetailsTreeItem } from './HookDetailsTreeItem';
 import HookLabelTreeItem from './HookLabelTreeItem';
 import { HookPoint, normalizeScriptPath, SFCCHookDefinition, sortHooks } from './hooksHelpers';
 import { commands, Event, EventEmitter, TreeDataProvider, TreeItem, Uri, window, workspace } from 'vscode';
-import SettingTool from '../../tools/SettingTool';
-import EditorTool from '../../tools/EditorTool';
-import { copyToClipboard } from '../../../helpers/clipboard';
+import EditorTool from '../../classes/tools/EditorTool';
+import FsTool from '../../classes/tools/FsTool';
+import SettingTool from '../../classes/tools/SettingTool';
+import { copyToClipboard } from '../../helpers/clipboard';
 
 export class HookObserver implements TreeDataProvider<TreeItem> {
     private _onDidChangeTreeData: EventEmitter<TreeItem | undefined | void> = new EventEmitter<

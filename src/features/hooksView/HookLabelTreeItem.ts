@@ -1,6 +1,6 @@
 import { ThemeIcon, TreeItem, TreeItemCollapsibleState } from 'vscode';
 import { getHookType, HookPoint, HookTypes } from './hooksHelpers';
-import { colors, getPinnedIcon } from '../../../helpers/iconHelpers';
+import { colors, getPinnedIcon } from '../../helpers/iconHelpers';
 
 function getIcon(hookPoint: HookPoint) {
     if (hookPoint.implementation.some((i) => !i.connected)) {

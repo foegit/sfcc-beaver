@@ -1,6 +1,6 @@
 import { ThemeColor, ThemeIcon, TreeItem } from 'vscode';
 import { HookImplementation } from './hooksHelpers';
-import PathTool from '../../tools/PathTool';
+import PathTool from '../../classes/tools/PathTool';
 
 export class HookDetailsTreeItem extends TreeItem {
     constructor(public hookImplementation: HookImplementation) {
