@@ -54,20 +54,10 @@
           "default": [],
           "description": "Comma separated list of pinned hooks."
         },
-        "sfccBeaver.general.enabled": {
-          "type": "string",
-          "enum": [
-            "auto_enabled",
-            "enabled",
-            "disabled"
-          ],
-          "enumDescriptions": [
-            "Enabled automatically based on presence of `.project` files in the project",
-            "All features enabled",
-            "All features disabled"
-          ],
-          "default": "disabled",
-          "description": "Enables/disables extension for the project"
+        "sfccBeaver.general.isSFCCProject": {
+          "type": "boolean",
+          "default": "false",
+          "description": "System setting. Don't modify it. If you need to disable extension for the current workspace do so from the extension page (View > Extensions > SFCC Beaver)"
         }
       }
     },
@@ -279,20 +269,20 @@
           "name": "Cartridges",
           "id": "cartridgesObserver",
           "contextualTitle": "Cartridge Overview",
-          "when": "config.sfccBeaver.general.enabled"
+          "when": "config.sfccBeaver.general.isSFCCProject == true || sfccBeaver.extActivated"
         },
         {
           "name": "Documentation",
           "id": "docsNavigator",
           "type": "webview",
           "contextualTitle": "Documentation Search",
-          "when": "sfccBeaver.extActivated"
+          "when": "config.sfccBeaver.general.isSFCCProject == true || sfccBeaver.extActivated"
         },
         {
           "name": "Hooks",
           "id": "hooksObserver",
           "contextualTitle": "Hooks Overview",
-          "when": "sfccBeaver.extActivated"
+          "when": "config.sfccBeaver.general.isSFCCProject == true || sfccBeaver.extActivated"
         }
       ]
     }

@@ -12,18 +12,16 @@ import WebviewMgr from './webviewProviders/WebviewMgr';
 import CommandMgr from './commands/CommandMgr';
 import { HookObserver } from './features/hooksView/HookObserver';
 import CartridgeTreeItem from './features/cartridgesView/CartridgeTreeItem';
-import { addToSettingList, removeFromSettingList } from './helpers/settings';
+import { addToSettingList, isSettingOff, removeFromSettingList, updateSetting } from './helpers/settings';
 
 class App {
-  public uniqueTime: string;
   public workspaceState?: vscode.Memento;
 
   constructor() {
-    this.uniqueTime = String(Date.now()) + Math.random();
-    console.debug('App created', this.uniqueTime);
+    console.debug('Extension activated at: ', String(Date.now()) + Math.random());
   }
 
-  public activate(context: vscode.ExtensionContext) {
+  public async activate(context: vscode.ExtensionContext) {
     const cartridgesObserver = new CartridgesObserver();
     const hooksObserver = new HookObserver();
 
@@ -55,7 +53,13 @@ class App {
     this.workspaceState = context.workspaceState;
     this.indexCartridges();
 
-    vscode.commands.executeCommand('setContext', 'sfccBeaver.extActivated', true);
+    if (isSettingOff('general.isSFCCProject')) {
+      // Saving a setting so the tree view will be loaded immediately the next time instead of waiting for activation to be finished
+      await updateSetting('general.isSFCCProject', true);
+
+      // Update setting does not trigger recheck of when clause for tree views, so additional. It only happens on the first load
+      vscode.commands.executeCommand('setContext', 'sfccBeaver.extActivated', true);
+    }
   }
 
   public async indexCartridges(): Promise<void> {

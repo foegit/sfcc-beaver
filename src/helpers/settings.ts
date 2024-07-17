@@ -22,8 +22,8 @@ const settingsDefinition = {
   'hooks.pinnedHooks': {
     default: [] as string[],
   },
-  'general.enabled': {
-    default: 'auto_enabled' as 'auto_enabled' | 'enabled' | 'disabled',
+  'general.isSFCCProject': {
+    default: false,
   },
   'copy.addLineNumberForUnix': {
     default: false,
@@ -69,6 +69,14 @@ export async function removeFromSettingList<T extends ArraySettingName>(settingN
   });
 }
 
-export function isSettingOn(settingName: SettingName) {
-  return !!getSetting(settingName);
+export function isSettingOn(settingName: SettingName<boolean>) {
+  return getSetting(settingName);
+}
+
+export function isSettingOff(settingName: SettingName<boolean>) {
+  return !getSetting(settingName);
+}
+
+export function compareSetting<T extends SettingName>(settingName: T, value: SettingType<T>) {
+  return getSetting(settingName) === value;
 }
