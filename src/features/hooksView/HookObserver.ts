@@ -9,6 +9,7 @@ import { registerHookCommands } from './hooksCommands';
 import { registerHookWatcher } from './hooksWatcher';
 import { showError } from '../../helpers/notification';
 import { getSetting } from '../../helpers/settings';
+import EditorTool from '../../classes/tools/EditorTool';
 
 export class HookObserver implements TreeDataProvider<TreeItem> {
   private _onDidChangeTreeData: EventEmitter<TreeItem | undefined | void> = new EventEmitter<
@@ -54,7 +55,16 @@ export class HookObserver implements TreeDataProvider<TreeItem> {
       const parsedHookJson: { hooks: SFCCHookDefinition[] | null } = FsTool.parseCurrentProjectJsonFile(hooksFilePath);
 
       if (!parsedHookJson || !parsedHookJson.hooks) {
-        showError(`Cannot parse hooks configuration ${hooksFilePath}`);
+        showError(`Cannot parse hooks configuration ${hooksFilePath}`, [
+          {
+            title: 'Go to file',
+            cb: () => {
+              EditorTool.focusOnWorkspaceFile(filePath, {
+                focusOnText: new RegExp('hooks'),
+              });
+            },
+          },
+        ]);
         return;
       }
 
@@ -73,6 +83,7 @@ export class HookObserver implements TreeDataProvider<TreeItem> {
           location: scriptFilePath,
           connected: FsTool.fileExist(scriptFilePath),
           definitionFileLocation: hooksFilePath,
+          hookName: sfccHook.name,
         });
       });
     });

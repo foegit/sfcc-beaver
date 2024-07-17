@@ -29,8 +29,19 @@ export function registerHookCommands(hookObserver: HookObserver) {
   });
 
   commands.registerCommand('sfccBeaver.openHookFile', async (hookItem: HookDetailsTreeItem) => {
+    // dw.order.calculate -> calculate
+    const hookNameLastPart = hookItem.hookImplementation.hookName.split('.').pop();
+    /**
+     * /(calculate\s*)[(=:]/ which covers
+     * function calculate () - function
+     * exports.calculate = - short export
+     * module.exports = { calculate: } - module export
+     */
+    const hookFunctionRegExp = new RegExp(`(${hookNameLastPart}\\s*)[(=:]`);
+
     await EditorTool.focusOnWorkspaceFile(hookItem.hookImplementation.location, {
       preview: hookObserver.lastClickedDetailsTreeItem !== hookItem, //double click
+      focusOnText: hookFunctionRegExp,
     });
 
     hookObserver.lastClickedDetailsTreeItem = hookItem;

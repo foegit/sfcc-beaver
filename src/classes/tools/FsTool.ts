@@ -5,40 +5,40 @@ import PathTool from './PathTool';
 import { Uri, window, workspace } from 'vscode';
 
 export default class FsTool {
-    static getCurrentWorkspaceFolder() {
-        if (!workspace.workspaceFolders) {
-            throw new BeaverError(ErrCodes.noActiveEditor);
-        }
-
-        return workspace.workspaceFolders[0];
+  static getCurrentWorkspaceFolder() {
+    if (!workspace.workspaceFolders) {
+      throw new BeaverError(ErrCodes.noActiveEditor);
     }
 
-    static parseCurrentProjectJsonFile(filePath: string) {
-        const workspaceFolder = FsTool.getCurrentWorkspaceFolder();
+    return workspace.workspaceFolders[0];
+  }
 
-        try {
-            const absoluteFilePath = path.join(workspaceFolder.uri.fsPath, filePath);
-            if (!fs.existsSync(absoluteFilePath)) {
-                throw new Error('File not found');
-            }
+  static parseCurrentProjectJsonFile(filePath: string) {
+    const workspaceFolder = FsTool.getCurrentWorkspaceFolder();
 
-            const file = fs.readFileSync(absoluteFilePath);
-            const parsedFile = JSON.parse(file.toString());
+    try {
+      const absoluteFilePath = path.join(workspaceFolder.uri.fsPath, filePath);
+      if (!fs.existsSync(absoluteFilePath)) {
+        throw new Error(`File not found: ${absoluteFilePath}`);
+      }
 
-            return parsedFile;
-        } catch (err) {
-            if (err instanceof Error) {
-                console.error(err.message, err.stack);
-            }
-            return null;
-        }
+      const file = fs.readFileSync(absoluteFilePath);
+      const parsedFile = JSON.parse(file.toString());
+
+      return parsedFile;
+    } catch (err) {
+      if (err instanceof Error) {
+        console.error(err.message, err.stack);
+      }
+      return null;
     }
+  }
 
-    static fileExist(filePath: string) {
-        const workspaceFolder = FsTool.getCurrentWorkspaceFolder();
+  static fileExist(filePath: string) {
+    const workspaceFolder = FsTool.getCurrentWorkspaceFolder();
 
-        const absoluteFilePath = path.join(workspaceFolder.uri.fsPath, filePath);
+    const absoluteFilePath = path.join(workspaceFolder.uri.fsPath, filePath);
 
-        return fs.existsSync(absoluteFilePath);
-    }
+    return fs.existsSync(absoluteFilePath);
+  }
 }

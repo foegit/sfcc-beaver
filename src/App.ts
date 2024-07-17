@@ -35,7 +35,7 @@ class App {
     });
 
     vscode.commands.registerCommand('sfccBeaver.pinCartridge', async (cartridgeItem: CartridgeTreeItem) => {
-      await addToSettingList('hooks.pinnedHooks', cartridgeItem.getName());
+      await addToSettingList('cartridges.pinnedCartridges', cartridgeItem.getName());
       await this.indexCartridges();
       cartridgesObserver.refresh();
     });
