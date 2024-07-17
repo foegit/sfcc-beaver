@@ -2,9 +2,9 @@ import { commands } from 'vscode';
 import { HookObserver } from './HookObserver';
 import { copyToClipboard } from '../../helpers/clipboard';
 import HookLabelTreeItem from './HookLabelTreeItem';
-import SettingTool from '../../classes/tools/SettingTool';
 import { HookDetailsTreeItem } from './HookDetailsTreeItem';
 import EditorTool from '../../classes/tools/EditorTool';
+import { addToSettingList, removeFromSettingList } from '../../helpers/settings';
 
 export function registerHookCommands(hookObserver: HookObserver) {
   commands.registerCommand('sfccBeaver.refreshHooksList', async () => {
@@ -17,13 +17,13 @@ export function registerHookCommands(hookObserver: HookObserver) {
   });
 
   commands.registerCommand('sfccBeaver.pinHook', async (treeItem: HookLabelTreeItem) => {
-    await SettingTool.addToList('pinnedHooks', treeItem.hookPoint.name);
+    await addToSettingList('hooks.pinnedHooks', treeItem.hookPoint.name);
     await hookObserver.loadHookPoints();
     hookObserver.refresh();
   });
 
   commands.registerCommand('sfccBeaver.unpinHook', async (treeItem: HookLabelTreeItem) => {
-    await SettingTool.removeFromList('pinnedHooks', treeItem.hookPoint.name);
+    await removeFromSettingList('hooks.pinnedHooks', treeItem.hookPoint.name);
     await hookObserver.loadHookPoints();
     hookObserver.refresh();
   });

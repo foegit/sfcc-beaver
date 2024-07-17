@@ -31,12 +31,12 @@
     "configuration": {
       "title": "SFCC Beaver",
       "properties": {
-        "sfccBeaver.addLineNumberForUnix": {
+        "sfccBeaver.copy.addLineNumberForUnix": {
           "type": "boolean",
           "default": false,
           "description": "Adds line number (#11) for extracted unix path."
         },
-        "sfccBeaver.pinnedCartridges": {
+        "sfccBeaver.cartridges.pinnedCartridges": {
           "type": "array",
           "items": {
             "type": "string",
@@ -45,7 +45,7 @@
           "default": [],
           "description": "Comma separated list of pinned cartridges."
         },
-        "sfccBeaver.pinnedHooks": {
+        "sfccBeaver.hooks.pinnedHooks": {
           "type": "array",
           "items": {
             "type": "string",
@@ -53,6 +53,21 @@
           },
           "default": [],
           "description": "Comma separated list of pinned hooks."
+        },
+        "sfccBeaver.general.enabled": {
+          "type": "string",
+          "enum": [
+            "auto_enabled",
+            "enabled",
+            "disabled"
+          ],
+          "enumDescriptions": [
+            "Enabled automatically based on presence of `.project` files in the project",
+            "All features enabled",
+            "All features disabled"
+          ],
+          "default": "disabled",
+          "description": "Enables/disables extension for the project"
         }
       }
     },
@@ -264,7 +279,7 @@
           "name": "Cartridges",
           "id": "cartridgesObserver",
           "contextualTitle": "Cartridge Overview",
-          "when": "sfccBeaver.extActivated"
+          "when": "config.sfccBeaver.general.enabled"
         },
         {
           "name": "Documentation",

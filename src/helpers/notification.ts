@@ -5,5 +5,5 @@ export function showNotification(notification: string) {
 }
 
 export function showError(notification: string) {
-  window.showErrorMessage(notification, { title: 'Error! ' });
+  window.showErrorMessage(notification);
 }

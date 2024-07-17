@@ -5,10 +5,10 @@ import HookLabelTreeItem from './HookLabelTreeItem';
 import { HookPoint, normalizeScriptPath, SFCCHookDefinition, sortHooks } from './hooksHelpers';
 import { Event, EventEmitter, TreeDataProvider, TreeItem, Uri, window, workspace } from 'vscode';
 import FsTool from '../../classes/tools/FsTool';
-import SettingTool from '../../classes/tools/SettingTool';
 import { registerHookCommands } from './hooksCommands';
 import { registerHookWatcher } from './hooksWatcher';
 import { showError } from '../../helpers/notification';
+import { getSetting } from '../../helpers/settings';
 
 export class HookObserver implements TreeDataProvider<TreeItem> {
   private _onDidChangeTreeData: EventEmitter<TreeItem | undefined | void> = new EventEmitter<
@@ -38,7 +38,7 @@ export class HookObserver implements TreeDataProvider<TreeItem> {
     });
 
     const hookMap = new Map<string, HookPoint>();
-    const pinnedHooks = SettingTool.getPinnedHooks();
+    const pinnedHooks = getSetting('hooks.pinnedHooks');
 
     packageJsonFiles.forEach((filePath) => {
       const content = FsTool.parseCurrentProjectJsonFile(filePath);
