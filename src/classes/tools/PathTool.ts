@@ -1,9 +1,30 @@
-import { workspace } from 'vscode';
+import { Uri, workspace, WorkspaceFolder } from 'vscode';
+import * as path from 'path';
 
 /**
  * @class tool to work with path
  */
 export default class PathTool {
+    /**
+     * Ensures path is in Posix-format e.g. src\\app\\index.js -> src/app/index.js
+     * @param relativePath
+     * @returns Posix-like path
+     */
+    static toPosixPath(relativePath: string) {
+        return relativePath.split(path.sep).join(path.posix.sep);
+    }
+
+    /**
+     * Gets absolute Posix path
+     * @param relativePath
+     */
+    static getAbsPosixPath(workspaceFolder: WorkspaceFolder, relativePath: string) {
+        var posixPath = PathTool.toPosixPath(relativePath);
+        var result = path.posix.join(workspaceFolder.uri.path, posixPath);
+
+        return result;
+    }
+
     /**
      * Checks if there is such folder in given path
      * @param fsPath - windows- or unix-like path

@@ -3,13 +3,11 @@ import axios from 'axios';
 import normalizeUrl from 'normalize-url';
 import * as cheerio from 'cheerio';
 import WebviewTool from '../classes/tools/WebviewTool';
-import Clipboard from '../classes/Clipboard';
 import SimpleHistory from './helpers/SimpleHistory';
 import URLHistoryItem from './types/URLHistoryItem';
 import CreateOrShowOptions from './types/CreateOrShowOptions';
 import LoadDocumentationOptions from './types/LoadDocumentationOptions';
-
-
+import { copyToClipboard } from '../helpers/clipboard';
 
 /**
  * Manages cat coding webview panels
@@ -50,11 +48,11 @@ export default class DocsViewerProvider {
         }
     }
 
-    public copyCurrentURLToClipbord() {
+    public copyCurrentURLToClipboard() {
         const lastHistory = this.history.getActive();
 
         if (lastHistory) {
-            Clipboard.toClipboard(lastHistory.url);
+            copyToClipboard(lastHistory.url);
         }
     }
 
@@ -63,7 +61,7 @@ export default class DocsViewerProvider {
 
         if (prevItem) {
             this.loadDocumentationTopic(prevItem.url, {
-                skipHistory: true
+                skipHistory: true,
             });
         }
     }
@@ -73,15 +71,16 @@ export default class DocsViewerProvider {
 
         if (nextItem) {
             this.loadDocumentationTopic(nextItem.url, {
-                skipHistory: true
+                skipHistory: true,
             });
         }
     }
 
     public static openClassDoc(extensionUri: vscode.Uri, classPath: string) {
         this.createOrShow(extensionUri, {
-            baseURL: 'https://documentation.b2c.commercecloud.salesforce.com/DOC2/topic/com.demandware.dochelp/DWAPI/scriptapi/html/api',
-            relativeLink: `/class_${classPath.replace(/\//g, '_')}.html`
+            baseURL:
+                'https://documentation.b2c.commercecloud.salesforce.com/DOC2/topic/com.demandware.dochelp/DWAPI/scriptapi/html/api',
+            relativeLink: `/class_${classPath.replace(/\//g, '_')}.html`,
         });
     }
 
@@ -90,7 +89,7 @@ export default class DocsViewerProvider {
             DocsViewerProvider.viewType,
             'Docs Viewer',
             vscode.ViewColumn.Beside,
-            DocsViewerProvider.getWebviewOptions(extensionUri),
+            DocsViewerProvider.getWebviewOptions(extensionUri)
         );
 
         return new DocsViewerProvider(panel, extensionUri);
@@ -134,7 +133,7 @@ export default class DocsViewerProvider {
         return $body.html();
     }
 
-    async loadDocumentationTopic(url: string, options? : LoadDocumentationOptions) {
+    async loadDocumentationTopic(url: string, options?: LoadDocumentationOptions) {
         console.log(`Start loading documentation page: "${url}"`);
 
         const safeOptions = options || new LoadDocumentationOptions();
@@ -144,7 +143,7 @@ export default class DocsViewerProvider {
         }
 
         this.webviewPanel.webview.postMessage({
-            type: 'beaver:host:docs:startLoading'
+            type: 'beaver:host:docs:startLoading',
         });
 
         const content = await axios.get(url);
@@ -152,7 +151,7 @@ export default class DocsViewerProvider {
         return this.webviewPanel.webview.postMessage({
             type: 'beaver:host:docs:updateDetails',
             originalURL: url,
-            html: this.prepareDocumentationPage(content.data)
+            html: this.prepareDocumentationPage(content.data),
         });
     }
 
@@ -163,7 +162,6 @@ export default class DocsViewerProvider {
     private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
         this.webviewPanel = panel;
         this.extensionUrl = extensionUri;
-
 
         this.webviewPanel.title = '🦫 SFCC Docs';
 
@@ -177,7 +175,7 @@ export default class DocsViewerProvider {
 
         // Handle messages from the webview
         this.webviewPanel.webview.onDidReceiveMessage(
-            async message => {
+            async (message) => {
                 switch (message.type) {
                     case 'alert':
                         vscode.window.showErrorMessage(message.text);
@@ -241,7 +239,9 @@ export default class DocsViewerProvider {
                     and only allow scripts that have a specific nonce.
                 -->
 
-                <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource}; img-src ${webview.cspSource} https:; script-src 'nonce-${nonce}';">
+                <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${
+                    webview.cspSource
+                }; img-src ${webview.cspSource} https:; script-src 'nonce-${nonce}';">
 
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -266,16 +266,16 @@ export default class DocsViewerProvider {
         return {
             enableScripts: true,
             enableFindWidget: true,
-            localResourceRoots: [vscode.Uri.joinPath(extensionUri)]
+            localResourceRoots: [vscode.Uri.joinPath(extensionUri)],
         };
     }
 
-        /**
+    /**
      * Create URL to webview static resource
      */
-        private getResourceUri(resourceRelativePath: string) {
-            return this.webviewPanel.webview.asWebviewUri(
-                vscode.Uri.joinPath(this.extensionUrl, 'static/webview2', resourceRelativePath)
-            );
-        }
+    private getResourceUri(resourceRelativePath: string) {
+        return this.webviewPanel.webview.asWebviewUri(
+            vscode.Uri.joinPath(this.extensionUrl, 'static/webview2', resourceRelativePath)
+        );
+    }
 }

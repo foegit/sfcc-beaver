@@ -2,7 +2,7 @@
   "name": "sfcc-beaver",
   "displayName": "SFCC Beaver",
   "description": "An extension for SFCC developers to automate routine tasks",
-  "version": "2.4.0",
+  "version": "3.1.0",
   "icon": "static/simpleLogo.png",
   "repository": "https://github.com/foegit/sfcc-beaver",
   "publisher": "SerhiiHlavatskyi",
@@ -18,22 +18,25 @@
     "demandware",
     "dw",
     "cartridge",
-    "commerce cloud"
+    "commerce cloud",
+    "pwakit",
+    "ocapi",
+    "scapi"
   ],
   "activationEvents": [
-    "*"
+    "workspaceContains:**/.project"
   ],
   "main": "./dist/extension.js",
   "contributes": {
     "configuration": {
       "title": "SFCC Beaver",
       "properties": {
-        "sfccBeaver.addLineNumberForUnix": {
+        "sfccBeaver.copy.addLineNumberForUnix": {
           "type": "boolean",
           "default": false,
           "description": "Adds line number (#11) for extracted unix path."
         },
-        "sfccBeaver.pinnedCartridges": {
+        "sfccBeaver.cartridges.pinnedCartridges": {
           "type": "array",
           "items": {
             "type": "string",
@@ -41,6 +44,20 @@
           },
           "default": [],
           "description": "Comma separated list of pinned cartridges."
+        },
+        "sfccBeaver.hooks.pinnedHooks": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "Name of the hook"
+          },
+          "default": [],
+          "description": "Comma separated list of pinned hooks."
+        },
+        "sfccBeaver.general.isSFCCProject": {
+          "type": "boolean",
+          "default": "false",
+          "description": "System setting. Don't modify it. If you need to disable extension for the current workspace do so from the extension page (View > Extensions > SFCC Beaver)"
         }
       }
     },
@@ -61,8 +78,23 @@
       },
       {
         "command": "sfccBeaver.refreshCartridgeList",
-        "title": "Refresh cartridge list",
+        "title": "Refresh Cartridges List",
         "icon": "$(refresh)"
+      },
+      {
+        "command": "sfccBeaver.refreshHooksList",
+        "title": "Refresh Hooks List",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "sfccBeaver.openHookFile",
+        "title": "Open hook file",
+        "icon": "$(go-to-file)"
+      },
+      {
+        "command": "sfccBeaver.openHookDefinitionFile",
+        "title": "Open hooks.js",
+        "icon": "$(references)"
       },
       {
         "command": "sfccBeaver.pinCartridge",
@@ -73,6 +105,21 @@
         "command": "sfccBeaver.unpinCartridge",
         "title": "Unpin cartridge",
         "icon": "$(close)"
+      },
+      {
+        "command": "sfccBeaver.pinHook",
+        "title": "Pin hook",
+        "icon": "$(pin)"
+      },
+      {
+        "command": "sfccBeaver.copyHookName",
+        "title": "Copy hook name",
+        "icon": "$(copy)"
+      },
+      {
+        "command": "sfccBeaver.unpinHook",
+        "title": "Unpin hook",
+        "icon": "$(pin)"
       },
       {
         "command": "sfccBeaver.openDocsDetails",
@@ -135,6 +182,11 @@
           "command": "sfccBeaver.refreshCartridgeList",
           "when": "view == cartridgesObserver",
           "group": "navigation"
+        },
+        {
+          "command": "sfccBeaver.refreshHooksList",
+          "when": "view == hooksObserver",
+          "group": "navigation"
         }
       ],
       "view/item/context": [
@@ -146,6 +198,26 @@
         {
           "command": "sfccBeaver.unpinCartridge",
           "when": "view == cartridgesObserver && viewItem == sfccPinnedCartridgeTreeItem",
+          "group": "inline"
+        },
+        {
+          "command": "sfccBeaver.openHookDefinitionFile",
+          "when": "view == hooksObserver && viewItem == hookFileItem",
+          "group": "inline"
+        },
+        {
+          "command": "sfccBeaver.copyHookName",
+          "when": "view == hooksObserver && viewItem == hookLabelTreeItem",
+          "group": "inline"
+        },
+        {
+          "command": "sfccBeaver.pinHook",
+          "when": "view == hooksObserver && viewItem == hookLabelTreeItem",
+          "group": "inline"
+        },
+        {
+          "command": "sfccBeaver.unpinHook",
+          "when": "view == hooksObserver && viewItem == hookLabelTreeItemPinned",
           "group": "inline"
         }
       ],
@@ -196,13 +268,21 @@
         {
           "name": "Cartridges",
           "id": "cartridgesObserver",
-          "contextualTitle": "Cartridge Overview"
+          "contextualTitle": "Cartridge Overview",
+          "when": "config.sfccBeaver.general.isSFCCProject == true || sfccBeaver.extActivated"
         },
         {
           "name": "Documentation",
           "id": "docsNavigator",
           "type": "webview",
-          "contextualTitle": "Documentation Search"
+          "contextualTitle": "Documentation Search",
+          "when": "config.sfccBeaver.general.isSFCCProject == true || sfccBeaver.extActivated"
+        },
+        {
+          "name": "Hooks",
+          "id": "hooksObserver",
+          "contextualTitle": "Hooks Overview",
+          "when": "config.sfccBeaver.general.isSFCCProject == true || sfccBeaver.extActivated"
         }
       ]
     }
@@ -218,8 +298,8 @@
     "lint": "eslint src --ext ts",
     "test": "node ./out/test/runTest.js",
     "unit": "mocha --require ts-node/register src/test/unit/**/*.ts",
-    "pre-release-minor": "vsce publish --pre-release minor",
-    "pre-release-major": "vsce publish --pre-release minor",
+    "rc-minor": "vsce publish --pre-release minor",
+    "rc-major": "vsce publish --pre-release major",
     "release-patch": "vsce publish patch",
     "release-minor": "vsce publish minor",
     "release-major": "vsce publish major"

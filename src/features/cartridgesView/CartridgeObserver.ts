@@ -1,11 +1,13 @@
 import * as vscode from 'vscode';
-import SFCCProject from '../SFCCProject';
-import CartridgeItem from './treeItems/CartridgeTreeItem';
+import SFCCProject from '../../classes/SFCCProject';
+import CartridgeTreeItem from './CartridgeTreeItem';
 
 export class CartridgesObserver implements vscode.TreeDataProvider<vscode.TreeItem> {
     private sfccProject = new SFCCProject();
 
-    private _onDidChangeTreeData: vscode.EventEmitter<vscode.TreeItem | undefined | void> = new vscode.EventEmitter<vscode.TreeItem | undefined | void>();
+    private _onDidChangeTreeData: vscode.EventEmitter<vscode.TreeItem | undefined | void> = new vscode.EventEmitter<
+        vscode.TreeItem | undefined | void
+    >();
     readonly onDidChangeTreeData: vscode.Event<vscode.TreeItem | undefined | void> = this._onDidChangeTreeData.event;
 
     refresh(): void {
@@ -24,12 +26,10 @@ export class CartridgesObserver implements vscode.TreeDataProvider<vscode.TreeIt
         const endTime = new Date();
         console.debug(`It took ${(endTime.valueOf() - startTime.valueOf()) / 1000} sec to find cartridges`);
 
-        const treeItems : vscode.TreeItem[] = sfccCartridges.map(cartridge => {
-            return new CartridgeItem(cartridge);
+        const treeItems: vscode.TreeItem[] = sfccCartridges.map((cartridge) => {
+            return new CartridgeTreeItem(cartridge);
         });
 
         return treeItems;
     }
 }
-
-

@@ -1,18 +1,20 @@
 # 🦫 SFCC Beaver
 
-Swiss-knife extension for SFCC developers
+**Swiss-knife extension for SFCC developers!**
 
-Currently supports:
+## Features
 
-- easy overriding files from one cartridge to another with
-- copying file path/require/include into clipboard so it can be quickly inserted to other file
-- built-in documentation search.
-  - this feature temporary not available due to recent documentation portal migration, but it will be back soon.
+- Overriding files from one cartridge to another
+- Copying/extracting file path/require/include into clipboard so it can be quickly inserted to other file
+- Overview of all project hooks
+- Documentation support
+  - 🤒 Documentation search temporary is not working due to documentation portal changes.
 
-> **💡Compatibility**
-Beaver fully supports only SFRA projects. However, some of the feature are compatible with SiteGen as well.
+## Compatibility
 
-## ⭐ Usage
+> Extension fully supports only SFRA projects. However, some of the features are compatible with SiteGen as well.
+
+## Usage
 
 ### Extract/Override
 
@@ -23,6 +25,7 @@ or copy current file path into clipboard ![alt text](static/override.png)
 ![alt text](static/overrideExtractExample.png)
 
 > 💡 You can use Command Pallette to do it even quicker.
+
 ### Commands
 
 Beaver adds several new commands that you can run manually.
@@ -41,7 +44,9 @@ To run a command you need to open the command pallette (press `F1` or `Ctrl + Sh
 Beaver introduces a new side section called Beaver Dam. There are two items currently:
 
 - **Cartridges** is a active cartridge list where you can pin/unpin cartridge for overriding.
-- **Documentation**. Search in docs without leaving VS Code.
+- **Documentation**. Search in docs without leaving VS Code. Currently not available.
+- **Hooks** shows all project hooks
+  ![alt text](static/hooksPreview.png)
 
 ### Hovers
 
@@ -49,7 +54,7 @@ If you hover over the API class such as `require('dw/web/URLUtils')` you see a t
 
 ## 👍 Recommendations
 
-Install the icons extension **[🦫 SFCC Beaver - Icons](https://marketplace.visualstudio.com/items?itemName=SerhiiHlavatskyi.sfcc-beaver-icons 'Open marketplace')** to make your project look better.
+Install the icons extension **[🦫 SFCC Beaver - Icons](https://marketplace.visualstudio.com/items?itemName=SerhiiHlavatskyi.sfcc-beaver-icons 'Open marketplace')** to have SFCC-specific icons.
 
 ## 📨 Feedback
 

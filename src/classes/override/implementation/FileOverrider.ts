@@ -8,6 +8,7 @@ import IFileCreator from '../IFileCreator';
 import IFileAppender from '../IFileAppender';
 import PathTool from '../../tools/PathTool';
 import StaticFileAppender from './FileAppenders/StaticFileAppender';
+import EditorTool from '../../tools/EditorTool';
 
 class CartridgePickItem implements vscode.QuickPickItem {
     label: string;
@@ -33,8 +34,8 @@ class CartridgePickItem implements vscode.QuickPickItem {
 
 class FileOverrider {
     constructor(
-        private activeEditor : vscode.TextEditor,
-        private sfccProject : SFCCProject,
+        private activeEditor: vscode.TextEditor,
+        private sfccProject: SFCCProject,
         private fileCreator: IFileCreator,
         private fileAppender: IFileAppender = new StaticFileAppender()
     ) {}
@@ -48,7 +49,9 @@ class FileOverrider {
         }
 
         if (targetCartridge.getName() === 'modules') {
-            vscode.window.showErrorMessage('Modules cartridge is not overridable because it is a unique cartridge and works differently');
+            vscode.window.showErrorMessage(
+                'Modules cartridge is not overridable because it is a unique cartridge and works differently'
+            );
             return;
         }
 
@@ -72,12 +75,12 @@ class FileOverrider {
         this.focusOnFile(targetPath);
     }
 
-    private async selectTargetCartridge(): Promise<SFCCCartridge|null> {
+    private async selectTargetCartridge(): Promise<SFCCCartridge | null> {
         const currentCartridgePath = this.activeEditor.document.uri.fsPath;
 
         const sfccCartridges = await this.sfccProject.getSortedCartridges();
 
-        const selectionList : CartridgePickItem[] = sfccCartridges.map(sfccCartridge => {
+        const selectionList: CartridgePickItem[] = sfccCartridges.map((sfccCartridge) => {
             const targetPath = this.getTargetPath(sfccCartridge);
             const isTargetFileExists = fs.existsSync(targetPath);
 
@@ -87,11 +90,10 @@ class FileOverrider {
             return new CartridgePickItem(sfccCartridge, isTargetFileExists, isCurrentCartridge);
         });
 
-        const selectedCartridgeItem = await vscode.window.showQuickPick(selectionList, {
-            title: 'Select the cartridge'
-        }) || '';
-
-
+        const selectedCartridgeItem =
+            (await vscode.window.showQuickPick(selectionList, {
+                title: 'Select the cartridge',
+            })) || '';
 
         return selectedCartridgeItem ? selectedCartridgeItem.sfccCartridge : null;
     }
@@ -139,11 +141,7 @@ class FileOverrider {
     }
 
     private async focusOnFile(filePath: string) {
-        var openPath = vscode.Uri.parse('file:///' + filePath);
-
-        const textDocument = await vscode.workspace.openTextDocument(openPath);
-        await vscode.window.showTextDocument(textDocument);
-
+        const textDocument = await EditorTool.focusOnFile(filePath);
         const targetPosition = this.getFocusPosition(textDocument);
 
         vscode.commands
@@ -152,17 +150,18 @@ class FileOverrider {
                 by: 'line',
                 value: targetPosition.line,
             })
-            .then(() =>vscode.commands.executeCommand('cursorMove', {
-                to: 'right',
-                by: 'character',
-                value: targetPosition.character,
-            })
-        );
+            .then(() =>
+                vscode.commands.executeCommand('cursorMove', {
+                    to: 'right',
+                    by: 'character',
+                    value: targetPosition.character,
+                })
+            );
     }
 
     protected getFocusPosition(createdTextDocument: vscode.TextDocument): vscode.Position {
         return new vscode.Position(createdTextDocument.lineCount, 0);
     }
-};
+}
 
 export default FileOverrider;
