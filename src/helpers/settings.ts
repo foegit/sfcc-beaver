@@ -22,6 +22,9 @@ const settingsDefinition = {
   'hooks.pinnedHooks': {
     default: [] as string[],
   },
+  'hooks.viewMode': {
+    default: 'list' as 'list' | 'tag',
+  },
   'general.isSFCCProject': {
     default: false,
   },

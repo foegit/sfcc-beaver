@@ -54,6 +54,19 @@
           "default": [],
           "description": "Comma separated list of pinned hooks."
         },
+        "sfccBeaver.hooks.viewMode": {
+          "type": "string",
+          "enum": [
+            "list",
+            "tag"
+          ],
+          "enumDescriptions": [
+            "Hooks shown one by one. Default mode",
+            "Hooks grouped by tags. By default each hook has a tag = first word before . e.g. app for app.custom.hook"
+          ],
+          "default": "list",
+          "description": "Display mode for hooks view"
+        },
         "sfccBeaver.general.isSFCCProject": {
           "type": "boolean",
           "default": "false",
@@ -88,7 +101,7 @@
       },
       {
         "command": "sfccBeaver.openHookFile",
-        "title": "Open hook file",
+        "title": "Open Hook File",
         "icon": "$(go-to-file)"
       },
       {
@@ -98,23 +111,33 @@
       },
       {
         "command": "sfccBeaver.pinCartridge",
-        "title": "Pin cartridge",
+        "title": "Pin Cartridge",
         "icon": "$(pin)"
       },
       {
         "command": "sfccBeaver.unpinCartridge",
-        "title": "Unpin cartridge",
+        "title": "Unpin Cartridge",
         "icon": "$(close)"
       },
       {
         "command": "sfccBeaver.pinHook",
-        "title": "Pin hook",
+        "title": "Pin Hook",
         "icon": "$(pin)"
       },
       {
         "command": "sfccBeaver.copyHookName",
-        "title": "Copy hook name",
+        "title": "Copy Hook Name",
         "icon": "$(copy)"
+      },
+      {
+        "command": "sfccBeaver.hooks.useListView",
+        "title": "View as List ",
+        "icon": "$(list-flat)"
+      },
+      {
+        "command": "sfccBeaver.hooks.useTagView",
+        "title": "View as Tags",
+        "icon": "$(tag)"
       },
       {
         "command": "sfccBeaver.unpinHook",
@@ -184,9 +207,19 @@
           "group": "navigation"
         },
         {
+          "command": "sfccBeaver.hooks.useListView",
+          "when": "view == hooksObserver && config.sfccBeaver.hooks.viewMode !== list",
+          "group": "navigation@1"
+        },
+        {
+          "command": "sfccBeaver.hooks.useTagView",
+          "when": "view == hooksObserver && config.sfccBeaver.hooks.viewMode !== tag",
+          "group": "navigation@1"
+        },
+        {
           "command": "sfccBeaver.refreshHooksList",
           "when": "view == hooksObserver",
-          "group": "navigation"
+          "group": "navigation@2"
         }
       ],
       "view/item/context": [

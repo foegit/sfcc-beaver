@@ -1,10 +1,10 @@
 import { commands } from 'vscode';
 import { HookObserver } from './HookObserver';
 import { copyToClipboard } from '../../helpers/clipboard';
-import HookLabelTreeItem from './HookLabelTreeItem';
-import { HookDetailsTreeItem } from './HookDetailsTreeItem';
+import HookLabelTreeItem from './treeItems/HookLabelTreeItem';
+import { HookDetailsTreeItem } from './treeItems/HookDetailsTreeItem';
 import EditorTool from '../../classes/tools/EditorTool';
-import { addToSettingList, removeFromSettingList } from '../../helpers/settings';
+import { addToSettingList, removeFromSettingList, updateSetting } from '../../helpers/settings';
 
 export function registerHookCommands(hookObserver: HookObserver) {
   commands.registerCommand('sfccBeaver.refreshHooksList', async () => {
@@ -25,6 +25,16 @@ export function registerHookCommands(hookObserver: HookObserver) {
   commands.registerCommand('sfccBeaver.unpinHook', async (treeItem: HookLabelTreeItem) => {
     await removeFromSettingList('hooks.pinnedHooks', treeItem.hookPoint.name);
     await hookObserver.loadHookPoints();
+    hookObserver.refresh();
+  });
+
+  commands.registerCommand('sfccBeaver.hooks.useListView', async () => {
+    await updateSetting('hooks.viewMode', 'list');
+    hookObserver.refresh();
+  });
+
+  commands.registerCommand('sfccBeaver.hooks.useTagView', async () => {
+    await updateSetting('hooks.viewMode', 'tag');
     hookObserver.refresh();
   });
 

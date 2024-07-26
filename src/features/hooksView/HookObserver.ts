@@ -1,15 +1,18 @@
 import * as fg from 'fast-glob';
 import * as path from 'path';
-import { HookDetailsTreeItem } from './HookDetailsTreeItem';
-import HookLabelTreeItem from './HookLabelTreeItem';
-import { HookPoint, normalizeScriptPath, SFCCHookDefinition, sortHooks } from './hooksHelpers';
-import { Event, EventEmitter, TreeDataProvider, TreeItem, Uri, window, workspace } from 'vscode';
+import { HookDetailsTreeItem } from './treeItems/HookDetailsTreeItem';
+import HookLabelTreeItem from './treeItems/HookLabelTreeItem';
+import { HookPoint, normalizeScriptPath, SFCCHookDefinition } from './hooksHelpers';
+import { Event, EventEmitter, TreeDataProvider, TreeItem } from 'vscode';
 import FsTool from '../../classes/tools/FsTool';
 import { registerHookCommands } from './hooksCommands';
 import { registerHookWatcher } from './hooksWatcher';
 import { showError } from '../../helpers/notification';
-import { getSetting } from '../../helpers/settings';
+import { compareSetting, getSetting } from '../../helpers/settings';
 import EditorTool from '../../classes/tools/EditorTool';
+import IHookViewStrategy from './viewStrategy/IHookViewStrategy';
+import HookViewListStrategy from './viewStrategy/HookViewListStrategy';
+import HookViewTagStrategy from './viewStrategy/HookViewTagStrategy';
 
 export class HookObserver implements TreeDataProvider<TreeItem> {
   private _onDidChangeTreeData: EventEmitter<TreeItem | undefined | void> = new EventEmitter<
@@ -17,12 +20,24 @@ export class HookObserver implements TreeDataProvider<TreeItem> {
   >();
   readonly onDidChangeTreeData: Event<TreeItem | undefined | void> = this._onDidChangeTreeData.event;
 
+  private displayStrategy: IHookViewStrategy;
+
   constructor() {
+    this.displayStrategy = this.getSavedHookStrategy();
     registerHookCommands(this);
     registerHookWatcher(this);
   }
 
+  private getSavedHookStrategy(): IHookViewStrategy {
+    if (compareSetting('hooks.viewMode', 'list')) {
+      return new HookViewListStrategy();
+    }
+
+    return new HookViewTagStrategy();
+  }
+
   refresh(): void {
+    this.displayStrategy = this.getSavedHookStrategy();
     this._onDidChangeTreeData.fire();
   }
 
@@ -95,17 +110,15 @@ export class HookObserver implements TreeDataProvider<TreeItem> {
     return element;
   }
 
-  async getChildren(hookLabelTreeItem?: HookLabelTreeItem): Promise<TreeItem[]> {
-    if (hookLabelTreeItem) {
-      return hookLabelTreeItem.hookPoint.implementation.map((hookImp) => new HookDetailsTreeItem(hookImp));
-    }
+  async getChildren(element?: HookLabelTreeItem): Promise<TreeItem[]> {
+    return this.displayStrategy.getChildren(this, element);
+  }
 
-    if (this.hookPoints.length === 0) {
-      await this.loadHookPoints();
-    }
+  getHookPoints() {
+    return this.hookPoints;
+  }
 
-    const sortedHookPoints = sortHooks(this.hookPoints, this.sortBy);
-
-    return sortedHookPoints.map((hookPoint) => new HookLabelTreeItem(hookPoint));
+  getSortBy() {
+    return this.sortBy;
   }
 }
