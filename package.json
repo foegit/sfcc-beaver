@@ -168,6 +168,11 @@
         "icon": "$(screen-full)"
       },
       {
+        "command": "sfccBeaver.hooks.collapseAll",
+        "title": "Collapse All",
+        "icon": "$(collapse-all)"
+      },
+      {
         "command": "sfccBeaver.openDocsDetails",
         "title": "Open Documentation Details"
       },
@@ -253,6 +258,11 @@
           "command": "sfccBeaver.hooks.refreshView",
           "when": "view == hooksObserver",
           "group": "navigation@3"
+        },
+        {
+          "command": "sfccBeaver.hooks.collapseAll",
+          "when": "view == hooksObserver",
+          "group": "navigation@4"
         }
       ],
       "view/item/context": [

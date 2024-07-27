@@ -48,6 +48,10 @@ export function registerHookCommands(hookObserver: HookObserver) {
     hookObserver.refresh();
   });
 
+  commands.registerCommand('sfccBeaver.hooks.collapseAll', async () => {
+    commands.executeCommand('workbench.actions.treeView.hooksObserver.collapseAll');
+  });
+
   commands.registerCommand(
     'sfccBeaver.hooks.openImplementation',
     async (hookItem: HookDetailsTreeItem | HookLabelTreeItem) => {
@@ -62,7 +66,7 @@ export function registerHookCommands(hookObserver: HookObserver) {
        * exports.calculate = - short export
        * module.exports = { calculate: } - module export
        */
-      const hookFunctionRegExp = new RegExp(`(${hookNameLastPart}\\s*)[(=:]`);
+      const hookFunctionRegExp = new RegExp(`(${hookNameLastPart})\\s*[(=:]`);
 
       await EditorTool.focusOnWorkspaceFile(implementation.location, {
         preview: hookObserver.lastClickedDetailsTreeItem !== hookItem, //double click
