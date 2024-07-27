@@ -54,9 +54,11 @@ Search in docs without leaving VS Code. Currently not working.
 #### **# Hooks**
 
 _Tag Compact View:_
+
 ![alt text](static/hooksPreviewTags.png)
 
 _List Full View:_
+
 ![alt text](static/hooksPreviewList.png)
 
 - Provides an overview of all project hooks
