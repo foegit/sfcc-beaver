@@ -1,7 +1,6 @@
 import * as fg from 'fast-glob';
 import * as path from 'path';
 import { HookDetailsTreeItem } from './treeItems/HookDetailsTreeItem';
-import HookLabelTreeItem from './treeItems/HookLabelTreeItem';
 import { HookPoint, normalizeScriptPath, SFCCHookDefinition } from './hooksHelpers';
 import { Event, EventEmitter, TreeDataProvider, TreeItem } from 'vscode';
 import FsTool from '../../classes/tools/FsTool';
@@ -11,8 +10,8 @@ import { showError } from '../../helpers/notification';
 import { compareSetting, getSetting } from '../../helpers/settings';
 import EditorTool from '../../classes/tools/EditorTool';
 import IHookViewStrategy from './viewStrategy/IHookViewStrategy';
-import HookViewListStrategy from './viewStrategy/HookViewListStrategy';
-import HookViewTagStrategy from './viewStrategy/HookViewTagStrategy';
+import HookListViewStrategy from './viewStrategy/HookListViewStrategy';
+import HookTagViewStrategy from './viewStrategy/HookTagViewStrategy';
 
 export class HookObserver implements TreeDataProvider<TreeItem> {
   private _onDidChangeTreeData: EventEmitter<TreeItem | undefined | void> = new EventEmitter<
@@ -23,21 +22,21 @@ export class HookObserver implements TreeDataProvider<TreeItem> {
   private displayStrategy: IHookViewStrategy;
 
   constructor() {
-    this.displayStrategy = this.getSavedHookStrategy();
+    this.displayStrategy = this.getHookViewStrategy();
     registerHookCommands(this);
     registerHookWatcher(this);
   }
 
-  private getSavedHookStrategy(): IHookViewStrategy {
+  private getHookViewStrategy(): IHookViewStrategy {
     if (compareSetting('hooks.viewMode', 'list')) {
-      return new HookViewListStrategy();
+      return new HookListViewStrategy();
     }
 
-    return new HookViewTagStrategy();
+    return new HookTagViewStrategy();
   }
 
   refresh(): void {
-    this.displayStrategy = this.getSavedHookStrategy();
+    this.displayStrategy = this.getHookViewStrategy();
     this._onDidChangeTreeData.fire();
   }
 
@@ -110,7 +109,7 @@ export class HookObserver implements TreeDataProvider<TreeItem> {
     return element;
   }
 
-  async getChildren(element?: HookLabelTreeItem): Promise<TreeItem[]> {
+  async getChildren(element?: TreeItem): Promise<TreeItem[]> {
     return this.displayStrategy.getChildren(this, element);
   }
 

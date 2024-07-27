@@ -5,7 +5,7 @@ import { HookObserver } from '../HookObserver';
 import { sortHooks } from '../hooksHelpers';
 import HookLabelTreeItem from '../treeItems/HookLabelTreeItem';
 
-export default class HookDisplayListStrategy implements IHookViewStrategy {
+export default class HookListViewStrategy implements IHookViewStrategy {
   async getChildren(hookObserver: HookObserver, element: TreeItem): Promise<TreeItem[]> {
     if (element && element instanceof HookLabelTreeItem) {
       return element.hookPoint.implementation.map((hookImp) => new HookDetailsTreeItem(hookImp));

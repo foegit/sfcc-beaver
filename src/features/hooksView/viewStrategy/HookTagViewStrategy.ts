@@ -6,6 +6,7 @@ import { sortHooks } from '../hooksHelpers';
 import HookTagTreeItem from '../treeItems/HookTagTreeItem';
 import { getSetting } from '../../../helpers/settings';
 import HookLabelTreeItem from '../treeItems/HookLabelTreeItem';
+import { sortTags } from '../hooksTagHelpers';
 
 export default class HookDisplayHybridStrategy implements IHookViewStrategy {
   async getChildren(hookObserver: HookObserver, element: TreeItem): Promise<TreeItem[]> {
@@ -44,9 +45,10 @@ export default class HookDisplayHybridStrategy implements IHookViewStrategy {
       hookTagItems[hookDefaultTag].hookPoints.push(hookPoint);
     });
 
-    return Object.keys(hookTagItems)
+    const tagItems = Object.keys(hookTagItems)
       .filter((key) => hookTagItems[key].hookPoints.length !== 0)
-      .sort((k1, k2) => k1.localeCompare(k2))
       .map((tagName) => hookTagItems[tagName]);
+
+    return sortTags(tagItems);
   }
 }

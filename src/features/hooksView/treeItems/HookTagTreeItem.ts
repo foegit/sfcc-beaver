@@ -13,10 +13,7 @@ export default class HookTagTreeItem extends TreeItem {
     this.name = name;
     this.hookPoints = hookPoints;
     this.isPinned = isPinned;
-
-    // this.description = getDescription(hookPoint);
     this.iconPath = this.getIconPath();
-    // this.contextValue = hookPoint.pinned ? 'hookLabelTreeItemPinned' : 'hookLabelTreeItem';
   }
 
   getIconPath() {
