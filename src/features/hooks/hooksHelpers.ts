@@ -35,7 +35,7 @@ export function getHookType(hookName: string) {
     return HookTypes.system;
   }
 
-  if (hookName.startsWith('dw.ocapi')) {
+  if (hookName.startsWith('dw.ocapi') || hookName.startsWith('dw.scapi')) {
     return HookTypes.commerceApi;
   }
 
