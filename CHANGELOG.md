@@ -2,7 +2,26 @@
 
 # Change Log
 
-## 3.2.0 - 2024-07-17
+## 3.4.0 - 2024-08-27
+
+### Features
+
+- Added tag view for hooks (configurable). Now hooks can be grouped by the first hook part: `app.custom.hook` will be placed under `app` tag
+- Added compact view for hooks with single implementation (configurable). When activating single hooks will be opened automatically without need to expand.
+- Added Collapse All to hooks view. Now all items can be closed by clicking one button
+
+### Bugs
+
+- Fix a bug when cartridges name were not detected if cartridges are located in the root folder
+
+### Improvements
+
+- Focusing now selects the found word instead of placing a cursor in front of the word
+- Added focusing for hook definition files
+- Added dw.scapi hooks detection
+- Made commands names more consistent
+
+## 3.3.0 - 2024-07-17
 
 ### Features
 
