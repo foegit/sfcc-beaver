@@ -160,12 +160,12 @@
       {
         "command": "sfccBeaver.hooks.useCompactView",
         "title": "Compact View for Single Hooks",
-        "icon": "$(screen-normal)"
+        "icon": "$(group-by-ref-type)"
       },
       {
         "command": "sfccBeaver.hooks.useFullView",
         "title": "Full View for Single Hooks",
-        "icon": "$(screen-full)"
+        "icon": "$(ungroup-by-ref-type)"
       },
       {
         "command": "sfccBeaver.hooks.collapseAll",
