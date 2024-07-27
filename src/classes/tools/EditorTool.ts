@@ -1,5 +1,5 @@
 import PathTool from './PathTool';
-import { Selection, TextDocumentShowOptions, TextEditorRevealType, Uri, window, workspace } from 'vscode';
+import { Position, Selection, TextDocumentShowOptions, TextEditorRevealType, Uri, window, workspace } from 'vscode';
 import FsTool from './FsTool';
 
 type FocusOptions = TextDocumentShowOptions & { focusOnText?: RegExp };
@@ -26,10 +26,11 @@ export default class EditorTool {
       if (searchResult) {
         // converting the index from RegExp to position e.g. 133 -> { line: 29, char: 5 }
         const position = textDocument.positionAt(searchResult.index);
+        const endPosition = new Position(position.line, position.character + searchResult[1].length);
 
         const range = activeEditor.document.lineAt(position.line).range;
         // changing focus (cursor) to new position
-        activeEditor.selection = new Selection(position, position);
+        activeEditor.selection = new Selection(position, endPosition);
         activeEditor.revealRange(range, TextEditorRevealType.AtTop);
       }
     }
