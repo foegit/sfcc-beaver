@@ -22,7 +22,7 @@ export function registerHookCommands(hookObserver: HookObserver) {
     hookObserver.refresh();
   });
 
-  commands.registerCommand('sfccBeaver.hooks.unpinHook', async (treeItem: HookLabelTreeItem) => {
+  commands.registerCommand('sfccBeaver.hooks.unpin', async (treeItem: HookLabelTreeItem) => {
     await removeFromSettingList('hooks.pinnedHooks', treeItem.hookPoint.name);
     await hookObserver.loadHookPoints();
     hookObserver.refresh();
@@ -38,26 +38,50 @@ export function registerHookCommands(hookObserver: HookObserver) {
     hookObserver.refresh();
   });
 
-  commands.registerCommand('sfccBeaver.openHookFile', async (hookItem: HookDetailsTreeItem) => {
-    // dw.order.calculate -> calculate
-    const hookNameLastPart = hookItem.hookImplementation.hookName.split('.').pop();
-    /**
-     * /(calculate\s*)[(=:]/ which covers
-     * function calculate () - function
-     * exports.calculate = - short export
-     * module.exports = { calculate: } - module export
-     */
-    const hookFunctionRegExp = new RegExp(`(${hookNameLastPart}\\s*)[(=:]`);
-
-    await EditorTool.focusOnWorkspaceFile(hookItem.hookImplementation.location, {
-      preview: hookObserver.lastClickedDetailsTreeItem !== hookItem, //double click
-      focusOnText: hookFunctionRegExp,
-    });
-
-    hookObserver.lastClickedDetailsTreeItem = hookItem;
+  commands.registerCommand('sfccBeaver.hooks.useCompactView', async () => {
+    await updateSetting('hooks.singeHookViewMode', 'compact');
+    hookObserver.refresh();
   });
 
-  commands.registerCommand('sfccBeaver.openHookDefinitionFile', async (hookItem: HookDetailsTreeItem) => {
-    EditorTool.focusOnWorkspaceFile(hookItem.hookImplementation.definitionFileLocation);
+  commands.registerCommand('sfccBeaver.hooks.useFullView', async () => {
+    await updateSetting('hooks.singeHookViewMode', 'full');
+    hookObserver.refresh();
   });
+
+  commands.registerCommand(
+    'sfccBeaver.hooks.openImplementation',
+    async (hookItem: HookDetailsTreeItem | HookLabelTreeItem) => {
+      const implementation =
+        hookItem instanceof HookDetailsTreeItem ? hookItem.hookImplementation : hookItem.hookPoint.implementation[0];
+
+      // dw.order.calculate -> calculate
+      const hookNameLastPart = implementation.hookName.split('.').pop();
+      /**
+       * /(calculate\s*)[(=:]/ which covers
+       * function calculate () - function
+       * exports.calculate = - short export
+       * module.exports = { calculate: } - module export
+       */
+      const hookFunctionRegExp = new RegExp(`(${hookNameLastPart}\\s*)[(=:]`);
+
+      await EditorTool.focusOnWorkspaceFile(implementation.location, {
+        preview: hookObserver.lastClickedDetailsTreeItem !== hookItem, //double click
+        focusOnText: hookFunctionRegExp,
+      });
+
+      hookObserver.lastClickedDetailsTreeItem = hookItem;
+    }
+  );
+
+  commands.registerCommand(
+    'sfccBeaver.hooks.openHookDefinition',
+    async (hookItem: HookDetailsTreeItem | HookLabelTreeItem) => {
+      const hookImplementation =
+        hookItem instanceof HookDetailsTreeItem ? hookItem.hookImplementation : hookItem.hookPoint.implementation[0];
+
+      EditorTool.focusOnWorkspaceFile(hookImplementation.definitionFileLocation, {
+        focusOnText: new RegExp(`(${hookImplementation.hookName})`),
+      });
+    }
+  );
 }

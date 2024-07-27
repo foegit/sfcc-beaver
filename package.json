@@ -67,10 +67,23 @@
           "default": "list",
           "description": "Display mode for hooks view"
         },
+        "sfccBeaver.hooks.singeHookViewMode": {
+          "type": "string",
+          "enum": [
+            "compact",
+            "full"
+          ],
+          "enumDescriptions": [
+            "Single hooks are combined into one item: Hook Label",
+            "Single hooks are expandable: Hook Label > Hook Implementation"
+          ],
+          "default": "compact",
+          "description": "Display mode for single hooks"
+        },
         "sfccBeaver.general.isSFCCProject": {
           "type": "boolean",
           "default": "false",
-          "description": "System setting. Don't modify it. If you need to disable extension for the current workspace do so from the extension page (View > Extensions > SFCC Beaver)"
+          "description": "Internal setting. Don't modify it. If you need to disable extension for the current workspace do so from the extension page (View > Extensions > SFCC Beaver)"
         }
       }
     },
@@ -95,21 +108,6 @@
         "icon": "$(refresh)"
       },
       {
-        "command": "sfccBeaver.hooks.refreshView",
-        "title": "Refresh Hooks List",
-        "icon": "$(refresh)"
-      },
-      {
-        "command": "sfccBeaver.openHookFile",
-        "title": "Open Hook File",
-        "icon": "$(go-to-file)"
-      },
-      {
-        "command": "sfccBeaver.openHookDefinitionFile",
-        "title": "Open hooks.js",
-        "icon": "$(references)"
-      },
-      {
         "command": "sfccBeaver.pinCartridge",
         "title": "Pin Cartridge",
         "icon": "$(pin)"
@@ -118,6 +116,21 @@
         "command": "sfccBeaver.unpinCartridge",
         "title": "Unpin Cartridge",
         "icon": "$(close)"
+      },
+      {
+        "command": "sfccBeaver.hooks.refreshView",
+        "title": "Refresh Hooks List",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "sfccBeaver.hooks.openImplementation",
+        "title": "Open Hook File",
+        "icon": "$(go-to-file)"
+      },
+      {
+        "command": "sfccBeaver.hooks.openHookDefinition",
+        "title": "Open hooks.js",
+        "icon": "$(references)"
       },
       {
         "command": "sfccBeaver.hooks.pin",
@@ -143,6 +156,16 @@
         "command": "sfccBeaver.hooks.useTagView",
         "title": "View as Tags",
         "icon": "$(tag)"
+      },
+      {
+        "command": "sfccBeaver.hooks.useCompactView",
+        "title": "Compact View for Single Hooks",
+        "icon": "$(screen-normal)"
+      },
+      {
+        "command": "sfccBeaver.hooks.useFullView",
+        "title": "Full View for Single Hooks",
+        "icon": "$(screen-full)"
       },
       {
         "command": "sfccBeaver.openDocsDetails",
@@ -209,17 +232,27 @@
         {
           "command": "sfccBeaver.hooks.useListView",
           "when": "view == hooksObserver && config.sfccBeaver.hooks.viewMode !== list",
-          "group": "navigation@1"
+          "group": "navigation@2"
         },
         {
           "command": "sfccBeaver.hooks.useTagView",
           "when": "view == hooksObserver && config.sfccBeaver.hooks.viewMode !== tag",
+          "group": "navigation@2"
+        },
+        {
+          "command": "sfccBeaver.hooks.useCompactView",
+          "when": "view == hooksObserver && config.sfccBeaver.hooks.singeHookViewMode !== compact",
+          "group": "navigation@1"
+        },
+        {
+          "command": "sfccBeaver.hooks.useFullView",
+          "when": "view == hooksObserver && config.sfccBeaver.hooks.singeHookViewMode !== full",
           "group": "navigation@1"
         },
         {
           "command": "sfccBeaver.hooks.refreshView",
           "when": "view == hooksObserver",
-          "group": "navigation@2"
+          "group": "navigation@3"
         }
       ],
       "view/item/context": [
@@ -234,24 +267,29 @@
           "group": "inline"
         },
         {
-          "command": "sfccBeaver.openHookDefinitionFile",
-          "when": "view == hooksObserver && viewItem == hookFileItem",
-          "group": "inline"
-        },
-        {
           "command": "sfccBeaver.hooks.copyName",
-          "when": "view == hooksObserver && viewItem == hookLabelTreeItem",
-          "group": "inline"
+          "when": "view == hooksObserver && viewItem =~ /hookLabelTreeItem/",
+          "group": "inline@1"
         },
         {
           "command": "sfccBeaver.hooks.pin",
-          "when": "view == hooksObserver && viewItem == hookLabelTreeItem",
-          "group": "inline"
+          "when": "view == hooksObserver && viewItem =~ /hookLabelTreeItem/ && !(viewItem =~ /hookLabelTreeItem.*pinned/)",
+          "group": "inline@3"
         },
         {
           "command": "sfccBeaver.hooks.unpin",
-          "when": "view == hooksObserver && viewItem == hookLabelTreeItemPinned",
-          "group": "inline"
+          "when": "view == hooksObserver && viewItem =~ /hookLabelTreeItem.*pinned/",
+          "group": "inline@3"
+        },
+        {
+          "command": "sfccBeaver.hooks.openHookDefinition",
+          "when": "view == hooksObserver && viewItem == hookFileItem",
+          "group": "inline@2"
+        },
+        {
+          "command": "sfccBeaver.hooks.openHookDefinition",
+          "when": "view == hooksObserver && viewItem =~ /hookLabelTreeItem.*compact/",
+          "group": "inline@2"
         }
       ],
       "editor/title": [

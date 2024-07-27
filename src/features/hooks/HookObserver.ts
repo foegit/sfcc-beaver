@@ -12,6 +12,7 @@ import EditorTool from '../../classes/tools/EditorTool';
 import IHookViewStrategy from './viewStrategy/IHookViewStrategy';
 import HookListViewStrategy from './viewStrategy/HookListViewStrategy';
 import HookTagViewStrategy from './viewStrategy/HookTagViewStrategy';
+import HookLabelTreeItem from './treeItems/HookLabelTreeItem';
 
 export class HookObserver implements TreeDataProvider<TreeItem> {
   private _onDidChangeTreeData: EventEmitter<TreeItem | undefined | void> = new EventEmitter<
@@ -42,7 +43,7 @@ export class HookObserver implements TreeDataProvider<TreeItem> {
 
   private hookPoints: HookPoint[] = [];
   private sortBy: string = 'default';
-  public lastClickedDetailsTreeItem: HookDetailsTreeItem | null = null;
+  public lastClickedDetailsTreeItem: HookDetailsTreeItem | HookLabelTreeItem | null = null;
 
   async loadHookPoints() {
     const workspaceFolder = FsTool.getCurrentWorkspaceFolder();
