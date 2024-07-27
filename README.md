@@ -43,10 +43,31 @@ To run a command you need to open the command pallette (press `F1` or `Ctrl + Sh
 
 Beaver introduces a new side section called Beaver Dam. There are two items currently:
 
-- **Cartridges** is a active cartridge list where you can pin/unpin cartridge for overriding.
-- **Documentation**. Search in docs without leaving VS Code. Currently not available.
-- **Hooks** shows all project hooks
-  ![alt text](static/hooksPreview.png)
+#### **# Cartridges**
+
+is a active cartridge list where you can pin/unpin cartridge for overriding.
+
+#### **# Documentation**
+
+Search in docs without leaving VS Code. Currently not working.
+
+#### **# Hooks**
+
+_Tag Compact View:_
+![alt text](static/hooksPreviewTags.png)
+
+_List Full View:_
+![alt text](static/hooksPreviewList.png)
+
+- Provides an overview of all project hooks
+- Hooks can be pinned
+- Two view mode:
+
+  - List mode best for small collections of hooks
+  - Tag mode best for big collections
+
+- Quick navigation to hooks implementation/definition
+- Bad configuration detection
 
 ### Hovers
 
