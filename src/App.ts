@@ -10,7 +10,7 @@ import { CartridgesObserver } from './features/cartridgesView/CartridgeObserver'
 import HoverManager from './classes/hover/HoverManager';
 import WebviewMgr from './webviewProviders/WebviewMgr';
 import CommandMgr from './commands/CommandMgr';
-import { HookObserver } from './features/hooksView/HookObserver';
+import { HookObserver } from './features/hooks/HookObserver';
 import CartridgeTreeItem from './features/cartridgesView/CartridgeTreeItem';
 import { addToSettingList, isSettingOff, removeFromSettingList, updateSetting } from './helpers/settings';
 

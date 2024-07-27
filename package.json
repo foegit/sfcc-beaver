@@ -95,7 +95,7 @@
         "icon": "$(refresh)"
       },
       {
-        "command": "sfccBeaver.refreshHooksList",
+        "command": "sfccBeaver.hooks.refreshView",
         "title": "Refresh Hooks List",
         "icon": "$(refresh)"
       },
@@ -120,12 +120,17 @@
         "icon": "$(close)"
       },
       {
-        "command": "sfccBeaver.pinHook",
+        "command": "sfccBeaver.hooks.pin",
         "title": "Pin Hook",
         "icon": "$(pin)"
       },
       {
-        "command": "sfccBeaver.copyHookName",
+        "command": "sfccBeaver.hooks.unpin",
+        "title": "Unpin Hook",
+        "icon": "$(pin)"
+      },
+      {
+        "command": "sfccBeaver.hooks.copyName",
         "title": "Copy Hook Name",
         "icon": "$(copy)"
       },
@@ -138,11 +143,6 @@
         "command": "sfccBeaver.hooks.useTagView",
         "title": "View as Tags",
         "icon": "$(tag)"
-      },
-      {
-        "command": "sfccBeaver.unpinHook",
-        "title": "Unpin hook",
-        "icon": "$(pin)"
       },
       {
         "command": "sfccBeaver.openDocsDetails",
@@ -217,7 +217,7 @@
           "group": "navigation@1"
         },
         {
-          "command": "sfccBeaver.refreshHooksList",
+          "command": "sfccBeaver.hooks.refreshView",
           "when": "view == hooksObserver",
           "group": "navigation@2"
         }
@@ -239,17 +239,17 @@
           "group": "inline"
         },
         {
-          "command": "sfccBeaver.copyHookName",
+          "command": "sfccBeaver.hooks.copyName",
           "when": "view == hooksObserver && viewItem == hookLabelTreeItem",
           "group": "inline"
         },
         {
-          "command": "sfccBeaver.pinHook",
+          "command": "sfccBeaver.hooks.pin",
           "when": "view == hooksObserver && viewItem == hookLabelTreeItem",
           "group": "inline"
         },
         {
-          "command": "sfccBeaver.unpinHook",
+          "command": "sfccBeaver.hooks.unpin",
           "when": "view == hooksObserver && viewItem == hookLabelTreeItemPinned",
           "group": "inline"
         }

@@ -7,22 +7,22 @@ import EditorTool from '../../classes/tools/EditorTool';
 import { addToSettingList, removeFromSettingList, updateSetting } from '../../helpers/settings';
 
 export function registerHookCommands(hookObserver: HookObserver) {
-  commands.registerCommand('sfccBeaver.refreshHooksList', async () => {
+  commands.registerCommand('sfccBeaver.hooks.refreshView', async () => {
     await hookObserver.loadHookPoints();
     hookObserver.refresh();
   });
 
-  commands.registerCommand('sfccBeaver.copyHookName', async (treeItem: HookLabelTreeItem) => {
+  commands.registerCommand('sfccBeaver.hooks.copyName', async (treeItem: HookLabelTreeItem) => {
     copyToClipboard(treeItem.hookPoint.name);
   });
 
-  commands.registerCommand('sfccBeaver.pinHook', async (treeItem: HookLabelTreeItem) => {
+  commands.registerCommand('sfccBeaver.hooks.pin', async (treeItem: HookLabelTreeItem) => {
     await addToSettingList('hooks.pinnedHooks', treeItem.hookPoint.name);
     await hookObserver.loadHookPoints();
     hookObserver.refresh();
   });
 
-  commands.registerCommand('sfccBeaver.unpinHook', async (treeItem: HookLabelTreeItem) => {
+  commands.registerCommand('sfccBeaver.hooks.unpinHook', async (treeItem: HookLabelTreeItem) => {
     await removeFromSettingList('hooks.pinnedHooks', treeItem.hookPoint.name);
     await hookObserver.loadHookPoints();
     hookObserver.refresh();
