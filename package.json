@@ -28,6 +28,13 @@
   ],
   "main": "./dist/extension.js",
   "contributes": {
+    "keybindings": [
+      {
+        "command": "sfccBeaver.hooks.search",
+        "key": "alt+h",
+        "mac": "cmd+h"
+      }
+    ],
     "configuration": {
       "title": "SFCC Beaver",
       "properties": {
@@ -168,6 +175,25 @@
         "icon": "$(ungroup-by-ref-type)"
       },
       {
+        "command": "sfccBeaver.hooks.search",
+        "title": "Search",
+        "icon": "$(search)"
+      },
+      {
+        "command": "sfccBeaver.hooks.filter",
+        "title": "Filter",
+        "icon": "$(filter)"
+      },
+      {
+        "command": "sfccBeaver.hooks.filterDoubleClick",
+        "title": "Filter"
+      },
+      {
+        "command": "sfccBeaver.hooks.clearFilter",
+        "title": "Clear Filter",
+        "icon": "$(trash)"
+      },
+      {
         "command": "sfccBeaver.hooks.collapseAll",
         "title": "Collapse All",
         "icon": "$(collapse-all)"
@@ -237,21 +263,26 @@
         {
           "command": "sfccBeaver.hooks.useListView",
           "when": "view == hooksObserver && config.sfccBeaver.hooks.viewMode !== list",
-          "group": "navigation@2"
+          "group": "additional"
         },
         {
           "command": "sfccBeaver.hooks.useTagView",
           "when": "view == hooksObserver && config.sfccBeaver.hooks.viewMode !== tag",
-          "group": "navigation@2"
+          "group": "additional"
         },
         {
           "command": "sfccBeaver.hooks.useCompactView",
           "when": "view == hooksObserver && config.sfccBeaver.hooks.singeHookViewMode !== compact",
-          "group": "navigation@1"
+          "group": "additional"
         },
         {
           "command": "sfccBeaver.hooks.useFullView",
           "when": "view == hooksObserver && config.sfccBeaver.hooks.singeHookViewMode !== full",
+          "group": "additional"
+        },
+        {
+          "command": "sfccBeaver.hooks.search",
+          "when": "view == hooksObserver",
           "group": "navigation@1"
         },
         {
@@ -274,6 +305,11 @@
         {
           "command": "sfccBeaver.unpinCartridge",
           "when": "view == cartridgesObserver && viewItem == sfccPinnedCartridgeTreeItem",
+          "group": "inline"
+        },
+        {
+          "command": "sfccBeaver.hooks.clearFilter",
+          "when": "view == hooksObserver && viewItem == hooksFilterTreeBarApplied",
           "group": "inline"
         },
         {

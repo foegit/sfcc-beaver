@@ -87,3 +87,16 @@ export function sortHooks(hooks: HookPoint[], sortBy?: string) {
     return hook1Value > hook2Value ? -1 : 1;
   });
 }
+
+export function getIconNameForHook(hookName: string) {
+  const type = getHookType(hookName);
+
+  switch (type) {
+    case HookTypes.system:
+      return 'verified-filled';
+    case HookTypes.commerceApi:
+      return 'database';
+    default:
+      return 'file-code';
+  }
+}

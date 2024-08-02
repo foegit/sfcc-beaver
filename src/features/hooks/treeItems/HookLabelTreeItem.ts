@@ -1,5 +1,5 @@
 import { ThemeIcon, TreeItem, TreeItemCollapsibleState } from 'vscode';
-import { getHookType, HookPoint, HookTypes } from '../hooksHelpers';
+import { getHookType, getIconNameForHook, HookPoint, HookTypes } from '../hooksHelpers';
 import { colors, getPinnedIcon } from '../../../helpers/iconHelpers';
 import { parseCartridgePath } from '../../cartridgesView/cartridgesHelpers';
 import { compareSetting } from '../../../helpers/settings';
@@ -13,13 +13,15 @@ function getIcon(hookPoint: HookPoint) {
     return getPinnedIcon();
   }
 
+  const hookIconName = getIconNameForHook(hookPoint.name);
+
   switch (getHookType(hookPoint.name)) {
     case HookTypes.system:
-      return new ThemeIcon('verified-filled', colors.blue);
+      return new ThemeIcon(hookIconName, colors.blue);
     case HookTypes.commerceApi:
-      return new ThemeIcon('verified-filled', colors.purple);
+      return new ThemeIcon(hookIconName, colors.purple);
     default:
-      return new ThemeIcon('file-code', colors.green);
+      return new ThemeIcon(hookIconName, colors.green);
   }
 }
 

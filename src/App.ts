@@ -13,20 +13,27 @@ import CommandMgr from './commands/CommandMgr';
 import { HookObserver } from './features/hooks/HookObserver';
 import CartridgeTreeItem from './features/cartridgesView/CartridgeTreeItem';
 import { addToSettingList, isSettingOff, removeFromSettingList, updateSetting } from './helpers/settings';
+import { CommandRegistry } from './app/CommandRegistry';
 
-class App {
-  public workspaceState?: vscode.Memento;
+export class App {
+  public context!: vscode.ExtensionContext;
+  public commandRegistry!: CommandRegistry;
 
   constructor() {
-    console.debug('Extension activated at: ', String(Date.now()) + Math.random());
+    console.debug('Extension created at: ', Date.now().toLocaleString());
+    // app will be init in activate methods
   }
 
   public async activate(context: vscode.ExtensionContext) {
+    console.debug('Extension activated at: ', Date.now().toLocaleString());
+
+    this.context = context;
+    this.commandRegistry = new CommandRegistry(context);
+
     const cartridgesObserver = new CartridgesObserver();
-    const hooksObserver = new HookObserver();
+    const hooksObserver = new HookObserver(this);
 
     vscode.window.registerTreeDataProvider('cartridgesObserver', cartridgesObserver);
-
     vscode.window.registerTreeDataProvider('hooksObserver', hooksObserver);
 
     vscode.commands.registerCommand('sfccBeaver.refreshCartridgeList', async () => {
@@ -50,7 +57,6 @@ class App {
     HoverManager.init(context);
     WebviewMgr.init(context);
 
-    this.workspaceState = context.workspaceState;
     this.indexCartridges();
 
     if (isSettingOff('general.isSFCCProject')) {
@@ -85,11 +91,11 @@ class App {
   }
 
   public memo(key: string, value: any) {
-    this.workspaceState && this.workspaceState.update(key, value);
+    this.context.workspaceState.update(key, value);
   }
 
   public getMemo(key: string): any {
-    return this.workspaceState?.get(key);
+    return this.context.workspaceState.get(key);
   }
 
   public async getCartridgeList(reIndex: boolean = true): Promise<string[]> {
