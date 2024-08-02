@@ -85,8 +85,9 @@ export function registerHookCommands(hookObserver: HookObserver) {
 
   commands.registerCommand('sfccBeaver.hooks.search', async () => {
     const items: HookPickItem[] = [];
+    const sortedHookPoints = hookObserver.getHookPoints().sort((h1, h2) => h1.name.localeCompare(h2.name));
 
-    hookObserver.getHookPoints().forEach((hookPoint) => {
+    sortedHookPoints.forEach((hookPoint) => {
       hookPoint.implementation.forEach((imp) => {
         items.push(new HookPickItem(imp));
       });

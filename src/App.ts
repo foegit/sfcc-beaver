@@ -66,6 +66,8 @@ export class App {
       // Update setting does not trigger recheck of when clause for tree views, so additional. It only happens on the first load
       vscode.commands.executeCommand('setContext', 'sfccBeaver.extActivated', true);
     }
+
+    console.debug('Workspace storage: ', this.context.workspaceState.keys());
   }
 
   public async indexCartridges(): Promise<void> {

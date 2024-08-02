@@ -1,11 +1,19 @@
 import { ThemeIcon, TreeItem, TreeItemCollapsibleState } from 'vscode';
-import { HookPoint } from '../hooksHelpers';
+import {
+  getDuplicateWarningDescription,
+  getNotFoundErrorDescription,
+  HookPoint,
+  hookPointHasDuplicates,
+  hookPointHasMissingImp,
+} from '../hooksHelpers';
 import { colors } from '../../../helpers/iconHelpers';
 
 export default class HookTagTreeItem extends TreeItem {
   public name: string;
   private hookPoints: HookPoint[];
   public isPinned: boolean = false;
+  public hasMissingImp: boolean = false;
+  public hasDuplicationImp: boolean = false;
 
   constructor(name: string, hookPoints: HookPoint[], isPinned: boolean = false) {
     super(name, isPinned ? TreeItemCollapsibleState.Expanded : TreeItemCollapsibleState.Collapsed);
@@ -13,15 +21,43 @@ export default class HookTagTreeItem extends TreeItem {
     this.name = name;
     this.hookPoints = hookPoints;
     this.isPinned = isPinned;
-    this.iconPath = this.getIconPath();
-    this.description = '' + hookPoints.length;
+
+    this.syncDescription();
+    this.syncIcon();
   }
 
-  private updateDescription() {
-    this.description = String(this.hookPoints.length);
+  private calcDescription() {
+    const amount = String(this.hookPoints.length);
+
+    if (this.hasMissingImp) {
+      return `${amount} (${getNotFoundErrorDescription()})`;
+    }
+
+    if (this.hasDuplicationImp) {
+      return `${amount} (${getDuplicateWarningDescription()})`;
+    }
+
+    return String(this.hookPoints.length);
   }
 
-  private getIconPath() {
+  private syncDescription() {
+    this.description = this.calcDescription();
+  }
+
+  private syncFlags() {
+    this.hasMissingImp = this.hookPoints.some(hookPointHasMissingImp);
+    this.hasDuplicationImp = this.hookPoints.some(hookPointHasDuplicates);
+  }
+
+  private calcIcon() {
+    if (this.hasMissingImp) {
+      return new ThemeIcon('tag', colors.red);
+    }
+
+    if (this.hasDuplicationImp) {
+      return new ThemeIcon('tag', colors.orange);
+    }
+
     if (this.isPinned) {
       return new ThemeIcon('tag', colors.yellow);
     }
@@ -29,9 +65,15 @@ export default class HookTagTreeItem extends TreeItem {
     return new ThemeIcon('tag');
   }
 
+  private syncIcon() {
+    this.iconPath = this.calcIcon();
+  }
+
   addHookPoint(hookPoint: HookPoint) {
     this.hookPoints.push(hookPoint);
-    this.updateDescription();
+    this.syncFlags();
+    this.syncDescription();
+    this.syncIcon();
   }
 
   getHookPoints() {

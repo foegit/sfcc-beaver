@@ -1,3 +1,5 @@
+import { parseCartridgePath } from '../cartridgesView/cartridgesHelpers';
+
 export type HookImplementation = {
   location: string;
   definitionFileLocation: string;
@@ -99,4 +101,27 @@ export function getIconNameForHook(hookName: string) {
     default:
       return 'file-code';
   }
+}
+
+export function getNotFoundErrorDescription() {
+  return 'ERROR: Implementation not found';
+}
+
+export function getDuplicateWarningDescription() {
+  return 'WARN: Duplicated configuration';
+}
+
+export function hookPointHasDuplicates(hookPoint: HookPoint) {
+  const uniqueMap: { [key: string]: boolean } = {};
+
+  return hookPoint.implementation.some((imp) => {
+    if (uniqueMap[imp.location]) {
+      return true;
+    }
+    uniqueMap[imp.location] = true;
+  });
+}
+
+export function hookPointHasMissingImp(hookPoint: HookPoint) {
+  return hookPoint.implementation.some((imp) => !imp.connected);
 }

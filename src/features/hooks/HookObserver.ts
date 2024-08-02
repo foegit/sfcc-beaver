@@ -29,7 +29,7 @@ export class HookObserver implements TreeDataProvider<TreeItem> {
   public lastClickedDetailsTreeItem: HookDetailsTreeItem | HookLabelTreeItem | null = null;
 
   constructor(private app: App) {
-    this.filterQuery = app.getMemo('hooks.filter');
+    this.filterQuery = app.getMemo('sfccBeaver.hooks.memo.lastFilter');
     this.displayStrategy = this.getHookViewStrategy();
 
     registerHookCommands(this);
@@ -80,6 +80,13 @@ export class HookObserver implements TreeDataProvider<TreeItem> {
       const parsedHookJson: { hooks: SFCCHookDefinition[] | null } = FsTool.parseCurrentProjectJsonFile(hooksFilePath);
 
       if (!parsedHookJson || !parsedHookJson.hooks) {
+        const disabledKey = 'sfccBeaver.hooks.ignoredErrors';
+        const ignoredErrors = (this.app.getMemo('sfccBeaver.hooks.ignoredErrors') as string[]) || [];
+
+        if (ignoredErrors.includes(hooksFilePath)) {
+          return;
+        }
+
         showError(`Cannot parse hooks configuration ${hooksFilePath}`, [
           {
             title: 'Go to file',
@@ -87,6 +94,12 @@ export class HookObserver implements TreeDataProvider<TreeItem> {
               EditorTool.focusOnWorkspaceFile(filePath, {
                 focusOnText: new RegExp('hooks'),
               });
+            },
+          },
+          {
+            title: 'Ignore',
+            cb: () => {
+              this.app.memo(disabledKey, [...ignoredErrors, hooksFilePath]);
             },
           },
         ]);
@@ -137,7 +150,7 @@ export class HookObserver implements TreeDataProvider<TreeItem> {
     this.refresh();
     commands.executeCommand('hooksObserver.focus');
 
-    this.app.memo('hooks.filter', query);
+    this.app.memo('sfccBeaver.hooks.memo.lastFilter', query);
   }
 
   getFilterQuery() {
