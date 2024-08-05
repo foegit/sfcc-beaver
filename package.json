@@ -31,7 +31,7 @@
     "keybindings": [
       {
         "command": "sfccBeaver.hooks.search",
-        "key": "alt+h",
+        "key": "ctrl+shift+h",
         "mac": "cmd+h"
       }
     ],
