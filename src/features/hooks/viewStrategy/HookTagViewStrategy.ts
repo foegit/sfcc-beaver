@@ -1,5 +1,4 @@
 import { TreeItem } from 'vscode';
-import IHookViewStrategy from './IHookViewStrategy';
 import { HookDetailsTreeItem } from '../treeItems/HookDetailsTreeItem';
 import { HookObserver } from '../HookObserver';
 import { sortHooks } from '../hooksHelpers';
@@ -7,11 +6,12 @@ import HookTagTreeItem from '../treeItems/HookTagTreeItem';
 import { getSetting } from '../../../helpers/settings';
 import HookLabelTreeItem from '../treeItems/HookLabelTreeItem';
 import { sortTags } from '../hooksTagHelpers';
+import AbstractViewStrategy from './AbstractViewStrategy';
 
-export default class HookDisplayHybridStrategy implements IHookViewStrategy {
-  async getChildren(hookObserver: HookObserver, element: TreeItem): Promise<TreeItem[]> {
+export default class HookDisplayHybridStrategy extends AbstractViewStrategy {
+  async getDynamicChildren(hookObserver: HookObserver, element: TreeItem): Promise<TreeItem[]> {
     if (element && element instanceof HookTagTreeItem) {
-      const sortedHookPoint = sortHooks(element.hookPoints);
+      const sortedHookPoint = sortHooks(element.getHookPoints());
 
       return sortedHookPoint.map((hookPoint) => new HookLabelTreeItem(hookPoint));
     }
@@ -32,21 +32,22 @@ export default class HookDisplayHybridStrategy implements IHookViewStrategy {
 
     hookObserver.getHookPoints().forEach((hookPoint) => {
       const nameSplit = hookPoint.name.split('.');
-      const hookDefaultTag = nameSplit[0];
+      const tag = nameSplit.length > 2 ? nameSplit.slice(0, 2) : nameSplit.slice(0, 1);
+      const hookDefaultTag = tag.join('.');
 
       if (pinnedHooks.includes(hookPoint.name)) {
-        hookTagItems.pinned.hookPoints.push(hookPoint);
+        hookTagItems.pinned.addHookPoint(hookPoint);
       }
 
       if (!hookTagItems[hookDefaultTag]) {
         hookTagItems[hookDefaultTag] = new HookTagTreeItem(hookDefaultTag, []);
       }
 
-      hookTagItems[hookDefaultTag].hookPoints.push(hookPoint);
+      hookTagItems[hookDefaultTag].addHookPoint(hookPoint);
     });
 
     const tagItems = Object.keys(hookTagItems)
-      .filter((key) => hookTagItems[key].hookPoints.length !== 0)
+      .filter((key) => !hookTagItems[key].isEmpty())
       .map((tagName) => hookTagItems[tagName]);
 
     return sortTags(tagItems);

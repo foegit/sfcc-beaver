@@ -1,3 +1,5 @@
+import { parseCartridgePath } from '../cartridgesView/cartridgesHelpers';
+
 export type HookImplementation = {
   location: string;
   definitionFileLocation: string;
@@ -86,4 +88,36 @@ export function sortHooks(hooks: HookPoint[], sortBy?: string) {
 
     return hook1Value > hook2Value ? -1 : 1;
   });
+}
+
+export function getIconNameForHook(hookName: string) {
+  const type = getHookType(hookName);
+
+  switch (type) {
+    case HookTypes.system:
+      return 'verified-filled';
+    case HookTypes.commerceApi:
+      return 'database';
+    default:
+      return 'file-code';
+  }
+}
+
+export const ERR_NOT_FOUND_HOOK_IMPLEMENTATION = 'ERROR: Hook implementation not found';
+export const WARN_DUPLICATED_HOOK_DEFINITION = 'WARN: Duplicated definition';
+
+export function hookPointHasDuplicates(hookPoint: HookPoint) {
+  const uniqueMap: { [key: string]: boolean } = {};
+
+  return hookPoint.implementation.some((imp) => {
+    if (uniqueMap[imp.location]) {
+      return true;
+    }
+
+    uniqueMap[imp.location] = true;
+  });
+}
+
+export function hookPointHasMissingImp(hookPoint: HookPoint) {
+  return hookPoint.implementation.some((imp) => !imp.connected);
 }

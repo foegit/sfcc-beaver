@@ -2,7 +2,7 @@ import * as fg from 'fast-glob';
 import * as path from 'path';
 import { HookDetailsTreeItem } from './treeItems/HookDetailsTreeItem';
 import { HookPoint, normalizeScriptPath, SFCCHookDefinition } from './hooksHelpers';
-import { Event, EventEmitter, TreeDataProvider, TreeItem } from 'vscode';
+import { commands, Event, EventEmitter, TreeDataProvider, TreeItem } from 'vscode';
 import FsTool from '../../classes/tools/FsTool';
 import { registerHookCommands } from './hooksCommands';
 import { registerHookWatcher } from './hooksWatcher';
@@ -13,6 +13,8 @@ import IHookViewStrategy from './viewStrategy/IHookViewStrategy';
 import HookListViewStrategy from './viewStrategy/HookListViewStrategy';
 import HookTagViewStrategy from './viewStrategy/HookTagViewStrategy';
 import HookLabelTreeItem from './treeItems/HookLabelTreeItem';
+import HookSearchViewStrategy from './viewStrategy/HookSearchViewStrategy';
+import { App } from '../../App';
 
 export class HookObserver implements TreeDataProvider<TreeItem> {
   private _onDidChangeTreeData: EventEmitter<TreeItem | undefined | void> = new EventEmitter<
@@ -21,29 +23,37 @@ export class HookObserver implements TreeDataProvider<TreeItem> {
   readonly onDidChangeTreeData: Event<TreeItem | undefined | void> = this._onDidChangeTreeData.event;
 
   private displayStrategy: IHookViewStrategy;
+  private filterQuery?: string;
+  private hookPoints: HookPoint[] = [];
+  private sortBy: string = 'default';
+  public lastClickedDetailsTreeItem: HookDetailsTreeItem | HookLabelTreeItem | null = null;
 
-  constructor() {
+  constructor(private app: App) {
+    this.filterQuery = app.getMemo('sfccBeaver.hooks.memo.lastFilter');
     this.displayStrategy = this.getHookViewStrategy();
+
     registerHookCommands(this);
     registerHookWatcher(this);
+
+    this.loadHookPoints();
   }
 
   private getHookViewStrategy(): IHookViewStrategy {
-    if (compareSetting('hooks.viewMode', 'list')) {
-      return new HookListViewStrategy();
+    if (this.isSearchApplied()) {
+      return new HookSearchViewStrategy();
     }
 
-    return new HookTagViewStrategy();
+    if (compareSetting('hooks.viewMode', 'tag')) {
+      return new HookTagViewStrategy();
+    }
+
+    return new HookListViewStrategy();
   }
 
   refresh(): void {
     this.displayStrategy = this.getHookViewStrategy();
     this._onDidChangeTreeData.fire();
   }
-
-  private hookPoints: HookPoint[] = [];
-  private sortBy: string = 'default';
-  public lastClickedDetailsTreeItem: HookDetailsTreeItem | HookLabelTreeItem | null = null;
 
   async loadHookPoints() {
     const workspaceFolder = FsTool.getCurrentWorkspaceFolder();
@@ -70,6 +80,13 @@ export class HookObserver implements TreeDataProvider<TreeItem> {
       const parsedHookJson: { hooks: SFCCHookDefinition[] | null } = FsTool.parseCurrentProjectJsonFile(hooksFilePath);
 
       if (!parsedHookJson || !parsedHookJson.hooks) {
+        const disabledKey = 'sfccBeaver.hooks.ignoredErrors';
+        const ignoredErrors = (this.app.getMemo('sfccBeaver.hooks.ignoredErrors') as string[]) || [];
+
+        if (ignoredErrors.includes(hooksFilePath)) {
+          return;
+        }
+
         showError(`Cannot parse hooks configuration ${hooksFilePath}`, [
           {
             title: 'Go to file',
@@ -77,6 +94,12 @@ export class HookObserver implements TreeDataProvider<TreeItem> {
               EditorTool.focusOnWorkspaceFile(filePath, {
                 focusOnText: new RegExp('hooks'),
               });
+            },
+          },
+          {
+            title: 'Ignore',
+            cb: () => {
+              this.app.memo(disabledKey, [...ignoredErrors, hooksFilePath]);
             },
           },
         ]);
@@ -115,10 +138,26 @@ export class HookObserver implements TreeDataProvider<TreeItem> {
   }
 
   getHookPoints() {
-    return this.hookPoints;
+    return this.hookPoints!;
   }
 
   getSortBy() {
     return this.sortBy;
+  }
+
+  filter(query: string) {
+    this.filterQuery = query;
+    this.refresh();
+    commands.executeCommand('hooksObserver.focus');
+
+    this.app.memo('sfccBeaver.hooks.memo.lastFilter', query);
+  }
+
+  getFilterQuery() {
+    return this.filterQuery;
+  }
+
+  isSearchApplied() {
+    return !!this.filterQuery;
   }
 }

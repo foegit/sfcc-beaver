@@ -1,12 +1,12 @@
 import { TreeItem } from 'vscode';
-import IHookViewStrategy from './IHookViewStrategy';
 import { HookDetailsTreeItem } from '../treeItems/HookDetailsTreeItem';
 import { HookObserver } from '../HookObserver';
 import { sortHooks } from '../hooksHelpers';
 import HookLabelTreeItem from '../treeItems/HookLabelTreeItem';
+import AbstractViewStrategy from './AbstractViewStrategy';
 
-export default class HookListViewStrategy implements IHookViewStrategy {
-  async getChildren(hookObserver: HookObserver, element: TreeItem): Promise<TreeItem[]> {
+export default class HookListViewStrategy extends AbstractViewStrategy {
+  async getDynamicChildren(hookObserver: HookObserver, element: TreeItem): Promise<TreeItem[]> {
     if (element && element instanceof HookLabelTreeItem) {
       return element.hookPoint.implementation.map((hookImp) => new HookDetailsTreeItem(hookImp));
     }

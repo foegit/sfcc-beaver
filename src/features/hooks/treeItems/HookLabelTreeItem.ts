@@ -1,27 +1,17 @@
 import { ThemeIcon, TreeItem, TreeItemCollapsibleState } from 'vscode';
-import { getHookType, HookPoint, HookTypes } from '../hooksHelpers';
+import {
+  ERR_NOT_FOUND_HOOK_IMPLEMENTATION,
+  getHookType,
+  getIconNameForHook,
+  HookPoint,
+  hookPointHasDuplicates,
+  hookPointHasMissingImp,
+  HookTypes,
+  WARN_DUPLICATED_HOOK_DEFINITION,
+} from '../hooksHelpers';
 import { colors, getPinnedIcon } from '../../../helpers/iconHelpers';
 import { parseCartridgePath } from '../../cartridgesView/cartridgesHelpers';
 import { compareSetting } from '../../../helpers/settings';
-
-function getIcon(hookPoint: HookPoint) {
-  if (hookPoint.implementation.some((i) => !i.connected)) {
-    return new ThemeIcon('flame', colors.red);
-  }
-
-  if (hookPoint.pinned) {
-    return getPinnedIcon();
-  }
-
-  switch (getHookType(hookPoint.name)) {
-    case HookTypes.system:
-      return new ThemeIcon('verified-filled', colors.blue);
-    case HookTypes.commerceApi:
-      return new ThemeIcon('verified-filled', colors.purple);
-    default:
-      return new ThemeIcon('file-code', colors.green);
-  }
-}
 
 function typeToDisplayValue(hookType: HookTypes) {
   switch (hookType) {
@@ -35,19 +25,24 @@ function typeToDisplayValue(hookType: HookTypes) {
 }
 
 export default class HookLabelTreeItem extends TreeItem {
+  public hasMissingImp: boolean;
+  public hasDuplicatedImp: boolean;
+
   constructor(public hookPoint: HookPoint) {
     super(hookPoint.name);
 
     const compactModeActive = this.isInCompactMode();
 
+    this.hasMissingImp = hookPointHasMissingImp(hookPoint);
+    this.hasDuplicatedImp = hookPointHasDuplicates(hookPoint);
     this.collapsibleState = compactModeActive ? TreeItemCollapsibleState.None : TreeItemCollapsibleState.Collapsed;
     this.description = this.getDescription();
-    this.iconPath = getIcon(hookPoint);
     this.contextValue = this.getContextValue();
+    this.iconPath = this.getIcon();
 
     if (compactModeActive) {
       this.command = {
-        command: 'sfccBeaver.hooks.openImplementation',
+        command: this.hasMissingImp ? 'sfccBeaver.hooks.openHookDefinition' : 'sfccBeaver.hooks.openImplementation',
         arguments: [this],
         title: 'Open Hook Implementation',
       };
@@ -58,8 +53,17 @@ export default class HookLabelTreeItem extends TreeItem {
     const type = getHookType(this.hookPoint.name);
     const hookDisplayType = typeToDisplayValue(type);
 
+    if (this.hasMissingImp) {
+      return ERR_NOT_FOUND_HOOK_IMPLEMENTATION;
+    }
+
+    if (this.hasDuplicatedImp) {
+      return WARN_DUPLICATED_HOOK_DEFINITION;
+    }
+
     if (this.isInCompactMode()) {
-      const parsedCartridge = parseCartridgePath(this.hookPoint.implementation[0].location);
+      const hookImplementation = this.hookPoint.implementation[0];
+      const parsedCartridge = parseCartridgePath(hookImplementation.location);
 
       return `${hookDisplayType} · ${parsedCartridge.cartridge}`;
     }
@@ -81,6 +85,31 @@ export default class HookLabelTreeItem extends TreeItem {
     }
 
     return contextValueParts.join('_');
+  }
+
+  getIcon() {
+    if (this.hasMissingImp) {
+      return new ThemeIcon('flame', colors.red);
+    }
+
+    if (this.hasDuplicatedImp) {
+      return new ThemeIcon('flame', colors.orange);
+    }
+
+    if (this.hookPoint.pinned) {
+      return getPinnedIcon();
+    }
+
+    const hookIconName = getIconNameForHook(this.hookPoint.name);
+
+    switch (getHookType(this.hookPoint.name)) {
+      case HookTypes.system:
+        return new ThemeIcon(hookIconName, colors.blue);
+      case HookTypes.commerceApi:
+        return new ThemeIcon(hookIconName, colors.purple);
+      default:
+        return new ThemeIcon(hookIconName, colors.green);
+    }
   }
 
   isInCompactMode() {
