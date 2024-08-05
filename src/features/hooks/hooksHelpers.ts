@@ -103,13 +103,8 @@ export function getIconNameForHook(hookName: string) {
   }
 }
 
-export function getNotFoundErrorDescription() {
-  return 'ERROR: Implementation not found';
-}
-
-export function getDuplicateWarningDescription() {
-  return 'WARN: Duplicated configuration';
-}
+export const ERR_NOT_FOUND_HOOK_IMPLEMENTATION = 'ERROR: Hook implementation not found';
+export const WARN_DUPLICATED_HOOK_DEFINITION = 'WARN: Duplicated definition';
 
 export function hookPointHasDuplicates(hookPoint: HookPoint) {
   const uniqueMap: { [key: string]: boolean } = {};
@@ -118,6 +113,7 @@ export function hookPointHasDuplicates(hookPoint: HookPoint) {
     if (uniqueMap[imp.location]) {
       return true;
     }
+
     uniqueMap[imp.location] = true;
   });
 }

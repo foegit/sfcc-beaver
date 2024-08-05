@@ -1,5 +1,5 @@
 import { ThemeColor, ThemeIcon, TreeItem } from 'vscode';
-import { getNotFoundErrorDescription, HookImplementation } from '../hooksHelpers';
+import { ERR_NOT_FOUND_HOOK_IMPLEMENTATION, HookImplementation } from '../hooksHelpers';
 import { parseCartridgePath } from '../../cartridgesView/cartridgesHelpers';
 
 export class HookDetailsTreeItem extends TreeItem {
@@ -28,6 +28,6 @@ export class HookDetailsTreeItem extends TreeItem {
       return parsedLocation.cartridgeRelatedPath;
     }
 
-    return getNotFoundErrorDescription();
+    return ERR_NOT_FOUND_HOOK_IMPLEMENTATION;
   }
 }

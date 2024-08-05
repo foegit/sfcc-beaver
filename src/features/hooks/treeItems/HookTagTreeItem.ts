@@ -1,10 +1,10 @@
 import { ThemeIcon, TreeItem, TreeItemCollapsibleState } from 'vscode';
 import {
-  getDuplicateWarningDescription,
-  getNotFoundErrorDescription,
+  ERR_NOT_FOUND_HOOK_IMPLEMENTATION,
   HookPoint,
   hookPointHasDuplicates,
   hookPointHasMissingImp,
+  WARN_DUPLICATED_HOOK_DEFINITION,
 } from '../hooksHelpers';
 import { colors } from '../../../helpers/iconHelpers';
 
@@ -30,11 +30,11 @@ export default class HookTagTreeItem extends TreeItem {
     const amount = String(this.hookPoints.length);
 
     if (this.hasMissingImp) {
-      return `${amount} (${getNotFoundErrorDescription()})`;
+      return `${amount} (${ERR_NOT_FOUND_HOOK_IMPLEMENTATION})`;
     }
 
     if (this.hasDuplicationImp) {
-      return `${amount} (${getDuplicateWarningDescription()})`;
+      return `${amount} (${WARN_DUPLICATED_HOOK_DEFINITION})`;
     }
 
     return String(this.hookPoints.length);

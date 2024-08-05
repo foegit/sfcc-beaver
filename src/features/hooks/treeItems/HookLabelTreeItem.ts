@@ -1,13 +1,13 @@
 import { ThemeIcon, TreeItem, TreeItemCollapsibleState } from 'vscode';
 import {
-  getDuplicateWarningDescription,
+  ERR_NOT_FOUND_HOOK_IMPLEMENTATION,
   getHookType,
   getIconNameForHook,
-  getNotFoundErrorDescription,
   HookPoint,
   hookPointHasDuplicates,
   hookPointHasMissingImp,
   HookTypes,
+  WARN_DUPLICATED_HOOK_DEFINITION,
 } from '../hooksHelpers';
 import { colors, getPinnedIcon } from '../../../helpers/iconHelpers';
 import { parseCartridgePath } from '../../cartridgesView/cartridgesHelpers';
@@ -54,11 +54,11 @@ export default class HookLabelTreeItem extends TreeItem {
     const hookDisplayType = typeToDisplayValue(type);
 
     if (this.hasMissingImp) {
-      return getNotFoundErrorDescription();
+      return ERR_NOT_FOUND_HOOK_IMPLEMENTATION;
     }
 
     if (this.hasDuplicatedImp) {
-      return getDuplicateWarningDescription();
+      return WARN_DUPLICATED_HOOK_DEFINITION;
     }
 
     if (this.isInCompactMode()) {
