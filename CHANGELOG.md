@@ -2,6 +2,22 @@
 
 # Change Log
 
+## 3.5.0 - 204-09-05
+
+### Features
+
+- Hooks search.
+- Hooks search shortcut:
+  - Windows: `Ctrl + Shift + H`
+  - Mac: `⌘ + H`
+- Hooks filter.
+
+### Improvements
+
+- For Tags hooks are now grouped by first two words.
+- Tags shows how much hooks it contains
+- Broken configuration is now reported in the list
+
 ## 3.4.0 - 2024-08-27
 
 ### Features

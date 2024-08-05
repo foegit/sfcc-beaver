@@ -1,18 +1,24 @@
 # 🦫 SFCC Beaver
 
-**Swiss-knife extension for SFCC developers!**
+_Extension for Salesforce Commerce Cloud (SFCC) Developers_
+
+![Visual Studio Marketplace Installs](https://img.shields.io/visual-studio-marketplace/i/SerhiiHlavatskyi.sfcc-beaver?style=flat&color=%231ae)
+![GitHub package.json version](https://img.shields.io/github/package-json/v/foegit/sfcc-beaver?style=flat&color=%231ae)
 
 ## Features
 
-- Overriding files from one cartridge to another
-- Copying/extracting file path/require/include into clipboard so it can be quickly inserted to other file
-- Overview of all project hooks
-- Documentation support
-  - 🤒 Documentation search temporary is not working due to documentation portal changes.
+- Quick File **Override**
+  - Easily override files from one cartridge to another.
+- File Require **Extract**
+  - A reliable alternative to path auto-completion for `.js`, `.isml`, `.properties`
+- **Hooks** Support
+  - Provides overview, search, filter, and validation for SFCC hooks.
+- **Documentation** Support
+  - 🤒 Documentation Search temporary is not working due to documentation portal changes.
 
 ## Compatibility
 
-> Extension fully supports only SFRA projects. However, some of the features are compatible with SiteGen as well.
+> Extension fully supports only SFRA projects. However, some of the features are compatible with SiteGen as well. Both Windows and Mac are supported.
 
 ## Usage
 
@@ -24,7 +30,7 @@ or copy current file path into clipboard ![alt text](static/override.png)
 
 ![alt text](static/overrideExtractExample.png)
 
-> 💡 You can use Command Pallette to do it even quicker.
+> 💡 You can use Command Pallette to do it even quicker. See below.
 
 ### Commands
 
@@ -32,7 +38,7 @@ Beaver adds several new commands that you can run manually.
 
 To run a command you need to open the command pallette (press `F1` or `Ctrl + Shift + P`) and enter the command name.
 
-- **▰ Extract** Swiss-kni command copies to clipboard require of the file depends on type.
+- **▰ Extract** A swiss-knife command that copies to clipboard a require of the file depends on type:
   - for scripts file copy require: `var fileName = require('*/filePath')`
   - for templates file copy isinclude: `<isinclude template='templatePath' />`
   - for resource properties file copy active line as `Resource.msg('{activeLinePropName}', '{fileName}', null)`
@@ -61,15 +67,23 @@ _List Full View:_
 
 ![alt text](static/hooksPreviewList.png)
 
-- Provides an overview of all project hooks
-- Hooks can be pinned
+- Provides an overview of all hooks defined and used in the project
+- Hooks can be pinned for quick access
 - Two view mode:
+  - List Mode. Best for small collections of hooks
+  - Tag Mode. Best for big collections
+  - You can change modes in Settings or by clicking on tree dots on Hooks panel.
+- **Search**. Click Search icon or use shortcut `Ctrl + Shift + H`/
+  `⌘ + H` to open search panel
 
-  - List mode best for small collections of hooks
-  - Tag mode best for big collections
+  ![hook search demo](static/hooksSearch.png)
 
-- Quick navigation to hooks implementation/definition
-- Bad configuration detection
+- **Filter**. Click filter on hook panel to apply a filter by name to the list of hooks.
+
+  ![hooks filter demo](static/hooksFilter.png)
+
+- Quick navigation to hooks implementation/definition.
+- Hooks configuration validation.
 
 ### Hovers
 
@@ -82,3 +96,7 @@ Install the icons extension **[🦫 SFCC Beaver - Icons](https://marketplace.vis
 ## 📨 Feedback
 
 Found a 🪲bug or want to improve something? Feel free to open an issue on GitHub: <https://github.com/foegit/sfcc-beaver/issues>
+
+## Credits
+
+- Badge Service: https://shields.io/
