@@ -5,6 +5,15 @@ _Extension for Salesforce Commerce Cloud (SFCC) Developers_
 ![Visual Studio Marketplace Installs](https://img.shields.io/visual-studio-marketplace/i/SerhiiHlavatskyi.sfcc-beaver?style=flat&color=%231ae)
 ![GitHub package.json version](https://img.shields.io/github/package-json/v/foegit/sfcc-beaver?style=flat&color=%231ae)
 
+## #StandWithUkraine 🇺🇦
+
+Russia invaded Ukraine, killing tens of thousands of civilians and displacing millions more.
+It's a genocide. Please help us defend freedom, democracy and Ukraine's right to exist.
+
+Visit https://stand-with-ukraine.pp.ua to see more details.
+
+Thanks ✊
+
 ## Features
 
 - Quick File **Override**
@@ -88,6 +97,13 @@ _List Full View:_
 ### Hovers
 
 If you hover over the API class such as `require('dw/web/URLUtils')` you see a tip with `▰ Open docs` suggestion. Clicking it will open corresponding documentation topic.
+
+### JSON Schemas
+
+Schemas provide autocompletion and validation for JSON. Currently supported:
+
+- Hooks → `hooks.json`
+- Job Steps → `steptypes.json`
 
 ## 👍 Recommendations
 
