@@ -2,7 +2,7 @@
   "name": "sfcc-beaver",
   "displayName": "SFCC Beaver",
   "description": "An extension for SFCC developers to automate routine tasks",
-  "version": "3.5.0",
+  "version": "3.5.1",
   "icon": "static/simpleLogo.png",
   "repository": "https://github.com/foegit/sfcc-beaver",
   "publisher": "SerhiiHlavatskyi",
@@ -28,11 +28,14 @@
   ],
   "main": "./dist/extension.js",
   "contributes": {
-    "keybindings": [
+    "jsonValidation": [
       {
-        "command": "sfccBeaver.hooks.search",
-        "key": "ctrl+shift+h",
-        "mac": "cmd+h"
+        "fileMatch": "steptypes.json",
+        "url": "https://resources.docs.salesforce.com/rel1/doc/en-us/static/misc/steptypes.schema.json"
+      },
+      {
+        "fileMatch": "hooks.json",
+        "url": "./static/schemas/hooks.schema.json"
       }
     ],
     "configuration": {

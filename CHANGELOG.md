@@ -4,6 +4,13 @@
 
 ## 3.5.0 - 204-09-05
 
+### Improvements
+
+- Added hooks.json schema validation (internal)
+- Added steptypes.json schema validation (external)
+
+## 3.5.0 - 204-09-05
+
 ### Features
 
 - Hooks search.
