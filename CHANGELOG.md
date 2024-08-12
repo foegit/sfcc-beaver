@@ -1,6 +1,6 @@
 <!-- markdownlint-disable -->
 
-# Change Log\
+# Change Log
 
 ## 3.5.0 - 204-09-05
 
