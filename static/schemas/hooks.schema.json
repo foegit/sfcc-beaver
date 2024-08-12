@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$ref": "#/definitions/HooksJsonSchema",
+  "definitions": {
+    "HooksJsonSchema": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "hooks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HookRegisterItem"
+          },
+          "uniqueItems": true,
+          "title": "List of Hooks",
+          "description": "To register add an item to this array."
+        }
+      },
+      "required": ["hooks"]
+    },
+    "HookRegisterItem": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "ID of the hook e.g. \"dw.order.calculate\"",
+          "title": "Hook Name",
+          "minLength": 1
+        },
+        "script": {
+          "type": "string",
+          "title": "Hook Script",
+          "description": "Relative path to the script path \"./cartridge/scripts/hooks/calculate.js\"",
+          "pattern": "(\\.|~/)*"
+        }
+      },
+      "required": ["name", "script"]
+    }
+  }
+}
