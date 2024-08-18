@@ -83,7 +83,9 @@ _List Full View:_
   - Tag Mode. Best for big collections
   - You can change modes in Settings or by clicking on tree dots on Hooks panel.
 - **Search**. Click Search icon or use shortcut `Ctrl + Shift + H`/
-  `⌘ + H` to open search panel
+  `Command + Shift + H`\* to open search panel
+
+  - \* it overrides the system `Find and Replace` command. Should you use this command often please reassign it.
 
   ![hook search demo](static/hooksSearch.png)
 

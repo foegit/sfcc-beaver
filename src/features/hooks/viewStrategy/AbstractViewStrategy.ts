@@ -1,34 +1,31 @@
 import { ThemeIcon, TreeItem } from 'vscode';
 import IHookViewStrategy from './IHookViewStrategy';
-import { HookObserver } from '../HookObserver';
-import { CommonTreenItem } from '../treeItems/CommonTreeItem';
+import HookModule from '../HookModule';
 
 export default abstract class AbstractViewStrategy implements IHookViewStrategy {
-  async getChildren(hookObserver: HookObserver, element: TreeItem): Promise<TreeItem[]> {
+  async getChildren(hookModule: HookModule, element: TreeItem): Promise<TreeItem[]> {
     if (element) {
-      return this.getDynamicChildren(hookObserver, element);
+      return this.getDynamicChildren(hookModule, element);
     }
 
-    if (hookObserver.getHookPoints().length === 0) {
-      // ensure hooks are parsed
-      await hookObserver.loadHookPoints();
-    }
-
-    const filterQuery = hookObserver.getFilterQuery();
+    const filterQuery = hookModule.getFilterQuery();
     const filterTitle = filterQuery ? `Filtered by "${filterQuery}"` : 'Filter';
     const filterDescription = filterQuery ? 'Double Click to Change' : 'Click to Enter Filter';
     const filterContextValue = filterQuery ? 'hooksFilterTreeBarApplied' : 'hooksFilterTreeBar';
 
-    const filterBar = new CommonTreenItem({
-      title: filterTitle,
-      commandOnClickName: filterQuery ? 'sfccBeaver.hooks.filterDoubleClick' : 'sfccBeaver.hooks.filter',
+    const filterBar: TreeItem = {
+      label: filterTitle,
+      command: {
+        command: filterQuery ? 'sfccBeaver.hooks.filterDoubleClick' : 'sfccBeaver.hooks.filter',
+        title: filterQuery ? 'Change' : 'Enter Filter',
+      },
       description: filterDescription,
-      icon: new ThemeIcon('filter'),
+      iconPath: new ThemeIcon('filter'),
       contextValue: filterContextValue,
-    });
+    };
 
-    return [filterBar, ...(await this.getDynamicChildren(hookObserver, element))];
+    return [filterBar, ...(await this.getDynamicChildren(hookModule, element))];
   }
 
-  abstract getDynamicChildren(hookObserver: HookObserver, element: TreeItem): Promise<TreeItem[]>;
+  abstract getDynamicChildren(hookModule: HookModule, element: TreeItem): Promise<TreeItem[]>;
 }

@@ -1,8 +1,8 @@
 import { TreeItem } from 'vscode';
-import { HookObserver } from '../HookObserver';
+import HookModule from '../HookModule';
 
 interface IHookViewStrategy {
-  getChildren(hookObserver: HookObserver, element?: TreeItem): Promise<TreeItem[]>;
+  getChildren(hookModule: HookModule, element?: TreeItem): Promise<TreeItem[]>;
 }
 
 export default IHookViewStrategy;

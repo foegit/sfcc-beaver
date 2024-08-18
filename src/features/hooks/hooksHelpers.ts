@@ -1,10 +1,10 @@
-import { parseCartridgePath } from '../cartridgesView/cartridgesHelpers';
-
 export type HookImplementation = {
   location: string;
   definitionFileLocation: string;
   connected: boolean;
   hookName: string;
+  cartridge: string;
+  cartridgeRelatedPath: string;
 };
 
 export type HookPoint = {

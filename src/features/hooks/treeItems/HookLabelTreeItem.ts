@@ -10,7 +10,6 @@ import {
   WARN_DUPLICATED_HOOK_DEFINITION,
 } from '../hooksHelpers';
 import { colors, getPinnedIcon } from '../../../helpers/iconHelpers';
-import { parseCartridgePath } from '../../cartridgesView/cartridgesHelpers';
 import { compareSetting } from '../../../helpers/settings';
 
 function typeToDisplayValue(hookType: HookTypes) {
@@ -63,9 +62,8 @@ export default class HookLabelTreeItem extends TreeItem {
 
     if (this.isInCompactMode()) {
       const hookImplementation = this.hookPoint.implementation[0];
-      const parsedCartridge = parseCartridgePath(hookImplementation.location);
 
-      return `${hookDisplayType} · ${parsedCartridge.cartridge}`;
+      return `${hookDisplayType} · ${hookImplementation.cartridge}`;
     }
 
     const amount = this.hookPoint.implementation.length;

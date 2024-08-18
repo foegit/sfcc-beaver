@@ -38,6 +38,13 @@
         "url": "./static/schemas/hooks.schema.json"
       }
     ],
+    "keybindings": [
+      {
+        "command": "sfccBeaver.hooks.search",
+        "key": "ctrl+shift+h",
+        "mac": "cmd+shift+h"
+      }
+    ],
     "configuration": {
       "title": "SFCC Beaver",
       "properties": {

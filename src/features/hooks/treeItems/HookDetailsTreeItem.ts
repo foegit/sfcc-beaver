@@ -1,14 +1,11 @@
 import { ThemeColor, ThemeIcon, TreeItem } from 'vscode';
 import { ERR_NOT_FOUND_HOOK_IMPLEMENTATION, HookImplementation } from '../hooksHelpers';
-import { parseCartridgePath } from '../../cartridgesView/cartridgesHelpers';
 
 export class HookDetailsTreeItem extends TreeItem {
   constructor(public hookImplementation: HookImplementation) {
-    const parsedLocation = parseCartridgePath(hookImplementation.location);
+    super(hookImplementation.cartridge);
 
-    super(parsedLocation.cartridge);
-
-    this.description = this.getDescription(parsedLocation);
+    this.description = this.getDescription();
     this.contextValue = 'hookFileItem';
     this.iconPath = hookImplementation.connected
       ? new ThemeIcon('code')
@@ -23,9 +20,9 @@ export class HookDetailsTreeItem extends TreeItem {
     };
   }
 
-  getDescription(parsedLocation: ReturnType<typeof parseCartridgePath>) {
+  getDescription() {
     if (this.hookImplementation.connected) {
-      return parsedLocation.cartridgeRelatedPath;
+      return this.hookImplementation.cartridgeRelatedPath;
     }
 
     return ERR_NOT_FOUND_HOOK_IMPLEMENTATION;

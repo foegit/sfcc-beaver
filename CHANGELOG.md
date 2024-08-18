@@ -2,14 +2,25 @@
 
 # Change Log
 
-## 3.5.0 - 204-09-05
+## 3.5.2 - 2024-08-19
+
+### Improvements
+
+- Hooks watchers and commands memory leaks fixes
+- Key binding for Hook Search on Mac is now `Command + Shift + H` since `Command + H` is Mac's system Hide Window shortcut.
+
+### Bugs
+
+- Fixed missing keybinding for Hook Search
+
+## 3.5.1 - 2024-08-12
 
 ### Improvements
 
 - Added hooks.json schema validation (internal)
 - Added steptypes.json schema validation (external)
 
-## 3.5.0 - 204-09-05
+## 3.5.0 - 2024-08-05
 
 ### Features
 
@@ -25,7 +36,7 @@
 - Tags shows how much hooks it contains
 - Broken configuration is now reported in the list
 
-## 3.4.0 - 2024-08-27
+## 3.4.0 - 2024-07-27
 
 ### Features
 
