@@ -3,8 +3,8 @@ import PathTool from '../../classes/tools/PathTool';
 export function parseCartridgePath(path: string) {
   // src/cartridges/int_custom/cartridge/scripts/index.js
   // inc_custom/cartridge/scripts/index.js
-  const parsedLocation2 = PathTool.toPosixPath(path).split('/');
-  const cartridgeKeyWordPosition = parsedLocation2.indexOf('cartridge');
+  const parsedLocation = PathTool.toPosixPath(path).split('/');
+  const cartridgeKeyWordPosition = parsedLocation.indexOf('cartridge');
 
   if (cartridgeKeyWordPosition < 1) {
     return {
@@ -14,7 +14,7 @@ export function parseCartridgePath(path: string) {
   }
 
   return {
-    cartridge: parsedLocation2[cartridgeKeyWordPosition - 1],
-    cartridgeRelatedPath: parsedLocation2.slice(cartridgeKeyWordPosition + 1).join('/'),
+    cartridge: parsedLocation[cartridgeKeyWordPosition - 1],
+    cartridgeRelatedPath: parsedLocation.slice(cartridgeKeyWordPosition + 1).join('/'),
   };
 }

@@ -1,27 +1,17 @@
 import { FileSystemWatcher, workspace } from 'vscode';
-import { HookObserver } from './HookObserver';
+import HookModule from './HookModule';
 
-async function reIndexHooks(hookObserver: HookObserver) {
-  await hookObserver.loadHookPoints();
-  hookObserver.refresh();
-}
+export function registerHookWatcher(hookModule: HookModule) {
+  const onAnyUpdate = async () => {
+    await hookModule.parseHooks();
+    hookModule.refreshHooksView();
+  };
 
-function handleHookWatcher(watcher: FileSystemWatcher, hookObserver: HookObserver) {
-  watcher.onDidChange(async () => {
-    reIndexHooks(hookObserver);
+  hookModule.watcherRegistry.add('**/hooks.json', {
+    onAny: onAnyUpdate,
   });
-  watcher.onDidCreate(async () => {
-    reIndexHooks(hookObserver);
-  });
-  watcher.onDidDelete(async () => {
-    reIndexHooks(hookObserver);
-  });
-}
 
-export function registerHookWatcher(hookObserver: HookObserver) {
-  const hooksJsonWatcher = workspace.createFileSystemWatcher('**/hooks.json');
-  const packageJsonWatcher = workspace.createFileSystemWatcher('**/package.json');
-
-  handleHookWatcher(hooksJsonWatcher, hookObserver);
-  handleHookWatcher(packageJsonWatcher, hookObserver);
+  hookModule.watcherRegistry.add('**/package.json', {
+    onAny: onAnyUpdate,
+  });
 }

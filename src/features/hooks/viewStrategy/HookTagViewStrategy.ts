@@ -1,15 +1,15 @@
 import { TreeItem } from 'vscode';
 import { HookDetailsTreeItem } from '../treeItems/HookDetailsTreeItem';
-import { HookObserver } from '../HookObserver';
 import { sortHooks } from '../hooksHelpers';
 import HookTagTreeItem from '../treeItems/HookTagTreeItem';
 import { getSetting } from '../../../helpers/settings';
 import HookLabelTreeItem from '../treeItems/HookLabelTreeItem';
 import { sortTags } from '../hooksTagHelpers';
 import AbstractViewStrategy from './AbstractViewStrategy';
+import HookModule from '../HookModule';
 
 export default class HookDisplayHybridStrategy extends AbstractViewStrategy {
-  async getDynamicChildren(hookObserver: HookObserver, element: TreeItem): Promise<TreeItem[]> {
+  async getDynamicChildren(hookModule: HookModule, element: TreeItem): Promise<TreeItem[]> {
     if (element && element instanceof HookTagTreeItem) {
       const sortedHookPoint = sortHooks(element.getHookPoints());
 
@@ -26,11 +26,7 @@ export default class HookDisplayHybridStrategy extends AbstractViewStrategy {
 
     const pinnedHooks = getSetting('hooks.pinnedHooks');
 
-    if (hookObserver.getHookPoints().length === 0) {
-      await hookObserver.loadHookPoints();
-    }
-
-    hookObserver.getHookPoints().forEach((hookPoint) => {
+    (await hookModule.getHookPoints()).forEach((hookPoint) => {
       const nameSplit = hookPoint.name.split('.');
       const tag = nameSplit.length > 2 ? nameSplit.slice(0, 2) : nameSplit.slice(0, 1);
       const hookDefaultTag = tag.join('.');

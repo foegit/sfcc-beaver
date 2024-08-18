@@ -10,14 +10,20 @@ import { CartridgesObserver } from './features/cartridgesView/CartridgeObserver'
 import HoverManager from './classes/hover/HoverManager';
 import WebviewMgr from './webviewProviders/WebviewMgr';
 import CommandMgr from './commands/CommandMgr';
-import { HookObserver } from './features/hooks/HookObserver';
 import CartridgeTreeItem from './features/cartridgesView/CartridgeTreeItem';
 import { addToSettingList, isSettingOff, removeFromSettingList, updateSetting } from './helpers/settings';
 import { CommandRegistry } from './app/CommandRegistry';
+import { WorkspaceStorage } from './app/WorkspaceStorage';
+import HookModule from './features/hooks/HookModule';
+import { WatcherRegistry } from './app/WatcherRegistry';
 
 export class App {
   public context!: vscode.ExtensionContext;
   public commandRegistry!: CommandRegistry;
+  public workspaceStorage!: WorkspaceStorage;
+  public watcherRegistry!: WatcherRegistry;
+
+  public hookModule?: HookModule;
 
   constructor() {
     console.debug('Extension created at: ', Date.now().toLocaleString());
@@ -28,13 +34,16 @@ export class App {
     console.debug('Extension activated at: ', Date.now().toLocaleString());
 
     this.context = context;
+
     this.commandRegistry = new CommandRegistry(context);
+    this.workspaceStorage = new WorkspaceStorage(context);
+    this.watcherRegistry = new WatcherRegistry(context);
 
     const cartridgesObserver = new CartridgesObserver();
-    const hooksObserver = new HookObserver(this);
+
+    this.hookModule = new HookModule(this);
 
     vscode.window.registerTreeDataProvider('cartridgesObserver', cartridgesObserver);
-    vscode.window.registerTreeDataProvider('hooksObserver', hooksObserver);
 
     vscode.commands.registerCommand('sfccBeaver.refreshCartridgeList', async () => {
       await this.indexCartridges();
@@ -89,15 +98,7 @@ export class App {
       return cartridgePath;
     });
 
-    this.memo('cartridgeList', cartridges);
-  }
-
-  public memo(key: string, value: any) {
-    this.context.workspaceState.update(key, value);
-  }
-
-  public getMemo(key: string): any {
-    return this.context.workspaceState.get(key);
+    this.workspaceStorage.set('cartridgeList', cartridges);
   }
 
   public async getCartridgeList(reIndex: boolean = true): Promise<string[]> {
@@ -105,7 +106,8 @@ export class App {
       this.indexCartridges();
     }
 
-    return this.getMemo('cartridgeList');
+    // return this.getMemo('cartridgeList');
+    return this.workspaceStorage.get('cartridgeList')!;
   }
 }
 

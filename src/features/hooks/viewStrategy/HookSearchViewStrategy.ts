@@ -1,28 +1,30 @@
 import { TreeItem } from 'vscode';
 import { HookDetailsTreeItem } from '../treeItems/HookDetailsTreeItem';
-import { HookObserver } from '../HookObserver';
 import { HookPoint } from '../hooksHelpers';
 import HookLabelTreeItem from '../treeItems/HookLabelTreeItem';
 import AbstractViewStrategy from './AbstractViewStrategy';
-import { CommonTreenItem } from '../treeItems/CommonTreeItem';
+import HookModule from '../HookModule';
 
 export default class HookSearchViewStrategy extends AbstractViewStrategy {
-  async getDynamicChildren(hookObserver: HookObserver, element: TreeItem): Promise<TreeItem[]> {
+  async getDynamicChildren(hookModule: HookModule, element: TreeItem): Promise<TreeItem[]> {
     if (element && element instanceof HookLabelTreeItem) {
       return element.hookPoint.implementation.map((hookImp) => new HookDetailsTreeItem(hookImp));
     }
-    const filterQuery = hookObserver.getFilterQuery() || '';
-    const hookPoints = hookObserver.getHookPoints();
+    const filterQuery = hookModule.getFilterQuery() || '';
+    const hookPoints = await hookModule.getHookPoints();
 
     const matchedHooks = this.filterByQuery(hookPoints, filterQuery);
 
     if (matchedHooks.length === 0) {
       return [
-        new CommonTreenItem({
-          title: `No hooks found for "${filterQuery}" query`,
+        {
+          label: `No hooks found for "${filterQuery}" query`,
           description: 'Click to change',
-          commandOnClickName: 'sfccBeaver.hooks.filter',
-        }),
+          command: {
+            command: 'sfccBeaver.hooks.filter',
+            title: 'Enter filter',
+          },
+        },
       ];
     }
 

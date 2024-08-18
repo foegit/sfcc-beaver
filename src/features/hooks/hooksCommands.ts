@@ -1,22 +1,34 @@
-import { commands, QuickPickItem, window } from 'vscode';
-import { HookObserver } from './HookObserver';
+import { commands, QuickInputButton, QuickPickItem, QuickPickItemKind, ThemeIcon, window } from 'vscode';
 import { copyToClipboard } from '../../helpers/clipboard';
 import HookLabelTreeItem from './treeItems/HookLabelTreeItem';
 import { HookDetailsTreeItem } from './treeItems/HookDetailsTreeItem';
 import EditorTool from '../../classes/tools/EditorTool';
 import { addToSettingList, removeFromSettingList, updateSetting } from '../../helpers/settings';
 import { getIconNameForHook, HookImplementation } from './hooksHelpers';
-import { parseCartridgePath } from '../cartridgesView/cartridgesHelpers';
+import HookModule from './HookModule';
 
 class HookPickItem implements QuickPickItem {
   label: string;
   description?: string | undefined;
   detail?: string | undefined;
+  picked?: boolean | undefined;
+  buttons?: readonly QuickInputButton[] | undefined;
 
   constructor(public implementation: HookImplementation) {
-    const parsed = parseCartridgePath(this.implementation.location);
     this.label = `$(${getIconNameForHook(this.implementation.hookName)}) ${this.implementation.hookName}`;
-    this.description = `${parsed.cartridge} ·  ${parsed.cartridgeRelatedPath}`;
+    this.description = implementation.cartridge;
+    // TODO: maybe make it configurable
+    // this.detail = `${implementation.cartridgeRelatedPath}`;
+  }
+}
+
+class HookPickItemSep implements QuickPickItem {
+  label: string;
+  kind?: QuickPickItemKind | undefined;
+
+  constructor(cartridge: string) {
+    this.label = `${cartridge}`;
+    this.kind = QuickPickItemKind.Separator;
   }
 }
 
@@ -37,85 +49,110 @@ async function openHookImplementation(implementation: HookImplementation, previe
   });
 }
 
-export function registerHookCommands(hookObserver: HookObserver) {
-  commands.registerCommand('sfccBeaver.hooks.refreshView', async () => {
-    await hookObserver.loadHookPoints();
-    hookObserver.refresh();
-  });
+export function registerHookCommands(hookModule: HookModule) {
+  async function reParseAndRefreshView() {
+    await hookModule.parseHooks();
 
-  commands.registerCommand('sfccBeaver.hooks.copyName', async (treeItem: HookLabelTreeItem) => {
+    hookModule.refreshHooksView();
+  }
+
+  hookModule.commandRegistry.add('sfccBeaver.hooks.refreshView', reParseAndRefreshView);
+
+  hookModule.commandRegistry.add('sfccBeaver.hooks.copyName', async (treeItem: HookLabelTreeItem) => {
     copyToClipboard(treeItem.hookPoint.name);
   });
 
-  commands.registerCommand('sfccBeaver.hooks.pin', async (treeItem: HookLabelTreeItem) => {
+  hookModule.commandRegistry.add('sfccBeaver.hooks.pin', async (treeItem: HookLabelTreeItem) => {
     await addToSettingList('hooks.pinnedHooks', treeItem.hookPoint.name);
-    await hookObserver.loadHookPoints();
-    hookObserver.refresh();
+
+    reParseAndRefreshView();
   });
 
-  commands.registerCommand('sfccBeaver.hooks.unpin', async (treeItem: HookLabelTreeItem) => {
+  hookModule.commandRegistry.add('sfccBeaver.hooks.unpin', async (treeItem: HookLabelTreeItem) => {
     await removeFromSettingList('hooks.pinnedHooks', treeItem.hookPoint.name);
-    await hookObserver.loadHookPoints();
-    hookObserver.refresh();
+
+    reParseAndRefreshView();
   });
 
-  commands.registerCommand('sfccBeaver.hooks.useListView', async () => {
+  hookModule.commandRegistry.add('sfccBeaver.hooks.useListView', async () => {
     await updateSetting('hooks.viewMode', 'list');
-    hookObserver.refresh();
+
+    hookModule.refreshHooksView();
   });
 
-  commands.registerCommand('sfccBeaver.hooks.useTagView', async () => {
+  hookModule.commandRegistry.add('sfccBeaver.hooks.useTagView', async () => {
     await updateSetting('hooks.viewMode', 'tag');
-    hookObserver.refresh();
+
+    hookModule.refreshHooksView();
   });
 
-  commands.registerCommand('sfccBeaver.hooks.useCompactView', async () => {
+  hookModule.commandRegistry.add('sfccBeaver.hooks.useCompactView', async () => {
     await updateSetting('hooks.singeHookViewMode', 'compact');
-    hookObserver.refresh();
+
+    hookModule.refreshHooksView();
   });
 
-  commands.registerCommand('sfccBeaver.hooks.useFullView', async () => {
+  hookModule.commandRegistry.add('sfccBeaver.hooks.useFullView', async () => {
     await updateSetting('hooks.singeHookViewMode', 'full');
-    hookObserver.refresh();
+
+    hookModule.refreshHooksView();
   });
 
-  commands.registerCommand('sfccBeaver.hooks.collapseAll', async () => {
+  hookModule.commandRegistry.add('sfccBeaver.hooks.collapseAll', async () => {
     commands.executeCommand('workbench.actions.treeView.hooksObserver.collapseAll');
   });
 
-  commands.registerCommand('sfccBeaver.hooks.search', async () => {
-    const items: HookPickItem[] = [];
-    const sortedHookPoints = hookObserver.getHookPoints().sort((h1, h2) => h1.name.localeCompare(h2.name));
+  hookModule.commandRegistry.add('sfccBeaver.hooks.search', async () => {
+    const items: (HookPickItem | HookPickItemSep)[] = [];
+
+    const sortedHookPoints = (await hookModule.getHookPoints()).sort((h1, h2) => h1.name.localeCompare(h2.name));
+    const cartridgeToHookMap: { [key: string]: HookImplementation[] } = {};
 
     sortedHookPoints.forEach((hookPoint) => {
       hookPoint.implementation.forEach((imp) => {
-        items.push(new HookPickItem(imp));
+        if (!cartridgeToHookMap[imp.cartridge]) {
+          cartridgeToHookMap[imp.cartridge] = [];
+        }
+
+        cartridgeToHookMap[imp.cartridge].push(imp);
       });
     });
 
+    Object.keys(cartridgeToHookMap)
+      .sort((c1, c2) => c1.localeCompare(c2))
+      .forEach((key) => {
+        items.push(new HookPickItemSep(key));
+
+        cartridgeToHookMap[key].forEach((imp) => {
+          items.push(new HookPickItem(imp));
+        });
+      });
+
     const result = await window.showQuickPick(items, {
       title: 'Search hook',
+      placeHolder: 'Enter hook name',
+      matchOnDescription: true,
     });
 
-    if (result) {
+    if (result && result instanceof HookPickItem) {
       openHookImplementation(result.implementation, true);
     }
   });
 
-  commands.registerCommand('sfccBeaver.hooks.filter', async () => {
+  hookModule.commandRegistry.add('sfccBeaver.hooks.filter', async () => {
     const result = await window.showInputBox({
       title: 'Enter Filter',
-      value: hookObserver.getFilterQuery(),
+      value: hookModule.getFilterQuery(),
     });
 
     if (typeof result === 'string') {
-      hookObserver.filter(result);
+      hookModule.applyFilterQuery(result);
     }
   });
 
   let lastFilterDoubleClick: Date | null = null;
 
-  commands.registerCommand('sfccBeaver.hooks.filterDoubleClick', function () {
+  hookModule.commandRegistry.add('sfccBeaver.hooks.filterDoubleClick', function () {
     let currentClick = new Date();
 
     if (!lastFilterDoubleClick || currentClick.valueOf() - lastFilterDoubleClick.valueOf() > 1000) {
@@ -126,24 +163,25 @@ export function registerHookCommands(hookObserver: HookObserver) {
     commands.executeCommand('sfccBeaver.hooks.filter');
   });
 
-  commands.registerCommand('sfccBeaver.hooks.clearFilter', async () => {
-    hookObserver.filter('');
+  hookModule.commandRegistry.add('sfccBeaver.hooks.clearFilter', async () => {
+    hookModule.applyFilterQuery('');
   });
 
-  commands.registerCommand(
+  hookModule.commandRegistry.add(
     'sfccBeaver.hooks.openImplementation',
     async (hookItem: HookDetailsTreeItem | HookLabelTreeItem) => {
       const implementation =
         hookItem instanceof HookDetailsTreeItem ? hookItem.hookImplementation : hookItem.hookPoint.implementation[0];
 
-      const isDoubleClick = hookObserver.lastClickedDetailsTreeItem !== hookItem;
+      const provider = hookModule.getHookDataTreeProvider();
+      const isDoubleClick = provider.lastClickedDetailsTreeItem !== hookItem;
 
       openHookImplementation(implementation, isDoubleClick);
-      hookObserver.lastClickedDetailsTreeItem = hookItem;
+      provider.lastClickedDetailsTreeItem = hookItem;
     }
   );
 
-  commands.registerCommand(
+  hookModule.commandRegistry.add(
     'sfccBeaver.hooks.openHookDefinition',
     async (hookItem: HookDetailsTreeItem | HookLabelTreeItem) => {
       const hookImplementation =
