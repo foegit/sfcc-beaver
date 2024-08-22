@@ -59,6 +59,8 @@ export default class DocsViewerProvider {
             return this.openPreviousPage();
           case 'sfccBeaver:docsViewer:goForward':
             return this.openNextPage();
+          case 'sfccBeaver:docsViewer:copyToClipboard':
+            return copyToClipboard(message.data.text);
         }
       },
       null,

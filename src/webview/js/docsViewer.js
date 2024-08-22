@@ -31,6 +31,8 @@ function getState() {
 }
 
 function fireServerEvent(type, data) {
+  console.log(`Fire ${type} event with ${JSON.stringify(data)} data`);
+
   vscode.postMessage({
     type,
     data,
@@ -84,6 +86,12 @@ function initListeners() {
     if (href) {
       openLink(href);
     }
+  });
+
+  $(document).on('click', '.copy-code-btn', (event) => {
+    fireServerEvent('sfccBeaver:docsViewer:copyToClipboard', {
+      text: $(event.currentTarget).closest('.pre.codeblock').find('code').text(),
+    });
   });
 
   $(document).on('mouseup', (event) => {

@@ -48,6 +48,10 @@ export class SfccLearningDocsRenderer implements IDocsRenderer {
       });
     }
 
+    $body.find('.pre.codeblock').each((i, $el) => {
+      $($el).prepend('<span class="copy-code-btn">copy</span>');
+    });
+
     $body.find('.header:contains("Method Summary")').closest('.section').remove();
 
     return $body.html()!;

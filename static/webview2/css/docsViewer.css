@@ -140,17 +140,55 @@ h6 {
   background: var(--vscode-textCodeBlock-background);
   font-family: var(--vscode-editor-font-family);
   padding: 1em;
+  border: 1px var(--vscode-textCodeBlock-background) solid;
+  transition: 200ms;
+  position: relative;
+}
+
+.pre.codeblock:hover {
+  border: 1px var(--vscode-focusBorder) solid;
+}
+
+.copy-code-btn {
+  position: absolute;
+  top: 0.3em;
+  right: 0.3em;
+  display: block;
+  padding: 0.2em 0.5em;
+  border-radius: 3px;
+  color: var(--vscode-tab-inactiveForeground);
+  background-color: var(--vscode-tab-inactiveBackground);
+  cursor: pointer;
+}
+
+.copy-code-btn:hover {
+  color: var(--vscode-button-hoverForeground);
+  background-color: var(--vscode-button-hoverBackground);
 }
 
 .pre.codeblock code {
   display: block;
+  background: none;
+  cursor: text;
+}
+
+.pre.codeblock code:hover {
+  border: none;
+  cursor: default;
+  padding: 0;
 }
 
 code {
   color: var(--vscode-symbolIcon-stringForeground);
   background: var(--vscode-textCodeBlock-background);
-
   font-family: var(--vscode-editor-font-family);
   display: inline-block;
-  padding: 0 0.3em;
+  padding: 1px 5px;
+  transition: all;
+}
+
+code:hover {
+  border: 1px dashed var(--vscode-button-hoverBackground);
+  cursor: pointer;
+  padding: 0px 4px;
 }
