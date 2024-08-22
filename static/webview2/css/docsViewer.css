@@ -1,139 +1,156 @@
 a {
-    text-decoration: none;
-    color: var(--vscode-charts-green);
+  text-decoration: none;
+  color: var(--vscode-charts-green);
 }
 
 a:hover {
-    text-decoration: underline;
-    color: var(--vscode-charts-green);
+  text-decoration: underline;
+  color: var(--vscode-charts-green);
 }
 
-p, ul {
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
+p,
+ul {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+p {
+  line-height: 1.7em;
+  margin-bottom: 1.5;
 }
 
 body {
-    color: var(--vscode-editorOverviewRuler-bracketMatchForeground);
+  color: var(--vscode-editorOverviewRuler-bracketMatchForeground);
 }
 
 .className {
-    font-size: 1.5em;
-    font-weight: bold;
+  font-size: 1.5em;
+  font-weight: bold;
 }
 
 .help_breadcrumbs {
-    padding-top: 0.5em;
+  padding-top: 0.5em;
 }
 .hierarchy,
 .className {
-    padding-bottom: 1em;
+  padding-bottom: 1em;
 }
 
-
-.hierarchy>div:nth-child(2) {
-    padding-left: 1em;
+.hierarchy > div:nth-child(2) {
+  padding-left: 1em;
 }
 
-.hierarchy>div:nth-child(3) {
-    padding-left: 2em;
+.hierarchy > div:nth-child(3) {
+  padding-left: 2em;
 }
 
-.hierarchy>div:nth-child(4) {
-    padding-left: 3em;
+.hierarchy > div:nth-child(4) {
+  padding-left: 3em;
 }
 
-.hierarchy>div:nth-child(5) {
-    padding-left: 4em;
+.hierarchy > div:nth-child(5) {
+  padding-left: 4em;
 }
 
-.hierarchy>div:nth-child(6) {
-    padding-left: 5em;
+.hierarchy > div:nth-child(6) {
+  padding-left: 5em;
 }
 
 .classSummary {
-    padding-left: 1em;
+  padding-left: 1em;
 }
 
 .classSummaryDetail .subclass {
-    padding-top: 1em;
+  padding-top: 1em;
 }
 
 .section .header {
-    font-size: 1.2em;
-    font-weight: bold;
-    margin: 1em 0;
-    border-bottom: 1px solid;
+  font-size: 1.2em;
+  font-weight: bold;
+  margin: 1em 0;
+  border-bottom: 1px solid;
 }
 
 .section .subHeader {
-    font-weight: bold;
-    margin: 0.5em;
+  font-weight: bold;
+  margin: 0.5em;
 }
-.section .summaryItem>span {
-    font-weight: bold;
+.section .summaryItem > span {
+  font-weight: bold;
 }
 
 .section .summaryItem {
-    padding-left: 1em;
+  padding-left: 1em;
 }
 
 .section .summaryItem .description {
-    padding-left: 1em;
-    padding: 0.5em 0 0.5em 1em;
-    font-weight: normal;
+  padding-left: 1em;
+  padding: 0.5em 0 0.5em 1em;
+  font-weight: normal;
 }
 
-.detailItem .description, .detailItem .parameters {
-    padding: 0.5em 0 0.5em 1em;
+.detailItem .description,
+.detailItem .parameters {
+  padding: 0.5em 0 0.5em 1em;
 }
 
 .detailSignature {
-    padding: 5px;
-    border-radius: 2px;
+  padding: 5px;
+  border-radius: 2px;
 }
 
 .detailSignature .emphasis {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .detailSignature {
-    background: var(--vscode-editor-hoverHighlightBackground);
+  background: var(--vscode-editor-hoverHighlightBackground);
 }
 .parameterTitle {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .parameterDetail {
-    padding-left: 0.5em;
+  padding-left: 0.5em;
 }
 
 .parameterName {
-    font-style: italic;
+  font-style: italic;
 }
 
-code {
-    color: var(--vscode-charts-foreground);
-    font-family: var(--vscode-font-family);
+h1,
+h2,
+h3 {
+  margin-top: 1em;
+  margin-bottom: 1em;
 }
 
-h1, h2, h3 {
-    margin-top: 1em;
-    margin-bottom: 1em;
-}
-
-h4, h5, h6 {
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
+h4,
+h5,
+h6 {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
 }
 
 .pre.codeblock {
-    border: 1px solid;
-    border-radius: 2px;
-    padding: 0.5em;
-    overflow-x: scroll;
+  border-radius: 0.5em;
+  overflow-x: auto;
+
+  color: var(--vscode-symbolIcon-variableForeground);
+  background: var(--vscode-textCodeBlock-background);
+  font-family: var(--vscode-editor-font-family);
+  padding: 1em;
 }
+
 .pre.codeblock code {
-    font-family: var(--vscode-editor-font-family);
-    line-height: 1.1em;
+  display: block;
+}
+
+code {
+  color: var(--vscode-symbolIcon-stringForeground);
+  background: var(--vscode-textCodeBlock-background);
+
+  font-family: var(--vscode-editor-font-family);
+  display: inline-block;
+  padding: 0 0.3em;
 }
