@@ -23,7 +23,7 @@ Thanks ✊
 - **Hooks** Support
   - Provides overview, search, filter, and validation for SFCC hooks.
 - **Documentation** Support
-  - 🤒 Documentation Search temporary is not working due to documentation portal changes.
+  - Built-in documentation search with improved UI/UX
 
 ## Compatibility
 
@@ -64,7 +64,16 @@ is a active cartridge list where you can pin/unpin cartridge for overriding.
 
 #### **# Documentation**
 
-Search in docs without leaving VS Code. Currently not working.
+Search in docs without leaving VS Code.
+
+![alt text](static/documentation.png)
+
+- **Search** and **view** documentation inside VS Code
+- Navigation inside documentation including **back/forward** buttons
+- Quick documentation **link copy**
+- **Open in browser** to review original docs
+- **Split/Combine** documentation with the active files group
+- Improved UI/UX for **tables** and **code blocks**
 
 #### **# Hooks**
 
@@ -118,3 +127,4 @@ Found a 🪲bug or want to improve something? Feel free to open an issue on GitH
 ## Credits
 
 - Badge Service: https://shields.io/
+- Documentation: https://sfcclearning.com/
