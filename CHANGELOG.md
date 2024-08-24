@@ -2,6 +2,25 @@
 
 # Change Log
 
+## 3.6.0 - 2024-08-24
+
+### Features
+
+- Copying of code blocks from documentation page
+- A button to attach/deattach documentation tab to side
+
+### Bugs
+
+- Documentation search works again. This version utilizes "old" documentation portal hosted by https://sfcclearning.com/. Support for the official docs is on the roadmap.
+
+### Improvements
+
+- Documentation UI/UX improvements
+  - Updated look and feel of the documentation
+  - Modern code highlighting
+  - Modern table presentation
+  - Improved search error feedback
+
 ## 3.5.2 - 2024-08-19
 
 ### Improvements

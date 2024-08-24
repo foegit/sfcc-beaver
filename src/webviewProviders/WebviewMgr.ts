@@ -21,6 +21,9 @@ export default class WebviewMgr {
       })
     );
     context.subscriptions.push(
+      vscode.commands.registerCommand('sfccBeaver.docs.toggleColumn', DocsViewerProvider.toggleView)
+    );
+    context.subscriptions.push(
       vscode.commands.registerCommand('sfccBeaver.docsCopyToClipboard', (data) => {
         DocsViewerProvider.currentDocsViewerPanel?.copyCurrentURLToClipboard();
       })

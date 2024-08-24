@@ -34,6 +34,22 @@ export default class FsTool {
     }
   }
 
+  static async write(filePath: string, content: string) {
+    const workspaceFolder = FsTool.getCurrentWorkspaceFolder();
+
+    try {
+      const absoluteFilePath = Uri.joinPath(workspaceFolder.uri, filePath);
+
+      await workspace.fs.writeFile(absoluteFilePath, Buffer.from(content));
+    } catch (err) {
+      if (err instanceof Error) {
+        console.error(err.message, err.stack);
+      }
+
+      return null;
+    }
+  }
+
   static fileExist(filePath: string) {
     const workspaceFolder = FsTool.getCurrentWorkspaceFolder();
 
