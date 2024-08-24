@@ -57,15 +57,94 @@ function goForward() {
   fireServerEvent('sfccBeaver:docsViewer:goForward');
 }
 
-function openLink(href) {
+function handleLinkClick(href) {
   fireServerEvent('sfccBeaver:docsViewer:onLinkClick', {
     href,
   });
 }
 
 function handleAnchorLink(href) {
-  const $element = $(`[name="${href.replace(/^#/, '')}"]`);
-  $element[0]?.scrollIntoView();
+  $('.focused-by-anchor').removeClass('focused-by-anchor');
+
+  const anchorId = href.replace(/^#/, '');
+
+  const $namedLink = $(`[name="${anchorId}"]`);
+  const $firstNamedLink = $($namedLink[0]);
+
+  if ($firstNamedLink.length < 1) {
+    const idEl = document.getElementById(anchorId);
+
+    if (!idEl) {
+      return;
+    }
+
+    idEl.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    });
+
+    return;
+  }
+
+  const $elSummaryItem = $firstNamedLink.closest('.summaryItem');
+
+  if ($elSummaryItem.length > 0) {
+    $elSummaryItem.addClass('focused-by-anchor');
+
+    $elSummaryItem[0]?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    });
+
+    return;
+  }
+
+  const $detailsItem = $firstNamedLink.closest('.detailItem');
+
+  if ($detailsItem) {
+    $detailsItem.addClass('focused-by-anchor');
+    $detailsItem[0]?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    });
+
+    return;
+  }
+
+  $namedLink[0]?.scrollIntoView({
+    behavior: 'smooth',
+    block: 'center',
+  });
+}
+
+function resetSelection() {
+  var getSelectionResult = window.getSelection();
+
+  if (getSelectionResult) {
+    getSelectionResult.empty();
+  }
+}
+
+function findCurrentPageAnchor(href) {
+  if (href.startsWith('#')) {
+    return href;
+  }
+
+  const [url, anchor] = href.split('#');
+
+  if (!anchor) {
+    return '';
+  }
+
+  const currentUrl = $openInBrowserBtn.attr('href');
+
+  if (!currentUrl) {
+    return '';
+  }
+
+  const [currentUrlWithoutAnchor] = currentUrl.split('#');
+
+  return currentUrlWithoutAnchor === url ? anchor : '';
 }
 
 function initListeners() {
@@ -74,24 +153,48 @@ function initListeners() {
   $(document).on('click', 'a', (event) => {
     const $link = $(event.currentTarget);
     const href = $link.attr('href');
+
     event.preventDefault();
     event.stopPropagation();
 
-    if (href?.startsWith('#')) {
-      // anchor
-      console.log('We have an anchor here!!' + href);
-      return handleAnchorLink(href);
+    if (!href) {
+      return;
     }
 
-    if (href) {
-      openLink(href);
+    const anchor = findCurrentPageAnchor(href);
+
+    if (anchor) {
+      console.log('We have an anchor here!!' + href);
+      return handleAnchorLink(anchor);
     }
+
+    handleLinkClick(href);
   });
 
   $(document).on('click', '.copy-code-btn', (event) => {
     fireServerEvent('sfccBeaver:docsViewer:copyToClipboard', {
       text: $(event.currentTarget).closest('.pre.codeblock').find('code').text(),
     });
+  });
+
+  let lastCodeElementClicked = {
+    el: null,
+    time: 0,
+  };
+
+  $(document).on('click', '.ph.codeph', (event) => {
+    if (lastCodeElementClicked.el === event.currentTarget && Date.now() - lastCodeElementClicked.time < 500) {
+      // double click
+      fireServerEvent('sfccBeaver:docsViewer:copyToClipboard', {
+        text: $(event.currentTarget).text(),
+      });
+
+      // remove selection that happens because of the double click
+      resetSelection();
+    }
+
+    lastCodeElementClicked.el = event.currentTarget;
+    lastCodeElementClicked.time = Date.now();
   });
 
   $(document).on('mouseup', (event) => {
@@ -109,9 +212,12 @@ function initListeners() {
         updateDetails(data);
         return;
       }
-      case 'beaver:host:docs:startLoading': {
-        console.log('loading started');
+      case 'sfccBeaver:docsViewer:showProgress': {
         updateStatus(PROGRESS);
+        return;
+      }
+      case 'sfccBeaver:docsViewer:stopProgress': {
+        updateStatus(SUCCESS);
       }
     }
   });
@@ -123,10 +229,17 @@ function updateDetails(data) {
   $details.html(data.html);
   $openInBrowserBtn.attr('href', data.originalURL);
   updateStatus(SUCCESS);
-  window.scroll({
-    top: 0,
-    behavior: 'smooth',
-  });
+
+  const [, anchor] = data.originalURL.split('#');
+
+  if (anchor) {
+    handleAnchorLink(anchor);
+  } else {
+    window.scroll({
+      top: 0,
+      behavior: 'smooth',
+    });
+  }
 }
 
 function init() {

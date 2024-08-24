@@ -24,7 +24,7 @@ export type SearchResult = XOR<SearchSuccessResult, SearchFailedResult>;
 export interface IDocsSearchAdaptor {
   renderer: IDocsRenderer;
 
-  isOwnUrl(url: string): boolean;
+  isDocsUrl(url: string): boolean;
   getClassLink(classPath: string): string;
   clickedHrefToAbsUrl(clickedHref: string, currentUrl: string): string;
   search(query: string): Promise<SearchResult>;

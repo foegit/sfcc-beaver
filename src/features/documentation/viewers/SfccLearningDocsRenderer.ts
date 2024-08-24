@@ -17,6 +17,8 @@ export class SfccLearningDocsRenderer implements IDocsRenderer {
     $body.find('.home-container>.copy').remove();
     // remove nums visit banner
     $body.find('.numVisits').remove();
+    // remove favorites
+    $body.find('.quick-links ul').first().remove();
 
     // TODO: double check
     $body.find('#cookieConsent').remove();
@@ -53,6 +55,13 @@ export class SfccLearningDocsRenderer implements IDocsRenderer {
     });
 
     $body.find('.header:contains("Method Summary")').closest('.section').remove();
+
+    $body.append(`<div class="credit-note">
+        Powered by
+        <a href="https://sfcclearning.com/">
+          https://sfcclearning.com/
+        </a>
+      </div>`);
 
     return $body.html()!;
   }

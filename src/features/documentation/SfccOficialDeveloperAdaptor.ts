@@ -85,7 +85,7 @@ export class SfccOfficialDeveloperAdaptor implements IDocsSearchAdaptor {
     };
   }
 
-  isOwnUrl(url: string): boolean {
+  isDocsUrl(url: string): boolean {
     return url.startsWith(BASE_URL);
   }
 }

@@ -70,31 +70,50 @@ export default class DocsViewerProvider {
 
   onLinkClick(href: string) {
     const currentURL = this.history.getActive();
+    const absUrl = DocsViewerProvider.docsAdaptor.clickedHrefToAbsUrl(href, currentURL.url);
 
-    const newAbsUrl = DocsViewerProvider.docsAdaptor.clickedHrefToAbsUrl(href, currentURL.url);
+    if (!DocsViewerProvider.docsAdaptor.isDocsUrl(absUrl)) {
+      this.openInBrowser(absUrl);
+      return;
+    }
 
-    this.updatePage(newAbsUrl);
+    if (absUrl.endsWith('.json') || absUrl.endsWith('.xml')) {
+      this.openInBrowser(absUrl);
+      return;
+    }
+
+    this.updatePage(absUrl);
+  }
+
+  public static ensurePanelIsCreated(extensionUri: vscode.Uri) {
+    if (!DocsViewerProvider.currentDocsViewerPanel) {
+      DocsViewerProvider.currentDocsViewerPanel = DocsViewerProvider.createDocsViewerPanel(extensionUri);
+    }
+
+    return DocsViewerProvider.currentDocsViewerPanel;
   }
 
   // 'https://salesforcecommercecloud.github.io/b2c-dev-doc/docs/current/scriptapi/html/index.html?target=class_dw_system_Logger.html';
 
   public static createOrShow(extensionUri: vscode.Uri, data: { absoluteLink: string }) {
-    if (!DocsViewerProvider.currentDocsViewerPanel) {
-      DocsViewerProvider.currentDocsViewerPanel = DocsViewerProvider.createDocsViewerPanel(extensionUri);
-    } else {
-      DocsViewerProvider.currentDocsViewerPanel.webviewPanel.reveal(vscode.ViewColumn.Beside, true);
+    const currentPanel = DocsViewerProvider.ensurePanelIsCreated(extensionUri);
+
+    if (!currentPanel.webviewPanel.visible) {
+      currentPanel.webviewPanel.reveal(vscode.ViewColumn.Beside);
     }
 
-    if (data.absoluteLink) {
-      DocsViewerProvider.currentDocsViewerPanel.updatePage(data.absoluteLink);
-    }
+    currentPanel.updatePage(data.absoluteLink);
+  }
+
+  public openInBrowser(url: string) {
+    vscode.env.openExternal(vscode.Uri.parse(url));
   }
 
   public openInBrowserCurrent() {
-    const lastHistory = this.history.getActive();
+    const activeUrl = this.history.getActive();
 
-    if (lastHistory) {
-      vscode.env.openExternal(vscode.Uri.parse(lastHistory.url));
+    if (activeUrl) {
+      this.openInBrowser(activeUrl.url);
     }
   }
 
@@ -145,6 +164,18 @@ export default class DocsViewerProvider {
     return new DocsViewerProvider(panel, extensionUri);
   }
 
+  public setInProgress() {
+    this.webviewPanel.webview.postMessage({
+      type: 'sfccBeaver:docsViewer:showProgress',
+    });
+  }
+
+  public removeInProgress() {
+    this.webviewPanel.webview.postMessage({
+      type: 'sfccBeaver:docsViewer:stopProgress',
+    });
+  }
+
   async updatePage(url: string, options?: { skipHistory: boolean }) {
     console.log(`Start loading documentation page: "${url}"`);
 
@@ -154,9 +185,7 @@ export default class DocsViewerProvider {
       this.history.push({ url });
     }
 
-    this.webviewPanel.webview.postMessage({
-      type: 'beaver:host:docs:startLoading',
-    });
+    this.setInProgress();
 
     try {
       const content = await axios.get(url);
@@ -172,6 +201,8 @@ export default class DocsViewerProvider {
       if (err instanceof Error) {
         console.log(err.message);
       }
+
+      this.removeInProgress();
     }
   }
 

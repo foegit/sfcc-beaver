@@ -5,7 +5,7 @@ import { IDocsRenderer } from './viewers/IDocsRenderer';
 import { SfccLearningDocsRenderer } from './viewers/SfccLearningDocsRenderer';
 import normalizeUrl from 'normalize-url';
 
-const BASE_URL = 'https://sfcclearning.com/';
+const BASE_URL = 'https://sfcclearning.com/infocenter';
 
 export class SfccLearningSearchAdaptor implements IDocsSearchAdaptor {
   renderer: IDocsRenderer;
@@ -15,7 +15,7 @@ export class SfccLearningSearchAdaptor implements IDocsSearchAdaptor {
   }
 
   getClassLink(classPath: string): string {
-    return `${BASE_URL}/infocenter/DWAPI/scriptapi/html/api/class_${classPath.split('/').join('_')}.php`;
+    return `${BASE_URL}/DWAPI/scriptapi/html/api/class_${classPath.split('/').join('_')}.php`;
   }
 
   clickedHrefToAbsUrl(clickedHref: string, currentUrl: string): string {
@@ -61,7 +61,7 @@ export class SfccLearningSearchAdaptor implements IDocsSearchAdaptor {
     }
 
     try {
-      const response = await axios.get(`${BASE_URL}/infocenter/search.php?term=${query}`);
+      const response = await axios.get(`${BASE_URL}/search.php?term=${query}`);
       const items = this.toSearchItems(response.data);
       return {
         msg: `Found ${items.length} results`,
@@ -75,7 +75,7 @@ export class SfccLearningSearchAdaptor implements IDocsSearchAdaptor {
     }
   }
 
-  isOwnUrl(url: string): boolean {
+  isDocsUrl(url: string): boolean {
     return url.startsWith(BASE_URL);
   }
 }

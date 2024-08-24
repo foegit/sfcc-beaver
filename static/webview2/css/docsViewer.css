@@ -1,3 +1,10 @@
+body {
+  color: var(--vscode-foreground);
+  font-family: var(--vscode-font-family);
+  font-size: var(--vscode-font-size);
+  line-height: 1.5em;
+}
+
 a {
   text-decoration: none;
   color: var(--vscode-charts-green);
@@ -9,20 +16,49 @@ a:hover {
 }
 
 p,
-ul {
+ul,
+table {
   margin-top: 0.5em;
-  margin-bottom: 0.5em;
+  margin-bottom: 1.5em;
 }
 
-p {
-  line-height: 1.7em;
-  margin-bottom: 1.5;
+table {
+  background-color: var(--vscode-notebook-cellEditorBackground);
+  border: transparent;
+  border-radius: 0.5em;
+  overflow: hidden;
 }
 
-body {
-  color: var(--vscode-editorOverviewRuler-bracketMatchForeground);
+table > caption {
+  background-color: var(--vscode-notebook-cellEditorBackground);
+  padding: 0.5em;
+  text-align: left;
+  color: var(--vscode-tab-inactiveForeground);
 }
 
+table th,
+table td {
+  padding: 0.5em;
+  text-align: left;
+  vertical-align: top;
+}
+
+table tr:not(:last-child) {
+  border-bottom: 1px solid var(--vscode-editorGroup-border);
+}
+
+.thead {
+  background-color: var(--vscode-charts-blue);
+  color: var(--vscode-charts-foreground);
+}
+
+img.image {
+  border-radius: 0.5em;
+}
+
+.itemgroup > img {
+  margin: 1em 0;
+}
 .className {
   font-size: 1.5em;
   font-weight: bold;
@@ -79,9 +115,38 @@ body {
   font-weight: bold;
 }
 
-.section .summaryItem {
-  padding-left: 1em;
+.section .summaryItem.focused-by-anchor,
+.detailItem.focused-by-anchor {
+  border: 1px solid var(--vscode-terminal-ansiGreen);
+  border-radius: 0.5em;
+  margin: 0.5em 0;
 }
+
+.section .summaryItem {
+  border: 1px solid var(--vscode-editorGroup-border);
+  margin-bottom: 0.5em;
+  border-radius: 0.5em;
+  padding: 0.5em;
+  transition: all 500ms;
+}
+
+/* deprecated */
+.dep::before {
+  content: 'deprecated';
+  margin-right: 5px;
+  font-weight: normal;
+  display: inline-block;
+  /* background-color: var(--vscode-statusBarItem-warningBackground); */
+  color: var(--vscode-editorWarning-foreground);
+  border-radius: 0.5em;
+  padding: 0.1em 0.3em;
+  font-size: 0.7em;
+  border: 1px solid var(--vscode-editorWarning-foreground);
+}
+
+/* .focused-by-anchor {
+  background-color: red;
+} */
 
 .section .summaryItem .description {
   padding-left: 1em;
@@ -91,7 +156,7 @@ body {
 
 .detailItem .description,
 .detailItem .parameters {
-  padding: 0.5em 0 0.5em 1em;
+  padding: 0.5em;
 }
 
 .detailSignature {
@@ -134,19 +199,33 @@ h6 {
 
 .pre.codeblock {
   border-radius: 0.5em;
-  overflow-x: auto;
 
   color: var(--vscode-symbolIcon-variableForeground);
   background: var(--vscode-textCodeBlock-background);
   font-family: var(--vscode-editor-font-family);
-  padding: 1em;
-  border: 1px var(--vscode-textCodeBlock-background) solid;
+  padding-bottom: 3px; /* fix code scroll cuts border */
+  border: 1px var(--vscode-editorGroup-border) solid;
   transition: 200ms;
   position: relative;
 }
 
 .pre.codeblock:hover {
   border: 1px var(--vscode-focusBorder) solid;
+}
+
+.pre.codeblock code {
+  display: block;
+  background: none;
+  cursor: text;
+  overflow-x: auto;
+  padding: 1em;
+}
+
+/* prevent default <code> behavior  */
+.pre.codeblock code:hover {
+  border: none;
+  cursor: default;
+  padding: 1em;
 }
 
 .copy-code-btn {
@@ -162,20 +241,8 @@ h6 {
 }
 
 .copy-code-btn:hover {
-  color: var(--vscode-button-hoverForeground);
-  background-color: var(--vscode-button-hoverBackground);
-}
-
-.pre.codeblock code {
-  display: block;
-  background: none;
-  cursor: text;
-}
-
-.pre.codeblock code:hover {
-  border: none;
-  cursor: default;
-  padding: 0;
+  color: var(--vscode-extensionButton-foreground);
+  background-color: var(--vscode-extensionButton-background);
 }
 
 code {
@@ -191,4 +258,25 @@ code:hover {
   border: 1px dashed var(--vscode-button-hoverBackground);
   cursor: pointer;
   padding: 0px 4px;
+}
+
+.credit-note {
+  color: var(--vscode-badge-foreground);
+  margin-top: 1em;
+  background: var(--vscode-badge-background);
+  border-radius: 0.5em;
+  padding: 1em;
+}
+
+.credit-note a {
+  color: var(--vscode-activityBarBadge-foreground);
+  text-decoration: underline;
+}
+
+.linklist > div {
+  margin: 0.5em 0 0.5em 1em;
+}
+
+.ph.uicontrol {
+  font-weight: bold;
 }
