@@ -48,8 +48,8 @@ table tr:not(:last-child) {
 }
 
 .thead {
-  background-color: var(--vscode-charts-blue);
-  color: var(--vscode-charts-foreground);
+  background-color: var(--vscode-activityBarBadge-background);
+  color: var(--vscode-activityBarBadge-foreground);
 }
 
 img.image {
@@ -261,6 +261,7 @@ code:hover {
 }
 
 .credit-note {
+  font-weight: bold;
   color: var(--vscode-badge-foreground);
   margin-top: 1em;
   background: var(--vscode-badge-background);

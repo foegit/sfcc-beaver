@@ -4,7 +4,10 @@ import { IDocsRenderer } from './IDocsRenderer';
 import * as cheerio from 'cheerio';
 
 export class SfccOfficialDocsRenderer implements IDocsRenderer {
-  async render(htmlResponse: string): Promise<string> {
+  async render(htmlResponse: string): Promise<{
+    html: string;
+    title: string;
+  }> {
     const $ = cheerio.load(htmlResponse);
     const $body = $('body');
 
@@ -40,6 +43,6 @@ export class SfccOfficialDocsRenderer implements IDocsRenderer {
 
     $body.find('.header:contains("Method Summary")').closest('.section').remove();
 
-    return $body.html()!;
+    return { html: $body.html()!, title: 'Docs' };
   }
 }

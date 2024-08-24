@@ -28,8 +28,7 @@ export default class DocsViewerProvider {
     this.webviewPanel = panel;
     this.extensionUrl = extensionUri;
 
-    this.webviewPanel.title = '🦫 SFCC Docs';
-
+    this.webviewPanel.title = 'SFCC Documentation';
     this.webviewPanel.webview.html = this._getHtmlForWebview(this.webviewPanel.webview);
 
     // Set the webview's initial html content
@@ -105,6 +104,19 @@ export default class DocsViewerProvider {
     currentPanel.updatePage(data.absoluteLink);
   }
 
+  public static toggleView() {
+    const currentPanel = DocsViewerProvider.currentDocsViewerPanel;
+
+    if (!currentPanel) {
+      return;
+    }
+
+    const column =
+      currentPanel.webviewPanel.viewColumn === vscode.ViewColumn.One ? vscode.ViewColumn.Beside : vscode.ViewColumn.One;
+
+    currentPanel.webviewPanel.reveal(column);
+  }
+
   public openInBrowser(url: string) {
     vscode.env.openExternal(vscode.Uri.parse(url));
   }
@@ -161,6 +173,8 @@ export default class DocsViewerProvider {
       DocsViewerProvider.getWebviewOptions(extensionUri)
     );
 
+    panel.iconPath = vscode.Uri.joinPath(extensionUri, 'static/icons/docs.svg');
+
     return new DocsViewerProvider(panel, extensionUri);
   }
 
@@ -190,10 +204,14 @@ export default class DocsViewerProvider {
     try {
       const content = await axios.get(url);
 
+      const renderResult = await DocsViewerProvider.docsAdaptor.renderer.render(content.data);
+
+      this.webviewPanel.title = `Docs | ${renderResult.title}`;
+
       return this.webviewPanel.webview.postMessage({
         type: 'beaver:host:docs:updateDetails',
         originalURL: url,
-        html: await DocsViewerProvider.docsAdaptor.renderer.render(content.data),
+        html: renderResult.html,
       });
     } catch (err) {
       // eslint-disable-next-line quotes

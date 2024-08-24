@@ -2,10 +2,10 @@ import { IDocsRenderer } from './IDocsRenderer';
 import * as cheerio from 'cheerio';
 
 export class SfccLearningDocsRenderer implements IDocsRenderer {
-  async render(htmlResponse: string): Promise<string> {
+  async render(htmlResponse: string) {
     const $ = cheerio.load(htmlResponse);
     const $body = $('body');
-
+    const title = $('title').text();
     // no scripts
     $body.find('script').remove();
     // remove footer
@@ -17,6 +17,8 @@ export class SfccLearningDocsRenderer implements IDocsRenderer {
     $body.find('.home-container>.copy').remove();
     // remove nums visit banner
     $body.find('.numVisits').remove();
+    // ocapi deprecation message, is outdated completely
+    $body.find('#ocapiDeprecationBanner').remove();
     // remove favorites
     $body.find('.quick-links ul').first().remove();
 
@@ -63,6 +65,11 @@ export class SfccLearningDocsRenderer implements IDocsRenderer {
         </a>
       </div>`);
 
-    return $body.html()!;
+    if (title) {
+      $body.append(`<div class="bv-page-title" data-bv-title="${title.split('|')[0].trim()}">
+        </div>`);
+    }
+
+    return { html: $body.html()!, title: title ? title.split('|')[0].trim() : '' };
   }
 }

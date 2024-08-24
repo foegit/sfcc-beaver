@@ -228,6 +228,7 @@ function updateDetails(data) {
 
   $details.html(data.html);
   $openInBrowserBtn.attr('href', data.originalURL);
+
   updateStatus(SUCCESS);
 
   const [, anchor] = data.originalURL.split('#');

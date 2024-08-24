@@ -222,6 +222,11 @@
         "icon": "$(link-external)"
       },
       {
+        "command": "sfccBeaver.docs.toggleColumn",
+        "title": "Split/Combine with Active Tab",
+        "icon": "$(terminal-tmux)"
+      },
+      {
         "command": "sfccBeaver.docsCopyToClipboard",
         "title": "Copy link to clipboard",
         "icon": "$(copy)"
@@ -351,6 +356,11 @@
       "editor/title": [
         {
           "command": "sfccBeaver.docsOpenInBrowser",
+          "group": "navigation@2",
+          "when": "activeWebviewPanelId == docsViewer"
+        },
+        {
+          "command": "sfccBeaver.docs.toggleColumn",
           "group": "navigation@2",
           "when": "activeWebviewPanelId == docsViewer"
         },
