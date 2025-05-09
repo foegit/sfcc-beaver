@@ -36,6 +36,14 @@
       {
         "fileMatch": "hooks.json",
         "url": "./static/schemas/hooks.schema.json"
+      },
+      {
+        "fileMatch": "**/experience/pages/**/*.json",
+        "url": "https://salesforcecommercecloud.github.io/b2c-dev-doc/docs/current/content/pagetype.json"
+      },
+      {
+        "fileMatch": "**/experience/components/**/*.json",
+        "url": "https://salesforcecommercecloud.github.io/b2c-dev-doc/docs/current/content/componenttype.json"
       }
     ],
     "keybindings": [
