@@ -1,7 +1,7 @@
 import { App } from '../../App';
 import AbstractModule from '../../classes/app/AbstractModule';
 import FsTool from '../../classes/tools/FsTool';
-import * as fg from 'fast-glob';
+import { glob } from 'fast-glob';
 import * as path from 'path';
 import EditorTool from '../../classes/tools/EditorTool';
 import { showError } from '../../helpers/notification';
@@ -33,13 +33,16 @@ export default class HookModule extends AbstractModule {
   async parseHooks() {
     const workspaceFolder = FsTool.getCurrentWorkspaceFolder();
 
-    const packageJsonFiles = await fg('**/package.json', {
+    const packageJsonFiles = await glob('**/package.json', {
       cwd: workspaceFolder.uri.fsPath,
       ignore: ['**/node_modules/**', '**/test/mocks/**', './package.json'],
     });
 
     const hookMap = new Map<string, HookPoint>();
     const pinnedHooks = getSetting('hooks.pinnedHooks');
+    const disabledKey = 'sfccBeaver.hooks.ignoredErrors';
+    const ignoredErrors = this.workspaceStorage.get(disabledKey);
+    const errorsToShow: { hooksFilePath: string; packageJsonPath: string }[] = [];
 
     packageJsonFiles.forEach((filePath) => {
       const content = FsTool.parseCurrentProjectJsonFile(filePath);
@@ -55,29 +58,10 @@ export default class HookModule extends AbstractModule {
       const parsedHookJson: { hooks: SFCCHookDefinition[] | null } = FsTool.parseCurrentProjectJsonFile(hooksFilePath);
 
       if (!parsedHookJson || !parsedHookJson.hooks) {
-        const disabledKey = 'sfccBeaver.hooks.ignoredErrors';
-        const ignoredErrors = this.workspaceStorage.get(disabledKey);
-
-        if (ignoredErrors.includes(hooksFilePath)) {
-          return;
+        if (!ignoredErrors.includes(hooksFilePath)) {
+          errorsToShow.push({ hooksFilePath, packageJsonPath: filePath });
         }
 
-        showError(`Cannot parse hooks configuration ${hooksFilePath}`, [
-          {
-            title: 'Go to file',
-            cb: () => {
-              EditorTool.focusOnWorkspaceFile(filePath, {
-                focusOnText: new RegExp('hooks'),
-              });
-            },
-          },
-          {
-            title: 'Ignore',
-            cb: () => {
-              this.workspaceStorage.set(disabledKey, [...ignoredErrors, hooksFilePath]);
-            },
-          },
-        ]);
         return;
       }
 
@@ -102,6 +86,36 @@ export default class HookModule extends AbstractModule {
         });
       });
     });
+
+    if (errorsToShow.length) {
+      const notification =
+        errorsToShow.length === 1
+          ? `Cannot parse hooks configuration ${errorsToShow[0].hooksFilePath}`
+          : `Cannot parse hooks configuration for the following files:\n${errorsToShow
+              .map((error) => `- ${error.hooksFilePath}`)
+              .join('\n')}`;
+
+      showError(notification, [
+        {
+          title: 'Go to file',
+          cb: () => {
+            EditorTool.focusOnWorkspaceFile(errorsToShow[0].packageJsonPath, {
+              focusOnText: new RegExp('hooks'),
+            });
+          },
+        },
+        {
+          title: 'Ignore',
+          cb: () => {
+            const allIgnored = Array.from(
+              new Set([...ignoredErrors, ...errorsToShow.map((error) => error.hooksFilePath)]),
+            );
+
+            this.workspaceStorage.set(disabledKey, allIgnored);
+          },
+        },
+      ]);
+    }
 
     this.hookPoints = Array.from(hookMap, ([hookName, hookPoint]) => hookPoint);
   }

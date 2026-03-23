@@ -406,20 +406,23 @@
           "name": "Cartridges",
           "id": "cartridgesObserver",
           "contextualTitle": "Cartridge Overview",
-          "when": "config.sfccBeaver.general.isSFCCProject == true || sfccBeaver.extActivated"
+          "when": "config.sfccBeaver.general.isSFCCProject == true || sfccBeaver.extActivated",
+          "icon": "static/simpleLogo.svg"
         },
         {
           "name": "Documentation",
           "id": "docsNavigator",
           "type": "webview",
           "contextualTitle": "Documentation Search",
-          "when": "config.sfccBeaver.general.isSFCCProject == true || sfccBeaver.extActivated"
+          "when": "config.sfccBeaver.general.isSFCCProject == true || sfccBeaver.extActivated",
+          "icon": "static/simpleLogo.svg"
         },
         {
           "name": "Hooks",
           "id": "hooksObserver",
           "contextualTitle": "Hooks Overview",
-          "when": "config.sfccBeaver.general.isSFCCProject == true || sfccBeaver.extActivated"
+          "when": "config.sfccBeaver.general.isSFCCProject == true || sfccBeaver.extActivated",
+          "icon": "static/simpleLogo.svg"
         }
       ]
     }
@@ -467,7 +470,7 @@
     "axios": "^0.27.2",
     "cash-dom": "^8.1.1",
     "cheerio": "^1.0.0-rc.12",
-    "fast-glob": "^3.2.11",
+    "fast-glob": "^3.3.3",
     "normalize-url": "^7.0.3"
   }
 }

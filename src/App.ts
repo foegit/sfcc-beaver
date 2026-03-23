@@ -1,7 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-import * as fg from 'fast-glob';
+import { glob } from 'fast-glob';
 import path = require('path');
 
 import BeaverError, { ErrCodes } from './classes/errors/BeaverError';
@@ -86,7 +86,7 @@ export class App {
 
     const [workspaceFolder] = vscode.workspace.workspaceFolders;
 
-    const projectFiles = await fg('**/.project', {
+    const projectFiles = await glob('**/.project', {
       cwd: workspaceFolder.uri.fsPath,
       ignore: ['**/node_modules/**', '**/cartridge/**', '**/test/mocks/**'],
     });
