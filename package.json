@@ -4,7 +4,10 @@
   "description": "An extension for SFCC developers to automate routine tasks",
   "version": "3.6.0",
   "icon": "static/simpleLogo.png",
-  "repository": "https://github.com/foegit/sfcc-beaver",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/foegit/sfcc-beaver"
+  },
   "publisher": "SerhiiHlavatskyi",
   "engines": {
     "vscode": "^1.66.0"
