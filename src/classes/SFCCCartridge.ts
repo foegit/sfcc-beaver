@@ -1,7 +1,11 @@
 import { getSetting } from '../helpers/settings';
 
 class TypeConfig {
-  constructor(public priority: number, public emoji: string, public icon: string = 'cloud') {}
+  constructor(
+    public priority: number,
+    public emoji: string,
+    public icon: string = 'cloud',
+  ) {}
 }
 export default class SFCCCartridge {
   private path: string;
@@ -82,29 +86,21 @@ export default class SFCCCartridge {
         return priorityDiff;
       }
 
-      if (c2.getName() > c1.getName()) {
-        return -1;
-      } else {
-        return 1;
-      }
+      return c2.getName() > c1.getName() ? -1 : 1;
     });
 
     return sfccCartridges;
   }
 
-  public isPinned(): boolean {
+  public isPinned() {
     return this.type === 'pinned';
   }
 
-  public getIcon(): string {
-    return this.typeConfig.icon;
+  public isSearchExcluded() {
+    return getSetting('cartridges.searchExcludedCartridges').includes(this.getName());
   }
 
-  public getXIcon(): string {
-    if (this.type === 'pinned') {
-      return '$(pinned)';
-    }
-
-    return '$(cloud)';
+  public getIcon() {
+    return this.typeConfig.icon;
   }
 }
