@@ -101,6 +101,24 @@
           "type": "boolean",
           "default": "false",
           "description": "Internal setting. Don't modify it. If you need to disable extension for the current workspace do so from the extension page (View > Extensions > SFCC Beaver)"
+        },
+        "sfccBeaver.docs.provider": {
+          "type": "string",
+          "enum": [
+            "sfcclearning",
+            "b2cdevdoc"
+          ],
+          "enumDescriptions": [
+            "Legacy SFCC documentation hosted at sfcclearning.com",
+            "Official B2C Developer Documentation at salesforcecommercecloud.github.io"
+          ],
+          "default": "sfcclearning",
+          "description": "Documentation search provider"
+        },
+        "sfccBeaver.cartridges.showSearchExcludeWarning": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show a status bar warning when cartridges are excluded from VS Code global search."
         }
       }
     },

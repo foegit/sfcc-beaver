@@ -4,6 +4,7 @@ export type SearchItem = {
   title: string;
   descriptions?: string;
   url?: string;
+  group?: 'api' | 'package';
 };
 
 type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };

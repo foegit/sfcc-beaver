@@ -4,7 +4,7 @@ import WebviewTool from '../classes/tools/WebviewTool';
 import SimpleHistory from './helpers/SimpleHistory';
 import { copyToClipboard } from '../helpers/clipboard';
 
-import { SfccLearningSearchAdaptor } from '../features/documentation/SfccLearningSearchAdaptor';
+import { getDocsAdaptor } from '../features/documentation/docsAdaptorFactory';
 
 /**
  * Manages cat coding webview panels
@@ -14,7 +14,10 @@ export default class DocsViewerProvider {
    * Track the currently panel. Only allow a single panel to exist at a time.
    */
   public static currentDocsViewerPanel: DocsViewerProvider | undefined;
-  public static docsAdaptor = new SfccLearningSearchAdaptor();
+
+  public static get docsAdaptor() {
+    return getDocsAdaptor();
+  }
 
   public static readonly viewType = 'docsViewer';
 

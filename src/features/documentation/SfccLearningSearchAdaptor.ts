@@ -51,21 +51,44 @@ export class SfccLearningSearchAdaptor implements IDocsSearchAdaptor {
     return searchItems;
   }
 
+  private tryClassLink(query: string): SearchItem | null {
+    // Match dw/namespace/ClassName (e.g. dw/web/Resource, dw/system/Logger)
+    if (/^dw(\/[a-zA-Z0-9]+){2,}$/.test(query.trim())) {
+      const classPath = query.trim();
+      const className = classPath.split('/').pop()!;
+
+      return {
+        title: className,
+        descriptions: classPath,
+        url: this.getClassLink(classPath),
+      };
+    }
+
+    return null;
+  }
+
   // https://sfcclearning.com/infocenter/search.php?term=test
   async search(query: string): Promise<SearchResult> {
     if (query.trim().length < 3) {
       return {
-        msg: 'Enter at least 3 cars',
+        msg: 'Enter at least 3 chars',
         items: [],
       };
     }
 
+    const directClassItem = this.tryClassLink(query);
+
     try {
       const response = await axios.get(`${BASE_URL}/search.php?term=${query}`);
       const items = this.toSearchItems(response.data);
+
+      const allItems = directClassItem
+        ? [directClassItem, ...items.filter((i) => i.url !== directClassItem.url)]
+        : items;
+
       return {
-        msg: `Found ${items.length} results`,
-        items,
+        msg: `Found ${allItems.length} results`,
+        items: allItems,
       };
     } catch (err) {
       return {

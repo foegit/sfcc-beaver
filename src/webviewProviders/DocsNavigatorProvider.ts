@@ -1,23 +1,22 @@
 import * as vscode from 'vscode';
-import * as cheerio from 'cheerio';
-import axios, { AxiosError } from 'axios';
+import { AxiosError } from 'axios';
 import WebviewTool from '../classes/tools/WebviewTool';
 import DocsSearchProvider from '../features/documentation/DocsSearch';
-import { SfccLearningSearchAdaptor } from '../features/documentation/SfccLearningSearchAdaptor';
 import { SearchResult } from '../features/documentation/IDocsSearchAdaptor';
+import { getDocsAdaptor, getDocsProviderLabel } from '../features/documentation/docsAdaptorFactory';
+import { getSetting, updateSetting } from '../helpers/settings';
 import { SfccOfficialDeveloperAdaptor } from '../features/documentation/SfccOficialDeveloperAdaptor';
 
 export default class DocsNavigatorProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = 'docsNavigator';
-  public static readonly baseUrl = 'https://documentation.b2c.commercecloud.salesforce.com/DOC2/advanced';
 
   private webview?: vscode.WebviewView;
 
   constructor(private readonly extensionUri: vscode.Uri) {}
 
-  public resolveWebviewView(
+  public async resolveWebviewView(
     webviewView: vscode.WebviewView,
-    context: vscode.WebviewViewResolveContext,
+    _context: vscode.WebviewViewResolveContext,
     _token: vscode.CancellationToken
   ) {
     this.webview = webviewView;
@@ -27,7 +26,7 @@ export default class DocsNavigatorProvider implements vscode.WebviewViewProvider
       localResourceRoots: [this.extensionUri],
     };
 
-    webviewView.webview.html = this.renderInitialHTML(webviewView.webview);
+    await this.refreshPanel(webviewView);
 
     webviewView.webview.onDidReceiveMessage(async (data) => {
       switch (data.type) {
@@ -36,13 +35,32 @@ export default class DocsNavigatorProvider implements vscode.WebviewViewProvider
           break;
         }
         case 'beaver:webview:docs:showPage': {
-          // const relativeLink = data.linkHref.replace('../topic/', '/').replace(/\?resultof=.*/g, '');
-
           vscode.commands.executeCommand('sfccBeaver.openDocsDetails', { absoluteLink: data.linkHref });
+          break;
+        }
+        case 'beaver:webview:docs:switchProvider': {
+          await updateSetting('docs.provider', data.provider);
+          await this.refreshPanel(webviewView);
           break;
         }
       }
     });
+  }
+
+  private async refreshPanel(webviewView: vscode.WebviewView) {
+    const provider = getSetting('docs.provider');
+    const needsIndexing = provider === 'b2cdevdoc' && !(await SfccOfficialDeveloperAdaptor.getCacheMtime());
+
+    webviewView.webview.html = this.renderInitialHTML(webviewView.webview, needsIndexing);
+
+    if (needsIndexing) {
+      new SfccOfficialDeveloperAdaptor()
+        .forceReindex()
+        .then(() => {
+          webviewView.webview.html = this.renderInitialHTML(webviewView.webview, false);
+        })
+        .catch(console.error);
+    }
   }
 
   private async onNewSearch(query: string) {
@@ -62,17 +80,6 @@ export default class DocsNavigatorProvider implements vscode.WebviewViewProvider
     });
   }
 
-  private generateCountMessage(resultsCount: number) {
-    if (resultsCount === 0) {
-      return 'Nothing found. Check for typo or try rephrase';
-    }
-    if (resultsCount === 1) {
-      return 'One topic is found';
-    }
-
-    return `${resultsCount} topics found`;
-  }
-
   private getErrorMessage(axiosError: AxiosError) {
     if (axiosError.code === AxiosError.ERR_BAD_REQUEST) {
       return 'Something went wrong. Try again';
@@ -89,13 +96,9 @@ export default class DocsNavigatorProvider implements vscode.WebviewViewProvider
     return 'Connection issues';
   }
 
-  /**
-   * Performs search by query
-   */
   private async searchInDocs(query: string): Promise<SearchResult> {
     try {
-      // const docsSearch = new DocsSearchProvider(new SfccOfficialDeveloperAdaptor());
-      const docsSearch = new DocsSearchProvider(new SfccLearningSearchAdaptor());
+      const docsSearch = new DocsSearchProvider(getDocsAdaptor());
 
       return await docsSearch.search(query);
     } catch (error) {
@@ -113,11 +116,12 @@ export default class DocsNavigatorProvider implements vscode.WebviewViewProvider
     }
   }
 
-  /**
-   * Renders initial page
-   */
-  private renderInitialHTML(webview: vscode.Webview) {
+  private renderInitialHTML(webview: vscode.Webview, needsIndexing: boolean) {
     const nonce = WebviewTool.getNonce();
+    const provider = getSetting('docs.provider');
+
+    const sfccActive = provider === 'sfcclearning' ? 'active' : '';
+    const b2cActive = provider === 'b2cdevdoc' ? 'active' : '';
 
     return `
             <!DOCTYPE html>
@@ -126,9 +130,7 @@ export default class DocsNavigatorProvider implements vscode.WebviewViewProvider
                     <meta charset="UTF-8">
                     <meta
                         http-equiv="Content-Security-Policy"
-                        content="default-src 'none'; style-src ${
-                          webview.cspSource
-                        }; img-src *; script-src 'nonce-${nonce}';"
+                        content="default-src 'none'; style-src ${webview.cspSource}; img-src *; script-src 'nonce-${nonce}';"
                     />
                     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                     <link href="${this.getResourceUri('css/reset.css')}" rel="stylesheet" />
@@ -137,14 +139,21 @@ export default class DocsNavigatorProvider implements vscode.WebviewViewProvider
 
                     <title>SFCC Docs</title>
                 </head>
-                <body>
-                    <form class="bv-search-form">
-                    <input type="text" class="bv-search-input" placeholder="Search"/>
-                        <div class="bv-search-status"><div class="bv-search-status-loader"></div></div>
-                        <div class="bv-search-feedback">Type something to search</div>
-                    </form>
-                    <div class="bv-result"></div>
-
+                <body${needsIndexing ? ' data-indexing="true"' : ''}>
+                    <div class="bv-docs-root">
+                        <div class="bv-docs-header">
+                            <div class="bv-provider-toggle">
+                                <button class="bv-provider-btn ${sfccActive}" data-provider="sfcclearning">SFCC Learning</button>
+                                <button class="bv-provider-btn ${b2cActive}" data-provider="b2cdevdoc">B2C Dev Docs</button>
+                            </div>
+                            <form class="bv-search-form">
+                                <input type="text" class="bv-search-input" placeholder="Search ${getDocsProviderLabel(provider)}"/>
+                                <div class="bv-search-status"><div class="bv-search-status-loader"></div></div>
+                                <div class="bv-search-feedback">Type something to search</div>
+                            </form>
+                        </div>
+                        <div class="bv-result"></div>
+                    </div>
 
                     <script nonce="${nonce}" src="${this.getResourceUri('js/docsNavigator.js')}"></script>
                 </body>
@@ -152,9 +161,6 @@ export default class DocsNavigatorProvider implements vscode.WebviewViewProvider
         `;
   }
 
-  /**
-   * Create URL to webview static resource
-   */
   private getResourceUri(resourceRelativePath: string) {
     return this.webview?.webview.asWebviewUri(
       vscode.Uri.joinPath(this.extensionUri, 'static/webview2', resourceRelativePath)

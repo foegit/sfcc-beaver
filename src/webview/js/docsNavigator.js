@@ -12,6 +12,7 @@ const $searchInput = $('.bv-search-input');
 
 let sameQueryEnterClicks = 0;
 
+/** @param {boolean} isSameQuery */
 function onEnterClick(isSameQuery) {
   if (isSameQuery) {
     sameQueryEnterClicks += 1;
@@ -24,16 +25,18 @@ function onEnterClick(isSameQuery) {
   }
 }
 
+/** @param {string} linkHref */
 function showPage(linkHref) {
   vscode.postMessage({ type: 'beaver:webview:docs:showPage', linkHref: linkHref });
 }
 
+/** @param {string} query */
 function getSearchResult(query) {
   vscode.postMessage({ type: 'beaver:webview:docs:search', query });
 }
 
 function triggerSearch() {
-  const val = $searchInput.val();
+  const val = /** @type {string} */ ($searchInput.val());
   const { status, query } = getState();
 
   if (query === val) {
@@ -55,6 +58,7 @@ function triggerSearch() {
   }
 }
 
+/** @param {string} status */
 function updateStatus(status) {
   setState({ status });
   $searchStatusBar.removeClass('success');
@@ -63,24 +67,34 @@ function updateStatus(status) {
   $searchStatusBar.addClass(status);
 }
 
+/** @param {{ items: Array<{ url: string, title: string, subtitle?: string, description?: string, group?: 'api' | 'package' }> }} searchResult */
 const updateResults = (searchResult) => {
-  $resultElem.html(
-    searchResult.items
-      .map(
-        (i) =>
-          `<div class="bv-search-result-item">
-            <div class="bv-link-wrapper"><a href="${i.url}" class="link">${i.title}</a></div>
+  const apiItems = searchResult.items.filter((i) => i.group === 'api' || i.group === 'package');
+  const others = searchResult.items.filter((i) => !i.group);
 
-            ${i.subtitle ? `<small>${i.subtitle}</small>` : ''}
+  /** @param {{ url: string, title: string }} i */
+  const renderItem = (i) =>
+    `<div class="bv-search-result-item">
+      <a href="${i.url}" class="link">${i.title}</a>
+    </div>`;
 
-            <div>${i.description || ''}</div>
-          </div>
-                    `
-      )
-      .join('\n')
-  );
+  const parts = [];
+  if (apiItems.length) {
+    parts.push('<div class="bv-result-group-label">API</div>');
+    parts.push(...apiItems.map(renderItem));
+  }
+  if (others.length) {
+    parts.push('<div class="bv-result-group-label">Other</div>');
+    parts.push(...others.map(renderItem));
+  }
+
+  $resultElem.html(parts.join('\n'));
 };
 
+/**
+ * @param {string} text
+ * @param {boolean} [isError]
+ */
 const updateSearchFeedback = (text, isError) => {
   if (isError) {
     $searchFeedbackElem.addClass('error');
@@ -91,8 +105,23 @@ const updateSearchFeedback = (text, isError) => {
   $searchFeedbackElem.text(text);
 };
 
+/** @param {string} provider */
+function switchProvider(provider) {
+  vscode.postMessage({ type: 'beaver:webview:docs:switchProvider', provider });
+}
+
 function initListeners() {
   $searchInput.on('input', debounce(triggerSearch, 500));
+
+  $(document).on('click', '.bv-provider-btn', (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    const btn = $(event.currentTarget);
+    if (!btn.hasClass('active')) {
+      setState({ lastHostData: '' });
+      switchProvider(btn.data('provider'));
+    }
+  });
 
   $(document).on('click', 'a', (event) => {
     const clickedElement = $(event.currentTarget);
@@ -100,7 +129,8 @@ function initListeners() {
     event.preventDefault();
     event.stopPropagation();
 
-    showPage(clickedElement.attr('href'));
+    const href = clickedElement.attr('href');
+    if (href) { showPage(href); }
   });
 
   $searchForm.on('submit', (event) => {
@@ -119,11 +149,12 @@ function initListeners() {
   });
 }
 
+/** @param {{ error?: boolean, errorMsg?: string, data?: { msg: string, items: Array<{ url: string, title: string, group?: 'api' | 'package' }> } }} data */
 function handleHostResults(data) {
   if (data.error) {
-    updateSearchFeedback(data.errorMsg, true);
+    updateSearchFeedback(data.errorMsg ?? 'Unknown error', true);
     updateStatus('fail');
-  } else {
+  } else if (data.data) {
     console.log(data);
     updateResults(data.data);
     updateStatus('success');
@@ -131,14 +162,15 @@ function handleHostResults(data) {
   }
 }
 
+/** @param {Record<string, unknown>} newState */
 function setState(newState) {
-  let currentState = vscode.getState() || {};
+  const currentState = /** @type {Record<string, unknown>} */ (vscode.getState() ?? {});
 
   vscode.setState({ ...currentState, ...newState });
 }
 
 function getState() {
-  const currentState = vscode.getState();
+  const currentState = /** @type {Record<string, unknown> | null} */ (vscode.getState());
 
   const defaultState = {
     query: '',
@@ -157,6 +189,13 @@ function getState() {
 
 function init() {
   initListeners();
+
+  if (document.body.dataset.indexing) {
+    updateSearchFeedback('Indexing documentation...');
+    updateStatus('progress');
+    return;
+  }
+
   setState({ status: 'none' });
 
   const currentState = getState();
@@ -173,12 +212,15 @@ function init() {
 
       return handleHostResults(savedData);
     } catch (err) {
-      console.error(`Error happened during parsing of cached data: ${err}`);
+      console.error(`Error happened during parsing of cached data: ${err}`);            
       setState({ lastHostData: '' }); // restoring it to default state
     }
   }
 
-  triggerSearch();
+  // bypass the same-query guard in triggerSearch — state.query already equals input val
+  updateSearchFeedback('Searching...');
+  getSearchResult(currentState.query);
+  updateStatus('progress');
 }
 
 init();

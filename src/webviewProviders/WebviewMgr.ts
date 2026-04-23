@@ -1,9 +1,12 @@
 import * as vscode from 'vscode';
 import DocsViewerProvider from './DocsViewerProvider';
 import DocsNavigatorProvider from './DocsNavigatorProvider';
+import { SfccOfficialDeveloperAdaptor } from '../features/documentation/SfccOficialDeveloperAdaptor';
 
 export default class WebviewMgr {
   static init(context: vscode.ExtensionContext) {
+    SfccOfficialDeveloperAdaptor.storageUri = context.globalStorageUri;
+
     const searchProvider = new DocsNavigatorProvider(context.extensionUri);
 
     context.subscriptions.push(

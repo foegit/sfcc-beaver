@@ -40,14 +40,31 @@ export class SfccLearningDocsRenderer implements IDocsRenderer {
     const $breadcrumbs = $body.find('.help_breadcrumbs');
 
     if ($breadcrumbs.length > 0) {
-      const $allBreadcrumbsLinks = $breadcrumbs.find('a');
+      const SKIP_LABELS = new Set(['home', 'search']);
+      const $allBreadcrumbsLinks = $breadcrumbs.find('a').toArray()
+        .filter((el) => !SKIP_LABELS.has($(el).text().trim().toLowerCase()));
 
       $breadcrumbs.empty();
 
-      $allBreadcrumbsLinks.each((i, $el) => {
-        $breadcrumbs.append($el);
-        if ($allBreadcrumbsLinks.length !== i + 1) {
-          $breadcrumbs.append(' / ');
+      if ($allBreadcrumbsLinks.length === 0) {
+        $breadcrumbs.remove();
+      } else {
+        $allBreadcrumbsLinks.forEach((el, i) => {
+          $breadcrumbs.append(el);
+          if (i < $allBreadcrumbsLinks.length - 1) {
+            $breadcrumbs.append(' / ');
+          }
+        });
+      }
+    }
+
+    // Remove the page title heading if it duplicates what's already shown as H1
+    const $h1 = $body.find('h1').first();
+    const h1Text = $h1.text().trim();
+    if (h1Text) {
+      $body.find('h2, h3').each((_, el) => {
+        if ($(el).text().trim() === h1Text) {
+          $(el).remove();
         }
       });
     }

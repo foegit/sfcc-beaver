@@ -1,5 +1,3 @@
-// !TODO
-
 import { IDocsRenderer } from './IDocsRenderer';
 import * as cheerio from 'cheerio';
 
@@ -18,6 +16,8 @@ export class SfccOfficialDocsRenderer implements IDocsRenderer {
     $body.find('.banner').remove();
     $body.find('.packageName').remove();
     $body.find('.detailName').remove();
+    $body.find('.className').remove();
+    $body.find('#homeLink').remove();
     $body.find('hr').remove();
     $body.find('a').removeAttr('target');
     const $hierarchy = $body.find('.hierarchy');

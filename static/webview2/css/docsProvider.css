@@ -1,21 +1,74 @@
 /* Docs provider styles */
 
+.bv-docs-root {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.bv-docs-header {
+  flex-shrink: 0;
+}
+
+.bv-provider-toggle {
+  display: flex;
+  margin-bottom: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid var(--vscode-editorGroup-border);
+}
+
+.bv-provider-btn {
+  flex: 1;
+  padding: 4px 8px;
+  font-size: 11px;
+  background: transparent;
+  color: var(--vscode-foreground);
+  border: none;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.1s;
+}
+
+.bv-provider-btn:hover {
+  opacity: 0.85;
+  background: var(--vscode-list-hoverBackground);
+}
+
+.bv-provider-btn.active {
+  background: var(--vscode-button-background);
+  color: var(--vscode-button-foreground);
+  opacity: 1;
+  cursor: default;
+}
+
+.bv-provider-btn:not(:last-child) {
+  border-right: 1px solid var(--vscode-editorGroup-border);
+}
+
+
 .bv-result {
   display: flex;
   flex-direction: column;
   gap: 1px;
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.bv-result-group-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.5;
+  padding: 6px 0 2px;
 }
 
 .bv-search-result-item {
-  margin: 4px 0;
-  border: 1px solid var(--vscode-editorGroup-border);
-  border-radius: 0.5em;
-  padding: 0.5em;
+  padding: 3px 0;
 }
 
-.bv-link-wrapper {
-  margin-bottom: 0.5rem;
-}
 
 .bv-result .link {
   font-weight: bold;
