@@ -1,135 +1,173 @@
-<!-- markdownlint-disable -->
-
 # Change Log
 
-## 3.6.0 - 2024-08-24
+All notable changes to this project will be documented in this file.
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-### Features
+## [3.10.0]
 
-- Copying of code blocks from documentation page
-- A button to attach/deattach documentation tab to side
+### Added
 
-### Bugs
+- Cartridge search exclusion — exclude cartridges from VS Code global search via the Cartridges panel
+- Status bar warning when cartridges are excluded from search (dismissable via settings)
+- `sfccBeaver.cartridges.showSearchExcludeWarning` setting to hide the status bar warning
 
-- Documentation search works again. This version utilizes "old" documentation portal hosted by https://sfcclearning.com/. Support for the official docs is on the roadmap.
+### Changed
 
-### Improvements
+- Hooks broken implementation errors are now combined into a single report
 
-- Documentation UI/UX improvements
-  - Updated look and feel of the documentation
-  - Modern code highlighting
-  - Modern table presentation
-  - Improved search error feedback
+## [3.6.0] - 2024-08-24
 
-## 3.5.2 - 2024-08-19
+### Added
 
-### Improvements
+- Copy code blocks from documentation page
+- Button to attach/detach documentation tab to the side panel
 
-- Hooks watchers and commands memory leaks fixes
-- Key binding for Hook Search on Mac is now `Command + Shift + H` since `Command + H` is Mac's system Hide Window shortcut.
+### Changed
 
-### Bugs
+- Updated documentation look and feel
+- Modern code highlighting and table presentation
+- Improved search error feedback
 
-- Fixed missing keybinding for Hook Search
+### Fixed
 
-## 3.5.1 - 2024-08-12
+- Documentation search is working again. This version uses the "old" portal hosted by https://sfcclearning.com/. Official docs support is on the roadmap.
 
-### Improvements
+## [3.5.2] - 2024-08-19
 
-- Added hooks.json schema validation (internal)
-- Added steptypes.json schema validation (external)
+### Changed
 
-## 3.5.0 - 2024-08-05
+- Fixed memory leaks in hooks watchers and commands
+- Mac keybinding for Hook Search changed to `Command + Shift + H` (`Command + H` is reserved by macOS)
 
-### Features
+### Fixed
 
-- Hooks search.
-- Hooks search shortcut:
-  - Windows: `Ctrl + Shift + H`
-  - Mac: `⌘ + H`
-- Hooks filter.
+- Missing keybinding for Hook Search
 
-### Improvements
+## [3.5.1] - 2024-08-12
 
-- For Tags hooks are now grouped by first two words.
-- Tags shows how much hooks it contains
-- Broken configuration is now reported in the list
+### Added
 
-## 3.4.0 - 2024-07-27
+- `hooks.json` schema validation
+- `steptypes.json` schema validation
 
-### Features
+## [3.5.0] - 2024-08-05
 
-- Added tag view for hooks (configurable). Now hooks can be grouped by the first hook part: `app.custom.hook` will be placed under `app` tag
-- Added compact view for hooks with single implementation (configurable). When activating single hooks will be opened automatically without need to expand.
-- Added Collapse All to hooks view. Now all items can be closed by clicking one button
+### Added
 
-### Bugs
+- Hooks search (Windows: `Ctrl + Shift + H`, Mac: `⌘ + H`)
+- Hooks filter
 
-- Fix a bug when cartridges name were not detected if cartridges are located in the root folder
+### Changed
 
-### Improvements
+- Hooks in tag view are now grouped by the first two words
+- Tags show the number of hooks they contain
+- Broken hook configurations are reported in the list
 
-- Focusing now selects the found word instead of placing a cursor in front of the word
+## [3.4.0] - 2024-07-27
+
+### Added
+
+- Tag view for hooks — hooks grouped by the first part of the hook name (e.g. `app.custom.hook` → `app` tag)
+- Compact view for hooks with a single implementation — single hooks expand automatically on click
+- Collapse All button for hooks view
+
+### Changed
+
+- Focusing now selects the found word instead of placing a cursor before it
 - Added focusing for hook definition files
-- Added dw.scapi hooks detection
-- Made commands names more consistent
+- Added `dw.scapi` hooks detection
+- Made command names more consistent
 
-## 3.3.0 - 2024-07-17
+### Fixed
 
-### Features
+- Cartridge names not being detected when cartridges are in the root folder
 
-- Added hooks overview:
-  - All project hooks are listed on the sidebar panel
-  - Hooks are split into 3 main category: system, API (OCAPI/SCAPI) and custom
+## [3.3.0] - 2024-07-17
+
+### Added
+
+- Hooks overview panel:
+  - All project hooks listed in the sidebar
+  - Hooks split into 3 categories: system, API (OCAPI/SCAPI), and custom
   - Hook name can be copied
-  - A hook can be pinned
-  - Clicking on hook's implementation opens a file with it
-  - From hook implementation it's possible to open definition hook.js
-  - Hooks with missing implementation are marked red.
-  - Changes made into hook.json and packages.json are automatically detected, otherwise refresh button can be used.
+  - Hooks can be pinned
+  - Clicking a hook implementation opens its file
+  - Hook definition `hooks.js` can be opened from the implementation
+  - Hooks with missing implementations are marked red
+  - Changes to `hooks.json` and `package.json` are detected automatically; refresh button available as fallback
 
-### Improvements
+### Changed
 
-- Optimize extension activation to avoid loading in non-SFCC projects
-- Other minor code and performance improvements
+- Optimized extension activation to skip non-SFCC projects
+- Minor code and performance improvements
 
-### Bugfixes
+### Fixed
 
-- Override command was not working on Mac
+- Override command not working on Mac
 
-## 2.1.0 - 2022-09-14
+## [2.1.0] - 2022-09-14
 
-### New Features
+### Added
 
-- Added SFCC documentation search. You can search directly in VS Code.
-- DW classes hovers that allow opening documentation.
+- SFCC documentation search inside VS Code
+- DW class hover to open documentation
 
-### Bugfixes
+### Fixed
 
-- Allow overriding of PD components in case they are located in modules folder
+- Overriding PD components located in the modules folder
 
-## 1.4.0 - 2022-05-13
+## [1.4.0] - 2022-05-13
 
-- Added cartridges overview
-- Added cartridge pining
+### Added
 
-## 1.3.0 - 2022-05-07
+- Cartridges overview
+- Cartridge pinning
 
-- Added override feature
-- Fixed a bug with modules folder
+## [1.3.0] - 2022-05-07
 
-## 1.2.0 - 2022-05-02
+### Added
 
-- Pre-release version of override feature
+- Override feature
 
-## 1.1.3 - 2022-05-02
+### Fixed
 
-- Bugfixes
+- Bug with the modules folder
 
-## 1.1.0 - 2022-04-10
+## [1.2.0] - 2022-05-02
 
-- Added unix path command
+### Added
 
-## 1.0.0 - 2022-04-10
+- Pre-release of the override feature
+
+## [1.1.3] - 2022-05-02
+
+### Fixed
+
+- Various bugfixes
+
+## [1.1.0] - 2022-04-10
+
+### Added
+
+- Unix path command
+
+## [1.0.0] - 2022-04-10
 
 - First stable version
+
+---
+
+[Unreleased]: https://github.com/foegit/sfcc-beaver/compare/v3.6.0...HEAD
+[3.6.0]: https://github.com/foegit/sfcc-beaver/compare/v3.5.2...v3.6.0
+[3.5.2]: https://github.com/foegit/sfcc-beaver/compare/v3.5.1...v3.5.2
+[3.5.1]: https://github.com/foegit/sfcc-beaver/compare/v3.5.0...v3.5.1
+[3.5.0]: https://github.com/foegit/sfcc-beaver/compare/v3.4.0...v3.5.0
+[3.4.0]: https://github.com/foegit/sfcc-beaver/compare/v3.3.0...v3.4.0
+[3.3.0]: https://github.com/foegit/sfcc-beaver/compare/v3.0.0...v3.3.0
+[2.1.0]: https://github.com/foegit/sfcc-beaver/releases/tag/v3.0.0
+[1.4.0]: https://github.com/foegit/sfcc-beaver/releases/tag/v3.0.0
+[1.3.0]: https://github.com/foegit/sfcc-beaver/releases/tag/v3.0.0
+[1.2.0]: https://github.com/foegit/sfcc-beaver/releases/tag/v3.0.0
+[1.1.3]: https://github.com/foegit/sfcc-beaver/releases/tag/v3.0.0
+[1.1.0]: https://github.com/foegit/sfcc-beaver/releases/tag/v3.0.0
+[1.0.0]: https://github.com/foegit/sfcc-beaver/releases/tag/v3.0.0

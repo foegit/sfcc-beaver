@@ -2,9 +2,12 @@
   "name": "sfcc-beaver",
   "displayName": "SFCC Beaver",
   "description": "An extension for SFCC developers to automate routine tasks",
-  "version": "3.6.0",
+  "version": "3.10.0",
   "icon": "static/simpleLogo.png",
-  "repository": "https://github.com/foegit/sfcc-beaver",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/foegit/sfcc-beaver"
+  },
   "publisher": "SerhiiHlavatskyi",
   "engines": {
     "vscode": "^1.66.0"
@@ -61,6 +64,20 @@
           },
           "default": [],
           "description": "Comma separated list of pinned cartridges."
+        },
+        "sfccBeaver.cartridges.showSearchExcludeWarning": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show a status bar warning when cartridges are excluded from search."
+        },
+        "sfccBeaver.cartridges.searchExcludedCartridges": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "Name of the cartridge"
+          },
+          "default": [],
+          "description": "Cartridges excluded from VS Code global search."
         },
         "sfccBeaver.hooks.pinnedHooks": {
           "type": "array",
@@ -150,7 +167,27 @@
       {
         "command": "sfccBeaver.unpinCartridge",
         "title": "Unpin Cartridge",
-        "icon": "$(close)"
+        "icon": "$(pin)"
+      },
+      {
+        "command": "sfccBeaver.excludeCartridgeFromSearch",
+        "title": "Exclude from Search",
+        "icon": "$(eye-closed)"
+      },
+      {
+        "command": "sfccBeaver.includeCartridgeInSearch",
+        "title": "Include in Search",
+        "icon": "$(eye)"
+      },
+      {
+        "command": "sfccBeaver.excludeAllCartridgesFromSearch",
+        "title": "Exclude All from Search",
+        "icon": "$(eye-closed)"
+      },
+      {
+        "command": "sfccBeaver.includeAllCartridgesInSearch",
+        "title": "Include All in Search",
+        "icon": "$(eye)"
       },
       {
         "command": "sfccBeaver.hooks.refreshView",
@@ -274,6 +311,22 @@
           "when": "false"
         },
         {
+          "command": "sfccBeaver.excludeCartridgeFromSearch",
+          "when": "false"
+        },
+        {
+          "command": "sfccBeaver.includeCartridgeInSearch",
+          "when": "false"
+        },
+        {
+          "command": "sfccBeaver.excludeAllCartridgesFromSearch",
+          "when": "false"
+        },
+        {
+          "command": "sfccBeaver.includeAllCartridgesInSearch",
+          "when": "false"
+        },
+        {
           "command": "sfccBeaver.openClassDetails",
           "when": "false"
         },
@@ -287,6 +340,16 @@
           "command": "sfccBeaver.refreshCartridgeList",
           "when": "view == cartridgesObserver",
           "group": "navigation"
+        },
+        {
+          "command": "sfccBeaver.excludeAllCartridgesFromSearch",
+          "when": "view == cartridgesObserver && !sfccBeaver.hasSearchExcludedCartridges",
+          "group": "navigation@2"
+        },
+        {
+          "command": "sfccBeaver.includeAllCartridgesInSearch",
+          "when": "view == cartridgesObserver && sfccBeaver.hasSearchExcludedCartridges",
+          "group": "navigation@2"
         },
         {
           "command": "sfccBeaver.hooks.useListView",
@@ -327,13 +390,23 @@
       "view/item/context": [
         {
           "command": "sfccBeaver.pinCartridge",
-          "when": "view == cartridgesObserver && viewItem == sfccCartridgeTreeItem",
+          "when": "view == cartridgesObserver && (viewItem == sfccCartridgeTreeItem || viewItem == sfccExcludedCartridgeTreeItem)",
           "group": "inline"
         },
         {
           "command": "sfccBeaver.unpinCartridge",
-          "when": "view == cartridgesObserver && viewItem == sfccPinnedCartridgeTreeItem",
+          "when": "view == cartridgesObserver && (viewItem == sfccPinnedCartridgeTreeItem || viewItem == sfccPinnedExcludedCartridgeTreeItem)",
           "group": "inline"
+        },
+        {
+          "command": "sfccBeaver.excludeCartridgeFromSearch",
+          "when": "view == cartridgesObserver && (viewItem == sfccCartridgeTreeItem || viewItem == sfccPinnedCartridgeTreeItem)",
+          "group": "inline@2"
+        },
+        {
+          "command": "sfccBeaver.includeCartridgeInSearch",
+          "when": "view == cartridgesObserver && (viewItem == sfccExcludedCartridgeTreeItem || viewItem == sfccPinnedExcludedCartridgeTreeItem)",
+          "group": "inline@2"
         },
         {
           "command": "sfccBeaver.hooks.clearFilter",
@@ -414,20 +487,23 @@
           "name": "Cartridges",
           "id": "cartridgesObserver",
           "contextualTitle": "Cartridge Overview",
-          "when": "config.sfccBeaver.general.isSFCCProject == true || sfccBeaver.extActivated"
+          "when": "config.sfccBeaver.general.isSFCCProject == true || sfccBeaver.extActivated",
+          "icon": "static/simpleLogo.svg"
         },
         {
           "name": "Documentation",
           "id": "docsNavigator",
           "type": "webview",
           "contextualTitle": "Documentation Search",
-          "when": "config.sfccBeaver.general.isSFCCProject == true || sfccBeaver.extActivated"
+          "when": "config.sfccBeaver.general.isSFCCProject == true || sfccBeaver.extActivated",
+          "icon": "static/simpleLogo.svg"
         },
         {
           "name": "Hooks",
           "id": "hooksObserver",
           "contextualTitle": "Hooks Overview",
-          "when": "config.sfccBeaver.general.isSFCCProject == true || sfccBeaver.extActivated"
+          "when": "config.sfccBeaver.general.isSFCCProject == true || sfccBeaver.extActivated",
+          "icon": "static/simpleLogo.svg"
         }
       ]
     }
@@ -476,7 +552,7 @@
     "axios": "^0.27.2",
     "cash-dom": "^8.1.1",
     "cheerio": "^1.0.0-rc.12",
-    "fast-glob": "^3.2.11",
+    "fast-glob": "^3.3.3",
     "normalize-url": "^7.0.3"
   }
 }

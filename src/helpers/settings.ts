@@ -19,6 +19,12 @@ const settingsDefinition = {
   'cartridges.pinnedCartridges': {
     default: [] as string[],
   },
+  'cartridges.searchExcludedCartridges': {
+    default: [] as string[],
+  },
+  'cartridges.showSearchExcludeWarning': {
+    default: true,
+  },
   'hooks.pinnedHooks': {
     default: [] as string[],
   },
