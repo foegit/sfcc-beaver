@@ -4,7 +4,9 @@ import WebviewTool from '../classes/tools/WebviewTool';
 import SimpleHistory from './helpers/SimpleHistory';
 import { copyToClipboard } from '../helpers/clipboard';
 
+import { SfccOfficialDeveloperAdaptor } from '../features/documentation/SfccOficialDeveloperAdaptor';
 import { SfccLearningSearchAdaptor } from '../features/documentation/SfccLearningSearchAdaptor';
+import { IDocsSearchAdaptor } from '../features/documentation/IDocsSearchAdaptor';
 
 /**
  * Manages cat coding webview panels
@@ -14,7 +16,15 @@ export default class DocsViewerProvider {
    * Track the currently panel. Only allow a single panel to exist at a time.
    */
   public static currentDocsViewerPanel: DocsViewerProvider | undefined;
-  public static docsAdaptor = new SfccLearningSearchAdaptor();
+
+  private static readonly adaptors: IDocsSearchAdaptor[] = [
+    new SfccOfficialDeveloperAdaptor(),
+    new SfccLearningSearchAdaptor(),
+  ];
+
+  public static getAdaptorForUrl(url: string): IDocsSearchAdaptor {
+    return DocsViewerProvider.adaptors.find((a) => a.isDocsUrl(url)) ?? DocsViewerProvider.adaptors[0];
+  }
 
   public static readonly viewType = 'docsViewer';
 
@@ -69,9 +79,10 @@ export default class DocsViewerProvider {
 
   onLinkClick(href: string) {
     const currentURL = this.history.getActive();
-    const absUrl = DocsViewerProvider.docsAdaptor.clickedHrefToAbsUrl(href, currentURL.url);
+    const adaptor = DocsViewerProvider.getAdaptorForUrl(currentURL.url);
+    const absUrl = adaptor.clickedHrefToAbsUrl(href, currentURL.url);
 
-    if (!DocsViewerProvider.docsAdaptor.isDocsUrl(absUrl)) {
+    if (!adaptor.isDocsUrl(absUrl)) {
       this.openInBrowser(absUrl);
       return;
     }
@@ -158,7 +169,7 @@ export default class DocsViewerProvider {
   }
 
   public static openClassDoc(extensionUri: vscode.Uri, classPath: string) {
-    const url = this.docsAdaptor.getClassLink(classPath);
+    const url = new SfccOfficialDeveloperAdaptor().getClassLink(classPath);
 
     this.createOrShow(extensionUri, {
       absoluteLink: url,
@@ -204,9 +215,9 @@ export default class DocsViewerProvider {
     try {
       const content = await axios.get(url);
 
-      const renderResult = await DocsViewerProvider.docsAdaptor.renderer.render(content.data);
+      const renderResult = await DocsViewerProvider.getAdaptorForUrl(url).renderer.render(content.data);
 
-      this.webviewPanel.title = `Docs | ${renderResult.title}`;
+      this.webviewPanel.title = renderResult.title || 'SFCC Docs';
 
       return this.webviewPanel.webview.postMessage({
         type: 'beaver:host:docs:updateDetails',

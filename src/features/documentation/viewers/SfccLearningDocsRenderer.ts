@@ -6,12 +6,11 @@ export class SfccLearningDocsRenderer implements IDocsRenderer {
     const $ = cheerio.load(htmlResponse);
     const $body = $('body');
     const title = $('title').text();
-    // no scripts
-    $body.find('script').remove();
+    // remove all scripts and navigation from entire document
+    $('script').remove();
+    $('aside').remove();
     // remove footer
     $body.find('footer').remove();
-    // remove navigation
-    $body.find('aside').remove();
     // remove retirement footer
     $body.find('.retirement-footer').remove();
     $body.find('.home-container>.copy').remove();
@@ -19,8 +18,11 @@ export class SfccLearningDocsRenderer implements IDocsRenderer {
     $body.find('.numVisits').remove();
     // ocapi deprecation message, is outdated completely
     $body.find('#ocapiDeprecationBanner').remove();
-    // remove favorites
-    $body.find('.quick-links ul').first().remove();
+    $body.find('nav').remove();
+    $body.find('header').remove();
+    $body.find('form').remove();
+    $body.find('.quick-links').remove();
+    $body.find('.home-container').remove();
 
     // TODO: double check
     $body.find('#cookieConsent').remove();
@@ -40,19 +42,44 @@ export class SfccLearningDocsRenderer implements IDocsRenderer {
     const $breadcrumbs = $body.find('.help_breadcrumbs');
 
     if ($breadcrumbs.length > 0) {
-      const $allBreadcrumbsLinks = $breadcrumbs.find('a');
+      let $ancestor = $breadcrumbs;
+      while ($ancestor.parent().length && $ancestor.parent()[0].tagName !== 'body') {
+        $ancestor = $ancestor.parent();
+      }
+      $ancestor.prevAll().remove();
+    }
+
+    if ($breadcrumbs.length > 0) {
+      const SKIP_LABELS = new Set(['home', 'search']);
+      const $allBreadcrumbsLinks = $breadcrumbs.find('a').toArray()
+        .filter((el) => !SKIP_LABELS.has($(el).text().trim().toLowerCase()));
 
       $breadcrumbs.empty();
 
-      $allBreadcrumbsLinks.each((i, $el) => {
-        $breadcrumbs.append($el);
-        if ($allBreadcrumbsLinks.length !== i + 1) {
-          $breadcrumbs.append(' / ');
+      if ($allBreadcrumbsLinks.length === 0) {
+        $breadcrumbs.remove();
+      } else {
+        $allBreadcrumbsLinks.forEach((el, i) => {
+          $breadcrumbs.append(el);
+          if (i < $allBreadcrumbsLinks.length - 1) {
+            $breadcrumbs.append(' / ');
+          }
+        });
+      }
+    }
+
+    // Remove the page title heading if it duplicates what's already shown as H1
+    const $h1 = $body.find('h1').first();
+    const h1Text = $h1.text().trim();
+    if (h1Text) {
+      $body.find('h2, h3').each((_, el) => {
+        if ($(el).text().trim() === h1Text) {
+          $(el).remove();
         }
       });
     }
 
-    $body.find('.pre.codeblock').each((i, $el) => {
+    $body.find('.pre.codeblock').each((_, $el) => {
       $($el).prepend('<span class="copy-code-btn">copy</span>');
     });
 

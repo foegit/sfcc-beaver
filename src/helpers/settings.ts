@@ -40,6 +40,12 @@ const settingsDefinition = {
   'copy.addLineNumberForUnix': {
     default: false,
   },
+  'docs.provider': {
+    default: 'sfcclearning' as 'sfcclearning' | 'b2cdevdoc',
+  },
+  'cartridges.showSearchExcludeWarning': {
+    default: true,
+  },
 };
 
 function getExtensionConfiguration() {

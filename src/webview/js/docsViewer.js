@@ -144,7 +144,9 @@ function findCurrentPageAnchor(href) {
 
   const [currentUrlWithoutAnchor] = currentUrl.split('#');
 
-  return currentUrlWithoutAnchor === url ? anchor : '';
+  const isSamePage = currentUrlWithoutAnchor === url || currentUrlWithoutAnchor.endsWith('/' + url);
+
+  return isSamePage ? anchor : '';
 }
 
 function initListeners() {
@@ -251,14 +253,13 @@ function init() {
   if (currentState.lastHostData) {
     try {
       const savedData = JSON.parse(currentState.lastHostData);
-
       updateDetails(savedData);
       if (savedData.originalURL) {
         initHistory(savedData.originalURL);
       }
     } catch (err) {
       console.error(`Error happened during parsing of cached data: ${err}`);
-      setState({ lastHostData: '' }); // restoring it to default state
+      setState({ lastHostData: '' });
     }
   } else {
     updateStatus(SUCCESS);

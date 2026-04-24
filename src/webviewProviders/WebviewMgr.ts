@@ -1,9 +1,12 @@
 import * as vscode from 'vscode';
 import DocsViewerProvider from './DocsViewerProvider';
 import DocsNavigatorProvider from './DocsNavigatorProvider';
+import { SfccOfficialDeveloperAdaptor } from '../features/documentation/SfccOficialDeveloperAdaptor';
 
 export default class WebviewMgr {
   static init(context: vscode.ExtensionContext) {
+    SfccOfficialDeveloperAdaptor.storageUri = context.globalStorageUri;
+
     const searchProvider = new DocsNavigatorProvider(context.extensionUri);
 
     context.subscriptions.push(
@@ -19,9 +22,6 @@ export default class WebviewMgr {
       vscode.commands.registerCommand('sfccBeaver.docsOpenInBrowser', (data) => {
         DocsViewerProvider.currentDocsViewerPanel?.openInBrowserCurrent();
       })
-    );
-    context.subscriptions.push(
-      vscode.commands.registerCommand('sfccBeaver.docs.toggleColumn', DocsViewerProvider.toggleView)
     );
     context.subscriptions.push(
       vscode.commands.registerCommand('sfccBeaver.docsCopyToClipboard', (data) => {

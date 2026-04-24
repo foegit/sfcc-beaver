@@ -118,6 +118,24 @@
           "type": "boolean",
           "default": "false",
           "description": "Internal setting. Don't modify it. If you need to disable extension for the current workspace do so from the extension page (View > Extensions > SFCC Beaver)"
+        },
+        "sfccBeaver.docs.provider": {
+          "type": "string",
+          "enum": [
+            "sfcclearning",
+            "b2cdevdoc"
+          ],
+          "enumDescriptions": [
+            "Legacy SFCC documentation hosted at sfcclearning.com",
+            "Official B2C Developer Documentation at salesforcecommercecloud.github.io"
+          ],
+          "default": "sfcclearning",
+          "description": "Documentation search provider"
+        },
+        "sfccBeaver.cartridges.showSearchExcludeWarning": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show a status bar warning when cartridges are excluded from VS Code global search."
         }
       }
     },
@@ -257,11 +275,6 @@
         "command": "sfccBeaver.docsOpenInBrowser",
         "title": "Open Class Documentation",
         "icon": "$(link-external)"
-      },
-      {
-        "command": "sfccBeaver.docs.toggleColumn",
-        "title": "Split/Combine with Active Tab",
-        "icon": "$(terminal-tmux)"
       },
       {
         "command": "sfccBeaver.docsCopyToClipboard",
@@ -433,11 +446,6 @@
           "when": "activeWebviewPanelId == docsViewer"
         },
         {
-          "command": "sfccBeaver.docs.toggleColumn",
-          "group": "navigation@2",
-          "when": "activeWebviewPanelId == docsViewer"
-        },
-        {
           "command": "sfccBeaver.docsCopyToClipboard",
           "group": "navigation@2",
           "when": "activeWebviewPanelId == docsViewer"
@@ -525,6 +533,7 @@
     "@types/vscode": "^1.66.0",
     "@typescript-eslint/eslint-plugin": "^5.16.0",
     "@typescript-eslint/parser": "^5.16.0",
+    "@vscode/codicons": "^0.0.45",
     "@vscode/test-electron": "^2.1.3",
     "chai": "^4.3.6",
     "eslint": "^8.11.0",

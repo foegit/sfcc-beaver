@@ -1,15 +1,16 @@
 import axios from 'axios';
-import * as cheerio from 'cheerio';
-import { IDocsSearchAdaptor, SearchItem, SearchResult } from './IDocsSearchAdaptor';
-import { workspace } from 'vscode';
-import FsTool from '../../classes/tools/FsTool';
+import { Uri, workspace } from 'vscode';
+import { IDocsSearchAdaptor, SearchResult } from './IDocsSearchAdaptor';
 import { IDocsRenderer } from './viewers/IDocsRenderer';
 import { SfccOfficialDocsRenderer } from './viewers/SfccOfficialDocsRenderer';
 import normalizeUrl from 'normalize-url';
 
 const BASE_URL = 'https://salesforcecommercecloud.github.io';
+const CACHE_FILE = 'docs-dump.json';
 
 export class SfccOfficialDeveloperAdaptor implements IDocsSearchAdaptor {
+  static storageUri: Uri | undefined;
+
   renderer: IDocsRenderer;
 
   constructor() {
@@ -17,12 +18,7 @@ export class SfccOfficialDeveloperAdaptor implements IDocsSearchAdaptor {
   }
 
   getClassLink(classPath: string): string {
-    /// https://salesforcecommercecloud.github.io/b2c-dev-doc/docs/current/scriptapi/html/index.html?target=class_dw_customer_AddressBook.html
-
-    return `${BASE_URL}/b2c-dev-doc/docs/current/scriptapi/html/index.html?target=class_${classPath.replace(
-      /\//g,
-      '_'
-    )}.html`;
+    return `${BASE_URL}/b2c-dev-doc/docs/current/scriptapi/html/api/class_${classPath.replace(/\//g, '_')}.html`;
   }
 
   clickedHrefToAbsUrl(clickedHref: string, currentUrl: string): string {
@@ -31,31 +27,65 @@ export class SfccOfficialDeveloperAdaptor implements IDocsSearchAdaptor {
     return normalizeUrl(`${currentURL}/${clickedHref}`);
   }
 
-  async parseDoc() {
-    const folder = workspace.workspaceFolders?.[0];
+  static readonly TTL_MS = 24 * 60 * 60 * 1000;
 
-    if (!folder) {
-      return;
-    }
-
-    if (!FsTool.fileExist('./.vscode/docs-dump.json')) {
-      const jsonDump = await axios.get('https://salesforcecommercecloud.github.io/b2c-dev-doc/search.json');
-
-      if (jsonDump.data) {
-        await FsTool.write('./.vscode/docs-dump.json', JSON.stringify(jsonDump.data));
-      }
-
-      return jsonDump.data;
-    }
-
-    return FsTool.parseCurrentProjectJsonFile('./.vscode/docs-dump.json');
+  private static get cacheUri(): Uri | undefined {
+    return SfccOfficialDeveloperAdaptor.storageUri
+      ? Uri.joinPath(SfccOfficialDeveloperAdaptor.storageUri, CACHE_FILE)
+      : undefined;
   }
 
-  // https://sfcclearning.com/infocenter/search.php?term=test
+  static async getCacheMtime(): Promise<number | null> {
+    const uri = SfccOfficialDeveloperAdaptor.cacheUri;
+    if (!uri) {
+      return null;
+    }
+    try {
+      const stat = await workspace.fs.stat(uri);
+      return stat.mtime;
+    } catch {
+      return null;
+    }
+  }
+
+  async forceReindex(): Promise<void> {
+    const uri = SfccOfficialDeveloperAdaptor.cacheUri;
+    if (uri) {
+      await this.fetchAndCache(uri);
+    }
+  }
+
+  private async fetchAndCache(uri: Uri): Promise<any> {
+    const response = await axios.get(`${BASE_URL}/b2c-dev-doc/search.json`);
+
+    if (response.data) {
+      await workspace.fs.createDirectory(SfccOfficialDeveloperAdaptor.storageUri!);
+      await workspace.fs.writeFile(uri, Buffer.from(JSON.stringify(response.data)));
+    }
+
+    return response.data;
+  }
+
+  static async isStale(): Promise<boolean> {
+    const mtime = await SfccOfficialDeveloperAdaptor.getCacheMtime();
+    return mtime !== null && Date.now() - mtime > SfccOfficialDeveloperAdaptor.TTL_MS;
+  }
+
+  async parseDoc() {
+    const uri = SfccOfficialDeveloperAdaptor.cacheUri;
+    if (!uri) { return; }
+    try {
+      const raw = await workspace.fs.readFile(uri);
+      return JSON.parse(raw.toString());
+    } catch {
+      return this.fetchAndCache(uri);
+    }
+  }
+
   async search(query: string): Promise<SearchResult> {
     const docs: { content: string; title: string; url: string }[] = await this.parseDoc();
 
-    const q = query.toLocaleLowerCase().trim();
+    const q = query.toLocaleLowerCase().trim().replace(/\//g, '.');
 
     const uniqueMap: { [key: string]: boolean } = {};
 
@@ -73,11 +103,19 @@ export class SfccOfficialDeveloperAdaptor implements IDocsSearchAdaptor {
 
         return true;
       })
-      .map((i) => ({
-        title: i.title,
-        description: i.content.slice(0, 100) + '...',
-        url: `https://salesforcecommercecloud.github.io/${i.url}`,
-      }));
+      .map((i) => {
+        const url = `${BASE_URL}/${i.url}`;
+        const group = i.url.includes('/api/class_')
+          ? ('api' as const)
+          : i.url.includes('/api/package_')
+            ? ('package' as const)
+            : undefined;
+        return { title: i.title, url, group };
+      })
+      .sort((a, b) => {
+        const rank = (g: typeof a.group) => (g === 'api' ? 0 : g === 'package' ? 1 : 2);
+        return rank(a.group) - rank(b.group);
+      });
 
     return {
       msg: `Found ${matchedItems.length} items`,
