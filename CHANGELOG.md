@@ -3,7 +3,19 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [3.10.0]
+## [3.11.0] - 2026-04-24
+
+### Added
+
+- Two documentation sources via tabs: **API** (official B2C Dev Docs) and **Infocenter (Retired)** (sfcclearning.com)
+- Grouped search results with VS Code icons, error handling, and no-results hints
+
+### Changed
+
+- Documentation search UI redesigned with tabs and cleaner result layout
+- Various search and viewer improvements: slash/dot notation, anchor navigation, page title in tab
+
+## [3.10.0] - 2026-04-18
 
 ### Added
 
@@ -157,7 +169,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
-[Unreleased]: https://github.com/foegit/sfcc-beaver/compare/v3.6.0...HEAD
+[Unreleased]: https://github.com/foegit/sfcc-beaver/compare/v3.11.0...HEAD
+[3.11.0]: https://github.com/foegit/sfcc-beaver/compare/v3.10.0...v3.11.0
+[3.10.0]: https://github.com/foegit/sfcc-beaver/compare/v3.6.0...v3.10.0
 [3.6.0]: https://github.com/foegit/sfcc-beaver/compare/v3.5.2...v3.6.0
 [3.5.2]: https://github.com/foegit/sfcc-beaver/compare/v3.5.1...v3.5.2
 [3.5.1]: https://github.com/foegit/sfcc-beaver/compare/v3.5.0...v3.5.1

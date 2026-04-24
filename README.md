@@ -61,16 +61,26 @@ Active cartridge list. Pin or unpin cartridges for overriding, and exclude them 
 
 #### Documentation
 
-Search SFCC docs without leaving VS Code.
+Browse SFCC API docs and Infocenter directly in your editor.
 
 ![alt text](static/documentation.png)
 
-- Search and view documentation inside VS Code
+**Two documentation sources via tabs:**
+- **API** — Official B2C Developer Docs (`salesforcecommercecloud.github.io`), indexed locally with 24h cache refresh
+- **Infocenter (Retired)** — Legacy SFCC Learning portal (`sfcclearning.com`)
+
+**Search:**
+- Results grouped by **Classes** and **Packages** with VS Code icons
+- Slash notation normalised: `dw/experience/PageMgr` treated as `dw.experience.PageMgr`
+- Empty state and no-results state with direct links to the corresponding docs site
+- Error handling with retry button when API index can't be fetched
+
+**Viewer:**
 - Back/forward navigation
 - Quick link copy
 - Open in browser
-- Split/combine with the active editor group
 - Improved tables and code block rendering
+- Anchor navigation within pages
 
 #### Hooks
 
