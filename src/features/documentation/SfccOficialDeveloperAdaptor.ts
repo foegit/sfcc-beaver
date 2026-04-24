@@ -27,7 +27,7 @@ export class SfccOfficialDeveloperAdaptor implements IDocsSearchAdaptor {
     return normalizeUrl(`${currentURL}/${clickedHref}`);
   }
 
-  private static readonly TTL_MS = 24 * 60 * 60 * 1000;
+  static readonly TTL_MS = 24 * 60 * 60 * 1000;
 
   private static get cacheUri(): Uri | undefined {
     return SfccOfficialDeveloperAdaptor.storageUri
@@ -66,24 +66,18 @@ export class SfccOfficialDeveloperAdaptor implements IDocsSearchAdaptor {
     return response.data;
   }
 
+  static async isStale(): Promise<boolean> {
+    const mtime = await SfccOfficialDeveloperAdaptor.getCacheMtime();
+    return mtime !== null && Date.now() - mtime > SfccOfficialDeveloperAdaptor.TTL_MS;
+  }
+
   async parseDoc() {
     const uri = SfccOfficialDeveloperAdaptor.cacheUri;
-
-    if (!uri) {
-      return;
-    }
-
+    if (!uri) { return; }
     try {
-      const [stat, raw] = await Promise.all([workspace.fs.stat(uri), workspace.fs.readFile(uri)]);
-      const isStale = Date.now() - stat.mtime > SfccOfficialDeveloperAdaptor.TTL_MS;
-
-      if (isStale) {
-        this.fetchAndCache(uri).catch(console.error);
-      }
-
+      const raw = await workspace.fs.readFile(uri);
       return JSON.parse(raw.toString());
     } catch {
-      // no cache yet — block until fetched
       return this.fetchAndCache(uri);
     }
   }
@@ -91,7 +85,7 @@ export class SfccOfficialDeveloperAdaptor implements IDocsSearchAdaptor {
   async search(query: string): Promise<SearchResult> {
     const docs: { content: string; title: string; url: string }[] = await this.parseDoc();
 
-    const q = query.toLocaleLowerCase().trim();
+    const q = query.toLocaleLowerCase().trim().replace(/\//g, '.');
 
     const uniqueMap: { [key: string]: boolean } = {};
 

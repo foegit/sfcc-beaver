@@ -117,7 +117,8 @@ img.image {
 
 .section .summaryItem.focused-by-anchor,
 .detailItem.focused-by-anchor {
-  border: 1px solid var(--vscode-terminal-ansiGreen);
+  outline: 1px solid var(--vscode-charts-green);
+  outline-offset: 2px;
   border-radius: 0.5em;
   margin: 0.5em 0;
 }
@@ -183,7 +184,13 @@ img.image {
   font-style: italic;
 }
 
-h1,
+h1 {
+  font-size: 1.6em;
+  line-height: 1.25;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
 h2,
 h3 {
   margin-top: 1em;
@@ -281,3 +288,5 @@ code:hover {
 .ph.uicontrol {
   font-weight: bold;
 }
+
+.main-container > aside { display: none !important; }

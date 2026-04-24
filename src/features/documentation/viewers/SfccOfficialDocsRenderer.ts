@@ -8,6 +8,8 @@ export class SfccOfficialDocsRenderer implements IDocsRenderer {
   }> {
     const $ = cheerio.load(htmlResponse);
     const $body = $('body');
+    const rawTitle = $('title').text().trim();
+    const title = rawTitle ? rawTitle.split('|')[0].trim() : ($body.find('h1').first().text().trim() || 'Docs');
 
     $body.find('script').remove();
     $body.find('footer').remove();
@@ -43,6 +45,6 @@ export class SfccOfficialDocsRenderer implements IDocsRenderer {
 
     $body.find('.header:contains("Method Summary")').closest('.section').remove();
 
-    return { html: $body.html()!, title: 'Docs' };
+    return { html: $body.html()!, title };
   }
 }

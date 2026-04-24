@@ -79,8 +79,14 @@ export class SfccLearningSearchAdaptor implements IDocsSearchAdaptor {
     const directClassItem = this.tryClassLink(query);
 
     try {
-      const response = await axios.get(`${BASE_URL}/search.php?term=${query}`);
-      const items = this.toSearchItems(response.data);
+      const response = await axios.get(`${BASE_URL}/search.php?term=${query}`, { timeout: 10000 });
+      const data = response.data;
+
+      if (typeof data !== 'string' || !data.includes('<li')) {
+        return { error: true, errorMsg: 'An error occurred searching in docs' };
+      }
+
+      const items = this.toSearchItems(data);
 
       const allItems = directClassItem
         ? [directClassItem, ...items.filter((i) => i.url !== directClassItem.url)]
