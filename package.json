@@ -68,7 +68,7 @@
         "sfccBeaver.cartridges.showSearchExcludeWarning": {
           "type": "boolean",
           "default": true,
-          "description": "Show a status bar warning when cartridges are excluded from search."
+          "description": "Show a status bar warning when cartridges are excluded from VS Code global search."
         },
         "sfccBeaver.cartridges.searchExcludedCartridges": {
           "type": "array",
@@ -131,11 +131,6 @@
           ],
           "default": "sfcclearning",
           "description": "Documentation search provider"
-        },
-        "sfccBeaver.cartridges.showSearchExcludeWarning": {
-          "type": "boolean",
-          "default": true,
-          "description": "Show a status bar warning when cartridges are excluded from VS Code global search."
         }
       }
     },
@@ -549,7 +544,7 @@
   },
   "dependencies": {
     "@types/vscode-webview": "^1.57.0",
-    "axios": "^0.27.2",
+    "axios": "^1.15.2",
     "cash-dom": "^8.1.1",
     "cheerio": "^1.0.0-rc.12",
     "fast-glob": "^3.3.3",

@@ -43,9 +43,6 @@ const settingsDefinition = {
   'docs.provider': {
     default: 'sfcclearning' as 'sfcclearning' | 'b2cdevdoc',
   },
-  'cartridges.showSearchExcludeWarning': {
-    default: true,
-  },
 };
 
 function getExtensionConfiguration() {
@@ -58,7 +55,7 @@ export function getSetting<T extends SettingName>(settingName: T): SettingType<T
 
 export async function updateSetting<T extends SettingName>(
   settingName: T,
-  value: SettingType<T> | ((currentValue: SettingType<T>) => SettingType<T>)
+  value: SettingType<T> | ((currentValue: SettingType<T>) => SettingType<T>),
 ) {
   const currentValue = getSetting(settingName);
 
